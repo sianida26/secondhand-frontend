@@ -8,6 +8,8 @@ import { Provider } from "react-redux";
 
 import "./styles/tailwind.css";
 import "./styles/custom.css";
+import "antd/dist/antd.css"
+
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
