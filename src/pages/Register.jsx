@@ -11,12 +11,12 @@ export default function Register() {
       <div className=" hidden md:block lg:w-6/12 items-center lg:rounded-r-lg lg:rounded-bl-none">
         <img src={pic} className="w-full m-0" alt="image register" />
       </div>
-      <div className="lg:w-6/12 md:px-0 items-center my-8 md:w-full">
+      <div className="lg:w-6/12 md:px-0 items-center my-8">
         <div className="md:p-12 md:mx-12 items-center ">
-            <a href="" className='hidden lg:block item-left mb-3 transition duration-200 ease-in-out'><img src={arrow} /></a>
-          <div className="text-left">
-            <h4 className="text-3xl font-bold mb-6 pb-1">Daftar</h4>
-          </div>
+            <a href="" className='lg:invisible item-left mb-6 pb-3'><img src={arrow} /></a>
+              <div className="text-left">
+                <h4 className="text-2xl font-bold mb-4 pb-1 pt-6">Daftar</h4>
+              </div>
           <form>
             <p className="mb-3 text-sm">Nama</p>
             <div className="mb-5">
