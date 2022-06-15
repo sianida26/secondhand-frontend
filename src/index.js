@@ -7,8 +7,9 @@ import { store } from "./redux/store";
 import { Provider } from "react-redux";
 
 import "./styles/tailwind.css";
+import "antd/dist/antd.css";
 import "./styles/custom.css";
-import "antd/dist/antd.css"
+
 
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
