@@ -7,13 +7,13 @@ import {Input} from "antd"
 
 export default function Register() {
   return (
-    <section className="h-full">
-    <div className="lg:flex-wrap g-0 flex xl:justify-center lg:justify-center justify-center items-center flex-wrap h-full">
-      <div className=" hidden md:block lg:w-6/12 items-center lg:rounded-r-lg lg:rounded-bl-none">
+    <section className="h-full md:h-screen">
+    <div className="flex md:flex-none xl:justify-center lg:justify-center justify-center items-center flex-wrap h-full">
+      <div className="hidden md:block lg:w-6/12 items-center">
         <img src={pic} className="w-full m-0" alt="image register" />
       </div>
       <div className="lg:w-6/12 md:px-0 items-center my-8">
-        <div className="xl:p-12 xl:mx-12 items-center">
+        <div className="lg:px-12 md:mx-12">
            <Link to="/">
               <button>
                 <FiArrowLeft className='lg:invisible item-left text-black text-xl'/>
@@ -25,27 +25,27 @@ export default function Register() {
           <form>
             <p className="mb-3 text-sm">Nama</p>
             <div className="mb-5">
-              <Input type="text" className="form-control block w-full px-4 py-2 font-normal text-base text-gray-700 bg-white 
-               border-gray-400 rounded-[18px] transition ease-in-out m-0 focus:text-gray-700 focus:outline-none"
+              <Input type="text" className="form-control rounded-[16px] w-full px-4 py-2 font-normal text-sm text-neutral-3 bg-white 
+               border-neutral-2  transition ease-in-out m-0 focus:text-gray-700 focus:outline-none"
                 id="nameInput" placeholder="Nama Lengkap" />
             </div>
             <p className="mb-3 text-sm">Email</p>
-            <div className="mb-4">
+            <div className="mb-5">
               <Input
-                type="email" className="form-control block w-full px-4 py-2 font-normal text-base text-gray-700 bg-white 
-                border-gray-400 rounded-[18px] transition ease-in-out m-0 focus:text-gray-700 focus:outline-none"
+                type="email" className="form-control w-full px-4 py-2 font-normal text-sm text-neutral-3 bg-white 
+                border-neutral-2 rounded-[16px] transition ease-in-out m-0 focus:text-gray-700 focus:outline-none"
                 id="emailInput" placeholder="Contoh: johndee@gmail.com" />
             </div>
             <p className="mb-3 text-sm">Password</p>
-            <div className="mb-4">
+            <div className="mb-5">
               <Input.Password
-                type="password" className="form-control block w-full px-4 py-2 font-normal text-base text-gray-700 bg-white 
-                border-gray-400 rounded-[18px] transition ease-in-out m-0 focus:text-gray-700 focus:outline-none"
+                type="password" className="form-control px-2 py-2 font-normal text-base text-neutral-3 bg-white 
+                border-neutral-2 rounded-[16px] transition ease-in-out m-0 focus:text-gray-700 focus:outline-none"
                 id="passwordInput" placeholder="Masukkan password" />
             </div>
 
             <div className="text-center pt-2 mb-6">
-              <button className="inline-block bg-purple-4 hover:bg-purple-3 px-6 py-3 text-white font-normal text-sm leading-tight rounded-[18px] 
+              <button className="inline-block bg-purple-4 hover:bg-purple-3 px-6 py-3 text-white font-normal text-sm leading-tight rounded-[16px] 
                 focus:shadow-lg focus:outline-none active:shadow-lg transition duration-200 ease-in-out w-full mb-4"
                 type="button" data-mdb-ripple="true" data-mdb-ripple-color="dark">
                 Daftar
