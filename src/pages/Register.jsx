@@ -2,17 +2,17 @@ import React from 'react'
 import pic from '../assets/register.png'
 import { Link } from 'react-router-dom'
 import {FiArrowLeft} from 'react-icons/fi'
-import {Input} from "antd"
+import {Input} from 'antd'
 
 
 export default function Register() {
   return (
-    <section className="h-full md:h-screen">
+    <section className="h-full">
     <div className="flex md:flex-none xl:justify-center lg:justify-center justify-center items-center flex-wrap h-full">
       <div className="hidden md:block lg:w-6/12 items-center">
         <img src={pic} className="w-full m-0" alt="image register" />
       </div>
-      <div className="lg:w-6/12 md:px-0 items-center my-8">
+      <div className="lg:w-6/12 w-full px-4 md:px-0 items-center my-8">
         <div className="lg:px-12 md:mx-12">
            <Link to="/">
               <button>
@@ -53,7 +53,7 @@ export default function Register() {
             </div>
             <div className="text-center text-sm">
               <p className="md:mb-5 md:pt-0">Sudah punya akun?
-                <Link to="/Login" >
+                <Link to="/login" >
                   <button className="text-purple-4 hover:text-purple-3 font-semibold pl-1 
                     transition duration-300 ease-in-out">Masuk disini
                   </button>
