@@ -55,7 +55,7 @@ export default function Login() {
               </button>
             </div>
             <div className="text-center text-sm">
-              <p className="md:mb-5 md:pt-0">Belum punya akun?
+              <p>Belum punya akun?
                 <Link to="/register" >
                   <button className="text-purple-4 hover:text-purple-3 font-semibold pl-1 
                     transition duration-300 ease-in-out">Daftar disini

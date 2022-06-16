@@ -51,8 +51,8 @@ export default function Register() {
                 Daftar
               </button>
             </div>
-            <div className="text-center text-sm">
-              <p className="md:mb-5 md:pt-0">Sudah punya akun?
+            <div className="text-center text-sm ">
+              <p>Sudah punya akun?
                 <Link to="/login" >
                   <button className="text-purple-4 hover:text-purple-3 font-semibold pl-1 
                     transition duration-300 ease-in-out">Masuk disini
