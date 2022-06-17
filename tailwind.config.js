@@ -32,6 +32,11 @@ module.exports = {
           4: '#3C3C3C',
           5: '#151515',
         }
+      },
+
+      boxShadow: {
+        low: "0px 0px 4px rgba(0, 0, 0, 0.15)",
+        high: "0px 0px 10px rgba(0, 0, 0, 0.15)",
       }
     },
   },
