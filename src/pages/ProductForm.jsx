@@ -58,13 +58,13 @@ export default function ProductForm(props) {
                                 </div>
                             <p className="mb-3 text-sm">Foto Produk</p>
                                 <div className='mb-5'>
-                                    <div class="w-[96px] h-[96px] rounded-[16px] border-dashed border-2 border-neutral-2 bg-white flex justify-center items-center">
-                                            <div class="absolute">
-                                                <div class="flex flex-col items-center">
+                                    <div className="w-[96px] h-[96px] rounded-[16px] border-dashed border-2 border-neutral-2 bg-white flex justify-center items-center">
+                                            <div className="absolute">
+                                                <div className="flex flex-col items-center">
                                                     <FiPlus className='text-neutral-3 text-lg' />
                                                 </div>
                                             </div>
-                                        <input type="file" class="h-full w-full opacity-0" id="prodInput" />
+                                        <input type="file" className="h-full w-full opacity-0" id="prodInput" />
                                     </div>
                                 </div>
 
