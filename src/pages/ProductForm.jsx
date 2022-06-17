@@ -1,6 +1,6 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
-import {FiPlus} from 'react-icons/fi'
+import {FiPlus, FiArrowLeft} from 'react-icons/fi'
 
 
 export default function ProductForm() {
@@ -8,9 +8,15 @@ export default function ProductForm() {
     <section className='h-full'>
         <div className='flex xl:justify-center lg:justify-center justify-center items-center flex-wrap'>
             <div className="w-full px-4 items-center my-8">
-                <div className="lg:px-64 md:mx-12">
+                <div className="lg:px-72 md:mx-12">
                     <form>
-                        <p className="mb-3 text-sm">Nama Produk</p>
+                        <p className="mb-3 text-sm">
+                            <Link to="/">
+                                <button>
+                                    <FiArrowLeft className='invisible lg:visible mx-[-64px] mb-[-8px] text-2xl' />
+                                </button>
+                            </Link>
+                        Nama Produk</p>
                             <div className="mb-5">
                                 <input
                                     type="text" className="form-control rounded-[16px] w-full px-4 py-2 font-normal text-sm text-neutral-3 bg-white 
@@ -30,9 +36,11 @@ export default function ProductForm() {
                                     className='form-select w-full px-4 py-2 font-normal text-sm text-neutral-3 bg-white 
                                     border border-neutral-2 rounded-[16px] transition ease-in-out focus:text-gray-700 focus:outline-none'>
                                         <option selected>Pilih kategori</option>
-                                        <option value="1">One</option>
-                                        <option value="2">Two</option>
-                                        <option value="3">Three</option>
+                                        <option value="1">Hobi</option>
+                                        <option value="2">Kendaraan</option>
+                                        <option value="3">Baju</option>
+                                        <option value="4">Elektronik</option>
+                                        <option value="4">Kesehatan</option>
                                 </select>
                             </div>
                         <p className="mb-3 text-sm">Deskripsi</p>
@@ -40,7 +48,7 @@ export default function ProductForm() {
                                 <textarea
                                     type="text" className="form-control w-full px-4 py-2 font-normal text-sm text-neutral-3 bg-white 
                                     border border-neutral-2 rounded-[16px] transition ease-in-out m-0 focus:text-gray-700 focus:outline-none"
-                                    id="priceInput" rows="3" placeholder="Contoh: Jalan Ikan Hiu No 33" />
+                                    id="descInput" rows="3" placeholder="Contoh: Jalan Ikan Hiu No 33" />
                             </div>
                         <p className="mb-3 text-sm">Foto Produk</p>
                             <div className='mb-5'>
@@ -50,7 +58,7 @@ export default function ProductForm() {
                                                 <FiPlus className='text-neutral-3 text-lg' />
                                             </div>
                                         </div>
-                                    <input type="file" class="h-full w-full opacity-0" name="" />
+                                    <input type="file" class="h-full w-full opacity-0" id="prodInput" />
                                 </div>
                             </div>
 
