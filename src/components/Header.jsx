@@ -6,7 +6,7 @@ export default function Header(props) {
   const navigate = useNavigate();
   return (
     <nav
-      className="sticky top-0  w-full flex flex-wrap items-center justify-between py-4 bg-white text-black 
+      className="sticky top-0  w-full flex flex-wrap items-center justify-between py-4 bg-white text-black
     shadow-none lg:shadow-md navbar navbar-expand-lg navbar-light px-5"
     >
       <div className="container-fluid w-full flex flex-wrap items-center justify-between lg:justify-around">

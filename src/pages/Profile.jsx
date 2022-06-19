@@ -9,9 +9,9 @@ export default function ProductForm(props) {
   return (
     <section className="h-full">
       <Header title="Lengkapi Info Akun" />
-      <div className=" flex text-purple-4 items-center justify-center text-2xl  mx-auto h-24 bg-gray-400 w-24 rounded-xl ">
+      <button className=" flex text-purple-4 items-center justify-center text-2xl  mx-auto h-24 bg-gray-400 w-24 rounded-xl ">
         <FiCamera />
-      </div>
+      </button>
 
       <div className="flex xl:justify-center lg:justify-center justify-center items-center flex-wrap">
         <div className="w-full px-4 items-center my-8">
