@@ -105,7 +105,7 @@ export default function Home() {
 	return (
 		<div className="w-screen min-h-screen">
 			<Sidebar
-				show={isMobileSidebarOpen}
+				show={false}
 				close={() => setMobileSidebarOpen(false)}
 			/>
 			{/* Hero */}
