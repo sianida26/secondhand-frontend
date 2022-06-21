@@ -16,6 +16,7 @@ export default function Register() {
   const [ email, setEmail ] = useState("")
   const [ password, setPassword ] = useState("")
   const [ isLoading, setLoading ] = useState(false)
+  const [ errorMsg, setErrorMsg ] = useState("")
 
   const handleRegister = async () => {
     setLoading(true)
@@ -29,7 +30,8 @@ export default function Register() {
       dispatch(setToken(token))
       navigate('/')
     } catch (e) {
-      // Handle error
+      if (e.response) setErrorMsg(e.response.data.message);
+      else setErrorMsg("Terjadi Kesalahan. Silakan periksa koneksi anda");
     } finally {
       setLoading(false)
     }
@@ -43,14 +45,21 @@ export default function Register() {
       </div>
       <div className="lg:w-6/12 w-full px-4 md:px-0 items-center my-8">
         <div className="lg:px-12 md:mx-12">
-           <Link to="/">
-              <button>
-                <FiArrowLeft className='lg:invisible item-left text-black text-xl'/>
-              </button>
-            </Link>
-              <div className="text-left">
-                <h4 className="text-2xl font-bold mb-4 pt-6">Daftar</h4>
-              </div>
+
+          <Link to="/">
+            <button>
+              <FiArrowLeft className='lg:invisible item-left text-black text-xl'/>
+            </button>
+          </Link>
+
+          <div className={ `bg-red-100 border border-red-400 text-red-700 px-4 py-3 mt-3 rounded relative ${errorMsg? "block":"hidden"}`}>
+            <span className="block sm:inline">{errorMsg}</span>
+          </div>
+
+          <div className="text-left">
+            <h4 className="text-2xl font-bold mb-4 pt-6">Daftar</h4>
+          </div>
+
           <form>
             <p className="mb-3 text-sm">Nama</p>
             <div className="mb-5">
