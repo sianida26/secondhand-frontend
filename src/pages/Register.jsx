@@ -1,11 +1,40 @@
-import React from 'react'
-import pic from '../assets/register.png'
-import { Link } from 'react-router-dom'
-import {FiArrowLeft} from 'react-icons/fi'
+import React, { useState } from 'react'
+import axios from 'axios'
 import {Input} from 'antd'
-
+import pic from '../assets/register.png'
+import { useDispatch } from 'react-redux'
+import { Link, useNavigate } from 'react-router-dom'
+import { setToken } from '../redux/slices/authSlice'
+import {FiArrowLeft} from 'react-icons/fi'
 
 export default function Register() {
+
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+
+  const [ name, setName ] = useState("")
+  const [ email, setEmail ] = useState("")
+  const [ password, setPassword ] = useState("")
+  const [ isLoading, setLoading ] = useState(false)
+
+  const handleRegister = async () => {
+    setLoading(true)
+    try {
+      const response = await axios({
+        url: 'https://secondhand-backend-kita.herokuapp.com/users/register',
+        method: 'POST',
+        data: { name, email, password }
+      })
+      const token = response.data.token;
+      dispatch(setToken(token))
+      navigate('/')
+    } catch (e) {
+      // Handle error
+    } finally {
+      setLoading(false)
+    }
+  }
+
   return (
     <section className="h-full">
     <div className="flex md:flex-none xl:justify-center lg:justify-center justify-center items-center flex-wrap h-full">
@@ -25,13 +54,16 @@ export default function Register() {
           <form>
             <p className="mb-3 text-sm">Nama</p>
             <div className="mb-5">
-              <Input type="text" className="form-control rounded-[16px] w-full px-4 py-2 font-normal text-sm text-neutral-3 bg-white 
-               border-neutral-2  transition ease-in-out m-0 focus:text-gray-700 focus:outline-none"
+              <Input 
+                onChange={(e) => setName(e.target.value)}
+                type="text" className="form-control rounded-[16px] w-full px-4 py-2 font-normal text-sm text-neutral-3 bg-white 
+              border-neutral-2  transition ease-in-out m-0 focus:text-gray-700 focus:outline-none"
                 id="nameInput" placeholder="Nama Lengkap" />
             </div>
             <p className="mb-3 text-sm">Email</p>
             <div className="mb-5">
               <Input
+                onChange={(e) => setEmail(e.target.value)}
                 type="email" className="form-control w-full px-4 py-2 font-normal text-sm text-neutral-3 bg-white 
                 border-neutral-2 rounded-[16px] transition ease-in-out m-0 focus:text-gray-700 focus:outline-none"
                 id="emailInput" placeholder="Contoh: johndee@gmail.com" />
@@ -39,13 +71,16 @@ export default function Register() {
             <p className="mb-3 text-sm">Password</p>
             <div className="mb-5">
               <Input.Password
+                onChange={(e) => setPassword(e.target.value)}
                 type="password" className="form-control px-2 py-2 font-normal text-base text-neutral-3 bg-white 
                 border-neutral-2 rounded-[16px] transition ease-in-out m-0 focus:text-gray-700 focus:outline-none"
                 id="passwordInput" placeholder="Masukkan password" />
             </div>
 
             <div className="text-center pt-2 mb-6">
-              <button className="inline-block bg-purple-4 hover:bg-purple-3 px-6 py-3 text-white font-normal text-sm leading-tight rounded-[16px] 
+              <button 
+                disabled={ isLoading } onClick={ handleRegister }
+                className="inline-block bg-purple-4 hover:bg-purple-3 px-6 py-3 text-white font-normal text-sm leading-tight rounded-[16px] 
                 focus:shadow-lg focus:outline-none active:shadow-lg transition duration-200 ease-in-out w-full mb-4"
                 type="button" data-mdb-ripple="true" data-mdb-ripple-color="dark">
                 Daftar

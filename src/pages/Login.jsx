@@ -30,7 +30,7 @@ export default function Login() {
       dispatch(setToken(token))
       navigate('/')
     } catch (e) {
-      setError(false)
+      
       
       
     } finally {
@@ -71,7 +71,8 @@ export default function Login() {
                 border-neutral-2 rounded-[16px] transition ease-in-out m-0 focus:text-gray-700 focus:outline-none"
                 id="passwordInput" placeholder="Masukkan password" />
             </div>
-            <p className='text-sm text-red-600'>Your email or password is invalid</p>
+            {//<p className='text-sm text-red-600'>Your email or password is invalid</p>
+            }
 
             <div className="text-center pt-2 mb-6">
               <button 
