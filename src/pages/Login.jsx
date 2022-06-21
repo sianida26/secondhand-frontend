@@ -15,7 +15,7 @@ export default function Login() {
   const [ email, setEmail ] = useState("")
   const [ password, setPassword ] = useState("")
   const [ isLoading, setLoading ] = useState(false)
-  
+  const [ errorMsg, setErrorMsg ] = useState("")
   
 
   const handleLogin = async () => {
@@ -30,9 +30,8 @@ export default function Login() {
       dispatch(setToken(token))
       navigate('/')
     } catch (e) {
-      
-      
-      
+      if (e.response) setErrorMsg(e.response.data.message);
+      else setErrorMsg("Terjadi Kesalahan. Silakan periksa koneksi anda");
     } finally {
       setLoading(false)
     }
@@ -45,6 +44,7 @@ export default function Login() {
         <img src={pic} className="w-full m-0" alt="image register" />
       </div>
       <div className="lg:w-6/12 w-full px-4 md:px-0 items-center my-8">
+        <div className="w-full py-2 font-bold bg-allert-danger text-white text-center">{ errorMsg }</div>
         <div className="lg:px-12 md:mx-12">
            <Link to="/">
               <button>
