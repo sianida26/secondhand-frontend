@@ -45,6 +45,7 @@ export default function Login() {
       </div>
 
       <div className="lg:w-6/12 w-full px-4 md:px-0 items-center my-8">
+        <div className="w-full py-2 font-bold bg-allert-danger text-white text-center">{ errorMsg }</div>
         <div className="lg:px-12 md:mx-12">
         
           <Link to="/">
