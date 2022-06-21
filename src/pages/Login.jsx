@@ -12,28 +12,27 @@ export default function Login() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const [ username, setUsername ] = useState("")
+  const [ email, setEmail ] = useState("")
   const [ password, setPassword ] = useState("")
   const [ isLoading, setLoading ] = useState(false)
-
-  const purakPurakLogin = () => {
-    const token = "purakPurakToken";
-    dispatch(setToken(token));
-  }
+  
+  
 
   const handleLogin = async () => {
     setLoading(true)
     try {
-      const response = axios({
-        url: 'https://secondhand-backend-kita/users/login',
+      const response = await axios({
+        url: 'https://secondhand-backend-kita.herokuapp.com/users/login',
         method: 'POST',
-        data: { username, password },
+        data: { email, password }
       })
       const token = response.data.token;
       dispatch(setToken(token))
-      navigate('/home')
+      navigate('/')
     } catch (e) {
-      // Handle error
+      setError(false)
+      
+      
     } finally {
       setLoading(false)
     }
@@ -59,7 +58,7 @@ export default function Login() {
             <p className="mb-3 text-sm">Email</p>
             <div className="mb-5">
               <Input
-                onChange={(e) => setUsername(e.target.value)}
+                onChange={(e) => setEmail(e.target.value)}
                 type="email" className="form-control w-full px-4 py-2 font-normal text-sm text-neutral-3 bg-white 
                 border-neutral-2 rounded-[16px] transition ease-in-out m-0 focus:text-gray-700 focus:outline-none"
                 id="emailInput" placeholder="Contoh: johndee@gmail.com" />
@@ -67,14 +66,17 @@ export default function Login() {
             <p className="mb-3 text-sm">Password</p>
             <div className="mb-5">
               <Input.Password
-               onChange={(e) => setPassword(e.target.value)}
+                onChange={(e) => setPassword(e.target.value)}
                 type="password" className="form-control px-2 py-2 font-normal text-base text-neutral-3 bg-white 
                 border-neutral-2 rounded-[16px] transition ease-in-out m-0 focus:text-gray-700 focus:outline-none"
                 id="passwordInput" placeholder="Masukkan password" />
             </div>
+            <p className='text-sm text-red-600'>Your email or password is invalid</p>
 
             <div className="text-center pt-2 mb-6">
-              <button disabled={ isLoading } onClick={ handleLogin } className="inline-block bg-purple-4 hover:bg-purple-3 px-6 py-3 text-white font-normal text-sm leading-tight rounded-[16px] 
+              <button 
+                disabled={ isLoading } onClick={ handleLogin } 
+                className="inline-block bg-purple-4 hover:bg-purple-3 px-6 py-3 text-white font-normal text-sm leading-tight rounded-[16px] 
                 focus:shadow-lg focus:outline-none active:shadow-lg transition duration-200 ease-in-out w-full mb-4"
                 type="button" data-mdb-ripple="true" data-mdb-ripple-color="dark">
                 Login
