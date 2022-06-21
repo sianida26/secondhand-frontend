@@ -1,22 +1,60 @@
-import React from "react";
-import Header from "../components/Header";
+import React, { useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { FiCamera, FiArrowLeft } from "react-icons/fi";
+import axios from "axios";
+
+import Header from "../components/Header";
 
 export default function ProductForm(props) {
   const navigate = useNavigate();
 
+  const inputButtonRef = useRef(null);
+
+  const [ isLoading, setLoading ] = useState(false);
+  const [ previewURI, setPreviewURI ] = useState("");
+
+  const handleSelectFile = async (e) => {
+    if (!e.target.files[0]) return; //Jika tidak ngupload file, do nothing
+    const file = e.target.files[0];
+    setPreviewURI(URL.createObjectURL(file));
+
+    const data = new FormData();
+    data.append("file", file);
+
+    try {
+      setLoading(true); //Mendisable input dan tombol submit
+      const response = await axios({
+        method: 'POST',
+        url: 'http://link-ke-server.com/blablabla', //TODO: Ganti URL nya
+        data: data,
+      });
+
+      // Handle success (redirect ke mana gitu, home misal)
+    } catch (e) {
+      // Handle error
+    } finally {
+      setLoading(false);
+    }
+  } 
+
   return (
     <section className="h-full">
       <Header title="Lengkapi Info Akun" />
-      <div className="mb-5">
-        <div className=" flex text-purple-4 items-center justify-center text-2xl  mx-auto h-24 bg-gray-400 w-24 rounded-xl ">
-          <div className="absolute">
+      <div className="my-6">
+        <div className={`flex text-purple-4 items-center justify-center text-2xl  mx-auto h-24 ${ !previewURI && "bg-gray-400" } w-24 rounded-xl relative group`}>
+          <div onClick={ () => inputButtonRef.current?.click() } className={`absolute ${ previewURI && 'hidden group-hover:flex w-full h-full bg-black bg-opacity-50 justify-center items-center rounded-xl'}`}>
             <div className="flex flex-col items-center">
               <FiCamera className="text-neutral-3 text-lg" />
             </div>
           </div>
-          <input type="file" className="h-full w-full opacity-0" id="prodInput" />
+          <input ref={ inputButtonRef } disabled={ isLoading } type="file" accept="images/*" className="h-full w-full opacity-0" id="prodInput" onChange={ handleSelectFile } />
+
+          {/* Preview gambar */}
+          {
+            previewURI && (
+              <img src={ previewURI } className="h-full w-full object-cover rounded-xl" alt="Foto Profil" />
+            )
+          }
         </div>
       </div>
 
@@ -25,7 +63,7 @@ export default function ProductForm(props) {
           <div className="lg:px-72 md:mx-12">
             <form>
               <p className="mb-3 text-sm">
-                <button onClick={() => navigate(-1)}>
+                <button onClick={() => navigate(-1)} disabled={ isLoading }>
                   <FiArrowLeft className="invisible lg:visible mx-[-64px] mb-[-8px] text-2xl" />
                 </button>
                 Nama*
@@ -37,12 +75,14 @@ export default function ProductForm(props) {
                                         border border-neutral-2  transition ease-in-out m-0 focus:text-gray-700 focus:outline-none"
                   id="nameInput"
                   placeholder="Nama Lengkap"
+                  disabled={ isLoading }
                 />
               </div>
 
               <p className="mb-3 text-sm">Kota*</p>
               <div className="mb-5">
                 <select
+                  disabled={ isLoading }
                   className="form-select w-full px-4 py-2 font-normal text-sm text-neutral-3 bg-white 
                                         border border-neutral-2 rounded-[16px] transition ease-in-out focus:text-gray-700 focus:outline-none"
                 >
@@ -62,6 +102,7 @@ export default function ProductForm(props) {
               <p className="mb-3 text-sm">Alamat*</p>
               <div className="mb-5">
                 <textarea
+                  disabled={ isLoading }
                   type="text"
                   className="form-control w-full px-4 py-2 font-normal text-sm text-neutral-3 bg-white 
                                         border border-neutral-2 rounded-[16px] transition ease-in-out m-0 focus:text-gray-700 focus:outline-none"
@@ -83,6 +124,7 @@ export default function ProductForm(props) {
 
               <div className="text-center pt-2 mb-6">
                 <button
+                disabled={ isLoading }
                   className="inline-block bg-purple-4 hover:bg-purple-3 px-6 py-3 text-white font-normal text-sm leading-tight rounded-[16px] 
                 focus:shadow-lg focus:outline-none active:shadow-lg transition duration-200 ease-in-out w-full mb-4"
                   type="button"
