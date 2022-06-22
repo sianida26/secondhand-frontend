@@ -48,11 +48,9 @@ export default function Login() {
       
         <div className="lg:px-12 md:mx-12">
         
-          <Link to="/">
-            <button>
-              <FiArrowLeft className='lg:invisible item-left text-black text-xl'/>
-            </button>
-          </Link>
+          <button button onClick={() => navigate(-1)}>
+            <FiArrowLeft className='lg:invisible item-left text-black text-xl'/>
+          </button>
 
           <div className={ `flex items-center bg-red-600 text-white px-4 py-2 mt-3 rounded relative ${errorMsg? "block":"hidden"}`}>
             <FiAlertCircle className='text-base mr-2'/>
