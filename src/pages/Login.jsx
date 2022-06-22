@@ -64,19 +64,24 @@ export default function Login() {
           <form>
             <p className="mb-3 text-sm">Email</p>
             <div className="mb-5">
+
               <Input
                 onChange={(e) => setEmail(e.target.value)}
                 type="email" className="form-control w-full px-4 py-2 font-normal text-sm text-neutral-3 bg-white 
                 border-neutral-2 rounded-[16px] transition ease-in-out m-0 focus:text-gray-700 focus:outline-none"
                 id="emailInput" placeholder="Contoh: johndee@gmail.com" />
+
             </div>
+
             <p className="mb-3 text-sm">Password</p>
             <div className="mb-5">
+
               <Input.Password
                 onChange={(e) => setPassword(e.target.value)}
                 type="password" className="form-control px-2 py-2 font-normal text-base text-neutral-3 bg-white 
                 border-neutral-2 rounded-[16px] transition ease-in-out m-0 focus:text-gray-700 focus:outline-none"
                 id="passwordInput" placeholder="Masukkan password" />
+                
             </div>
 
             <div className="text-center pt-2 mb-6">

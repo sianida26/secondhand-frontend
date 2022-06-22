@@ -74,7 +74,7 @@ export default function Register() {
                 onChange={(e) => setName(e.target.value)}
                 type="text" className={`form-control rounded-[16px] w-full px-4 py-2 font-normal text-sm text-neutral-3 bg-white 
                 transition ease-in-out m-0 focus:text-gray-700 focus:outline-none 
-                ${errorMsgName? "border-red-600":"border-neutral-2"}`}
+                ${errorMsgName? "border-red-600 hover:border-red-600":"border-neutral-2"}`}
                 id="nameInput" placeholder="Nama Lengkap" />
 
               <div className={`flex items-center text-red-600 text-sm mt-2 ${errorMsgName? "block":"hidden"}`}>
@@ -90,7 +90,7 @@ export default function Register() {
                 onChange={(e) => setEmail(e.target.value)}
                 type="email" className={`form-control w-full px-4 py-2 font-normal text-sm text-neutral-3 bg-white 
                 border-neutral-2 rounded-[16px] transition ease-in-out m-0 focus:text-gray-700 focus:outline-none
-                ${errorMsgEmail? "border-red-600":"border-neutral-2"}`}
+                ${errorMsgEmail? "border-red-600 hover:border-red-600":"border-neutral-2"}`}
                 id="emailInput" placeholder="Contoh: johndee@gmail.com" />
 
               <div className={`flex items-center text-red-600 text-sm mt-2 ${errorMsgEmail? "block":"hidden"}`}>
@@ -106,7 +106,7 @@ export default function Register() {
                 onChange={(e) => setPassword(e.target.value)}
                 type="password" className={`form-control px-2 py-2 font-normal text-base text-neutral-3 bg-white 
                 border-neutral-2 rounded-[16px] transition ease-in-out m-0 focus:text-gray-700 focus:outline-none 
-                ${errorMsgPwd? "border-red-600":"border-neutral-2"}`}
+                ${errorMsgPwd? "border-red-600 hover:border-red-600":"border-neutral-2"}`}
                 id="passwordInput" placeholder="Masukkan password" />
 
               <div className={`flex items-center text-red-600 text-sm mt-2 ${errorMsgPwd? "block":"hidden"}`}>
