@@ -11,32 +11,34 @@ export default function ProductForm(props) {
     const inputButtonRef = useRef(null)
 
     const [ isLoading, setLoading ] = useState(false);
-    const [ previewURI, setPreviewURI ] = useState("");
+    const [ previewURI, setPreviewURI ] = useState([]);
     const [ errorMsg, setErrorMsg ] = useState("")
+
   
     const handleSelectFile = async (e) => {
-      if (!e.target.files[0]) return; 
-      const file = e.target.files[0];
-      setPreviewURI(URL.createObjectURL(file));
+      if (!(e.target.files?.length>0)) return; 
+      const files = e.target.files;
+      setPreviewURI(files.map(file => URL.createObjectURL(file)))
+    //   setPreviewURI(URL.createObjectURL(file));
   
-      const data = new FormData();
-      data.append("file", file);
+    //   const data = new FormData();
+    //   data.append("file", files);
   
-      try {
-        setLoading(true); 
-        const response = await axios({
-          method: 'POST',
-          url: 'http:', 
-          data:  data,
-        });
-        navigate('/')
+    //   try {
+    //     setLoading(true); 
+    //     const response = await axios({
+    //       method: 'POST',
+    //       url: 'http:', 
+    //       data:  data,
+    //     });
+    //     navigate('/')
         
-      } catch (e) {
-        if(e.response) setErrorMsg(e.response.message);
-        else setErrorMsg("Terjadi Kesalahan. Silakan periksa koneksi anda")
-      } finally {
-        setLoading(false);
-      }
+    //   } catch (e) {
+    //     if(e.response) setErrorMsg(e.response.message);
+    //     else setErrorMsg("Terjadi Kesalahan. Silakan periksa koneksi anda")
+    //   } finally {
+    //     setLoading(false);
+    //   }
     } 
 
     return (
