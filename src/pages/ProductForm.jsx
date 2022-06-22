@@ -11,15 +11,22 @@ export default function ProductForm(props) {
     const inputButtonRef = useRef(null)
 
     const [ isLoading, setLoading ] = useState(false);
-    const [ previewURI, setPreviewURI ] = useState([]);
-    const [ errorMsg, setErrorMsg ] = useState("")
+    const [ previewURIs, setPreviewURIs ] = useState([]);
+    const [ files, setFiles ] = useState([]);
+    const [ errorMsg, setErrorMsg ] = useState("");
 
   
     const handleSelectFile = async (e) => {
       if (!(e.target.files?.length>0)) return; 
-      const files = e.target.files;
-      setPreviewURI(files.map(file => URL.createObjectURL(file)))
-    //   setPreviewURI(URL.createObjectURL(file));
+      const iFiles = Array.from(e.target.files);
+
+      // validasi ukuran files
+    const isAnyOversize = !!iFiles.find(file => file.size>2e+6)
+    if (isAnyOversize) {
+        // handle oversize
+    }
+    setPreviewURIs([...previewURIs, ...iFiles.map(file => URL.createObjectURL(file))].slice(0,4))
+    setFiles([...files,...iFiles].slice(0,4))
   
     //   const data = new FormData();
     //   data.append("file", files);
@@ -95,22 +102,21 @@ export default function ProductForm(props) {
                                     />
                                 </div>
                             <p className="mb-3 text-sm">Foto Produk</p>
-                                <div className='mb-5'>
-                                    <div className={`w-[96px] h-[96px] rounded-[16px] border-dashed border-2 border-neutral-2 ${ !previewURI && "bg-white" } flex justify-center items-center`}>
-                                            <div onClick={ () => inputButtonRef.current?.click() } className={`absolute ${ previewURI && 'hidden group-hover:flex w-full h-full bg-black bg-opacity-50 justify-center items-center rounded-xl'}`}>
-                                                <div className="flex flex-col items-center">
-                                                    <FiPlus className='text-neutral-3 text-lg' />
-                                                </div>
+                                <div className='grid grid-cols-2 lg:grid-cols-4 mb-5'>
+                                    {
+                                        previewURIs.map(uri => (
+                                            <img src={uri} className="w-[96px] h-[96px] rounded-[16px] object-cover" alt="foto produk" />
+                                        ))
+
+                                    }
+                                    {previewURIs.length<4 && <div className={`w-[96px] h-[96px] rounded-[16px] border-dashed border-2 border-neutral-2 ${ !previewURIs && "bg-white" } flex justify-center items-center`}>
+                                            <div onClick={ () => inputButtonRef.current?.click() } className="w-full h-full flex flex-col justify-center items-center" >
+                                                {/* <div className="flex flex-col justify-center w-full items-center"> */}
+                                                    <FiPlus className='ms-auto text-neutral-3 text-lg' />
+                                                {/* </div> */}
                                             </div>
                                         <input ref={ inputButtonRef } disabled={ isLoading } type="file" accept="images/*" className="h-full w-full opacity-0" id="prodInput" onChange={ handleSelectFile } />
-
-                                        {/* Preview gambar */}
-                                        {
-                                            previewURI && (
-                                            <img src={ previewURI } className="h-full w-full object-cover rounded-xl" alt="Product photo" />
-                                            )
-                                        }
-                                    </div>
+                                    </div>}
                                 </div>
 
                                 
