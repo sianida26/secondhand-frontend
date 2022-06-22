@@ -1,11 +1,43 @@
-import React from 'react'
+import React, { useRef, useState } from 'react'
 import Header from '../components/Header'
 import {useNavigate} from 'react-router-dom'
-import {FiPlus, FiArrowLeft} from 'react-icons/fi'
+import {FiPlus, FiArrowLeft, FiAlertCircle} from 'react-icons/fi'
+import axios from 'axios'
 
 
 export default function ProductForm(props) {
     const navigate = useNavigate()
+
+    const inputButtonRef = useRef(null)
+
+    const [ isLoading, setLoading ] = useState(false);
+    const [ previewURI, setPreviewURI ] = useState("");
+    const [ errorMsg, setErrorMsg ] = useState("")
+  
+    const handleSelectFile = async (e) => {
+      if (!e.target.files[0]) return; 
+      const file = e.target.files[0];
+      setPreviewURI(URL.createObjectURL(file));
+  
+      const data = new FormData();
+      data.append("file", file);
+  
+      try {
+        setLoading(true); 
+        const response = await axios({
+          method: 'POST',
+          url: 'http:', 
+          data:  data,
+        });
+        navigate('/')
+        
+      } catch (e) {
+        if(e.response) setErrorMsg(e.response.message);
+        else setErrorMsg("Terjadi Kesalahan. Silakan periksa koneksi anda")
+      } finally {
+        setLoading(false);
+      }
+    } 
 
     return (
         <section className='h-full'>
@@ -14,6 +46,10 @@ export default function ProductForm(props) {
             <div className='flex xl:justify-center lg:justify-center justify-center items-center flex-wrap'>
                 <div className="w-full px-4 items-center my-8">
                     <div className="lg:px-72 md:mx-12">
+                        <div className={ `flex items-center bg-red-600 text-white px-4 py-2 mt-3 rounded relative ${errorMsg? "block":"hidden"}`}>
+                            <FiAlertCircle className='text-base mr-2'/>
+                            <p>{errorMsg}</p>
+                        </div>
                         <form>
                             <p className="mb-3 text-sm">
                                     <button onClick={() => navigate(-1)}>
@@ -58,15 +94,24 @@ export default function ProductForm(props) {
                                 </div>
                             <p className="mb-3 text-sm">Foto Produk</p>
                                 <div className='mb-5'>
-                                    <div className="w-[96px] h-[96px] rounded-[16px] border-dashed border-2 border-neutral-2 bg-white flex justify-center items-center">
-                                            <div className="absolute">
+                                    <div className={`w-[96px] h-[96px] rounded-[16px] border-dashed border-2 border-neutral-2 ${ !previewURI && "bg-white" } flex justify-center items-center`}>
+                                            <div onClick={ () => inputButtonRef.current?.click() } className={`absolute ${ previewURI && 'hidden group-hover:flex w-full h-full bg-black bg-opacity-50 justify-center items-center rounded-xl'}`}>
                                                 <div className="flex flex-col items-center">
                                                     <FiPlus className='text-neutral-3 text-lg' />
                                                 </div>
                                             </div>
-                                        <input type="file" className="h-full w-full opacity-0" id="prodInput" />
+                                        <input ref={ inputButtonRef } disabled={ isLoading } type="file" accept="images/*" className="h-full w-full opacity-0" id="prodInput" onChange={ handleSelectFile } />
+
+                                        {/* Preview gambar */}
+                                        {
+                                            previewURI && (
+                                            <img src={ previewURI } className="h-full w-full object-cover rounded-xl" alt="Product photo" />
+                                            )
+                                        }
                                     </div>
                                 </div>
+
+                                
 
                             <div className="grid grid-cols-2 text-center pt-2">
                                 <button className="mr-2 inline-block bg-white border border-purple-4 py-3 text-black font-normal text-sm leading-tight rounded-[16px] 
