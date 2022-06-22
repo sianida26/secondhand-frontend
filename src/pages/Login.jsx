@@ -3,7 +3,7 @@ import axios from 'axios'
 import {Input} from "antd"
 import { useDispatch } from 'react-redux'
 import { Link, useNavigate } from 'react-router-dom'
-import {FiArrowLeft} from 'react-icons/fi'
+import { FiArrowLeft,FiAlertCircle } from 'react-icons/fi'
 import pic from '../assets/register.png'
 import { setToken } from '../redux/slices/authSlice'
 
@@ -54,8 +54,9 @@ export default function Login() {
             </button>
           </Link>
 
-          <div className={ `bg-red-100 border border-red-400 text-red-700 px-4 py-3 mt-3 rounded relative ${errorMsg? "block":"hidden"}`}>
-            <span className="block sm:inline">{errorMsg}</span>
+          <div className={ `flex items-center bg-red-600 text-white px-4 py-2 mt-3 rounded relative ${errorMsg? "block":"hidden"}`}>
+            <FiAlertCircle className='text-base mr-2'/>
+            <p>{errorMsg}</p>
           </div>
 
           <div className="text-left">
