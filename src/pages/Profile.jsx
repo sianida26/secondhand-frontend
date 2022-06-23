@@ -1,6 +1,6 @@
 import React, { useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { FiCamera, FiArrowLeft } from "react-icons/fi";
+import { FiCamera, FiArrowLeft, FiAlertCircle } from "react-icons/fi";
 import axios from "axios";
 
 import Header from "../components/Header";
@@ -12,7 +12,10 @@ export default function ProductForm(props) {
   const [isLoading, setLoading] = useState(false);
   const [previewURI, setPreviewURI] = useState("");
   const [name, setName] = useState("");
+  const [kota, setKota] = useState("");
+
   const [errorMsgName, setErrorMsgName] = useState("");
+  const [errorMsgKota, setErrorMsgKota] = useState("");
 
   const handleSelectFile = async (e) => {
     if (!e.target.files[0]) return; //Jika tidak ngupload file, do nothing
@@ -26,7 +29,7 @@ export default function ProductForm(props) {
       setLoading(true); //Mendisable input dan tombol submit
       const response = await axios({
         method: "POST",
-        url: "http://link-ke-server.com/blablabla", //TODO: Ganti URL nya
+        url: "https://secondhand-backend-kita.herokuapp.com/users/lengkapi-profil", //TODO: Ganti URL nya
         data: data,
       });
 
@@ -34,6 +37,7 @@ export default function ProductForm(props) {
       navigate(-1, { replace: true });
     } catch (e) {
       if (e.response?.data?.errors?.name) setErrorMsgName(e.response?.data?.errors?.name);
+      if (e.response?.data?.errors?.kota) setErrorMsgKota(e.response?.data?.errors?.email);
 
       // Handle error
     } finally {
@@ -70,13 +74,19 @@ export default function ProductForm(props) {
               </p>
               <div className="mb-5">
                 <input
+                  onChange={(e) => setName(e.target.value)}
                   type="text"
-                  className="form-control rounded-[16px] w-full px-4 py-2 font-normal text-sm text-neutral-3 bg-white 
-                                        border border-neutral-2  transition ease-in-out m-0 focus:text-gray-700 focus:outline-none"
+                  className={`form-control rounded-[16px] w-full px-4 py-2 font-normal text-sm text-neutral-3 bg-white 
+                  transition ease-in-out m-0 focus:text-gray-700 focus:outline-none 
+                  ${errorMsgName ? "border-red-600 hover:border-red-600" : "border-neutral-2"}`}
                   id="nameInput"
                   placeholder="Nama Lengkap"
                   disabled={isLoading}
                 />
+                <div className={`flex items-center text-red-600 text-sm mt-2 ${errorMsgName ? "block" : "hidden"}`}>
+                  <FiAlertCircle className="mr-2" />
+                  <p>{errorMsgName}</p>
+                </div>
               </div>
 
               <p className="mb-3 text-sm">Kota*</p>
