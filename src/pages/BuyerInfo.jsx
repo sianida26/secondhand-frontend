@@ -17,18 +17,16 @@ export default function BuyerInfo(props) {
             <div className="lg:px-72 md:mx-12">
 
                 <button onClick={() => navigate(-1)}>
-                    <FiArrowLeft className='invisible lg:visible mx-[-64px] text-2xl' />
+                    <FiArrowLeft className='invisible lg:visible mx-[-64px] mb-[-22px] text-2xl' />
                 </button>
             
-                <div className="flex flex-row items-center bg-white rounded-[12px] border shadow-md mt-[-22px]">
+                <div className="flex flex-row items-center bg-white rounded-[12px] border shadow-md">
                     <div className="w-[48px] h-[48px] rounded-[12px] border border-neutral-2 m-4">
                         <div className="flex flex-col items-center">
-                            <div className='absolute'>
-                                <img src={buyer} />
-                            </div>
+                            <img src={buyer} />
                         </div>
                     </div>
-                    <div className="flex flex-col justify-between  leading-normal">
+                    <div className="flex flex-col justify-between leading-normal">
                         <p className="mb-1 text-black text-sm font-normal">Nama Pembeli</p>
                         <p className="font-normal text-[10px] text-neutral-3 ">Kota</p>
                     </div>

@@ -4,12 +4,13 @@ import App from "./App";
 import reportWebVitals from "./reportWebVitals";
 import { BrowserRouter as Router } from "react-router-dom";
 import { store } from "./redux/store";
-import { Provider } from "react-redux";
+import { Provider } from "react-redux";  
 
+
+import 'react-toastify/dist/ReactToastify.css';
 import "antd/dist/antd.css";
 import "./styles/tailwind.css";
 import "./styles/custom.css";
-
 
 
 const root = ReactDOM.createRoot(document.getElementById("root"));

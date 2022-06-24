@@ -1,10 +1,11 @@
 import React, { useRef, useState } from 'react'
-import Header from '../components/Header'
-import {useNavigate} from 'react-router-dom'
-import {FiPlus, FiArrowLeft, FiAlertCircle} from 'react-icons/fi'
-import axios from 'axios'
+import { toast } from 'react-toastify';
+import { useNavigate } from 'react-router-dom'
+import { FiPlus, FiArrowLeft, FiAlertCircle } from 'react-icons/fi'
 import { useDispatch, useSelector } from 'react-redux'
 import { setPreviewProductData } from '../redux/slices/previewProductSlice'
+import Header from '../components/Header'
+import axios from 'axios'
 
 
 export default function ProductForm(props) {
@@ -93,10 +94,19 @@ export default function ProductForm(props) {
         
                 }
             })
-            // TODO: buat toast 
+            toast.error('Produk berhasil dihapus!', {
+                position: "top-center",
+                autoClose: 5000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                });
             navigate(-1,{replace: true})
         } catch (e) {
-            
+            if(e.response) setErrorMsg(e.response.message);
+            else setErrorMsg("Terjadi Kesalahan. Silakan periksa koneksi Anda")
         }
     }
 
@@ -134,6 +144,7 @@ export default function ProductForm(props) {
     return (
         <section className='h-full'>
             <Header title="Lengkapi Info Produk" />
+            
 
             <div className='flex xl:justify-center lg:justify-center justify-center items-center flex-wrap'>
                 <div className="w-full px-4 items-center my-8">
@@ -159,12 +170,15 @@ export default function ProductForm(props) {
                                         border border-neutral-2  transition ease-in-out m-0 focus:text-gray-700 focus:outline-none"
                                         id="nameInput" placeholder="Nama Produk" 
                                     />
+
                                     {/* error preview name */}
                                     <div className={`flex items-center text-red-600 text-sm mt-2 ${errorName? "block":"hidden"}`}>
                                         <FiAlertCircle className='mr-2'/>
                                         <p>{errorName}</p>
                                     </div>
+
                                 </div>
+                                
                             <p className="mb-3 text-sm">Harga Produk</p>
                                 <div className="mb-5">
                                     <input
@@ -173,12 +187,15 @@ export default function ProductForm(props) {
                                         border border-neutral-2 rounded-[16px] transition ease-in-out m-0 focus:text-gray-700 focus:outline-none"
                                         id="priceInput" placeholder="Rp 0,00" 
                                     />
+
                                     {/* error preview price */}
                                     <div className={`flex items-center text-red-600 text-sm mt-2 ${errorPrice? "block":"hidden"}`}>
                                         <FiAlertCircle className='mr-2'/>
                                         <p>{errorPrice}</p>
                                     </div>
+
                                 </div>
+
                             <p className="mb-3 text-sm">
                             Kategori</p>
                                 <div className="mb-5">
@@ -193,12 +210,15 @@ export default function ProductForm(props) {
                                             <option value="elektronik">Elektronik</option>
                                             <option value="kesehatan">Kesehatan</option>
                                     </select>
+
                                     {/* error preview category */}
                                     <div className={`flex items-center text-red-600 text-sm mt-2 ${errorCategory? "block":"hidden"}`}>
                                         <FiAlertCircle className='mr-2'/>
                                         <p>{errorCategory}</p>
-                                    </div>                                   
+                                    </div>  
+
                                 </div>
+
                             <p className="mb-3 text-sm">
                             Deskripsi</p>
                                 <div className="mb-5">
@@ -208,12 +228,15 @@ export default function ProductForm(props) {
                                         border border-neutral-2 rounded-[16px] transition ease-in-out m-0 focus:text-gray-700 focus:outline-none"
                                         id="descInput" rows="3" placeholder="Contoh: Jalan Ikan Hiu No 33" 
                                     />
+
                                     {/* error preview description */}
                                     <div className={`flex items-center text-red-600 text-sm mt-2 ${errorDesc? "block":"hidden"}`}>
                                         <FiAlertCircle className='mr-2'/>
                                         <p>{errorDesc}</p>
-                                    </div>                                
+                                    </div>  
+
                                 </div>
+
                             <p className="mb-3 text-sm">
                             Foto Produk</p>
                                 <div className='grid grid-cols-3 md:grid-cols-4 mb-5 gap-4'>
@@ -226,8 +249,9 @@ export default function ProductForm(props) {
                                     {previewURIs.length<4 && <div className={`w-[96px] h-[96px] rounded-[16px] border-dashed border-2 border-neutral-2 ${ !previewURIs && "bg-white" }`}>
                                             <div onClick={ () => inputButtonRef.current?.click() } className="flex flex-col items-center justify-center py-[38px]" >
                                                  <FiPlus className=' text-neutral-3 text-lg' />
+                                                 <input ref={ inputButtonRef } disabled={ isLoading } type="file" accept="images/*" className="h-full opacity-0" id="prodInput" onChange={ handleSelectFile } />
                                             </div>
-                                        <input ref={ inputButtonRef } disabled={ isLoading } type="file" accept="images/*" className="h-full opacity-0" id="prodInput" onChange={ handleSelectFile } />
+                                        
                                     </div>}
                                 </div>
 
