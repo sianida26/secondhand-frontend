@@ -47,7 +47,8 @@ export default function ProductForm(props) {
     }
   
     // handle untuk button terbitkan
-    const handlePublish = async () => {
+    const handlePublish = async (event) => {
+        event.preventDefault();
         if(!validateInput()) return
         const data = new FormData();
         data.append("file", files);
@@ -167,7 +168,7 @@ export default function ProductForm(props) {
                             <p>{errorMsg}</p>
                         </div>
                         
-                        <form>
+                        <form onSubmit={ handlePublish }>
                             <p className="mb-3 text-sm">
                                     <button onClick={() => navigate(-1)}>
                                         <FiArrowLeft className='invisible lg:visible mx-[-64px] mb-[-8px] text-2xl' />
@@ -257,13 +258,12 @@ export default function ProductForm(props) {
                                         ))
 
                                     }
-                                    {previewURIs.length<4 && <div className={`w-[96px] h-[96px] rounded-[16px] border-dashed border-2 border-neutral-2 ${ !previewURIs && "bg-white" }`}>
-                                            <div onClick={ () => inputButtonRef.current?.click() } className="flex flex-col items-center justify-center py-[38px]" >
-                                                 <FiPlus className=' text-neutral-3 text-lg' />
-                                                 <input ref={ inputButtonRef } disabled={ isLoading } type="file" accept="images/*" className="h-full opacity-0" id="prodInput" onChange={ handleSelectFile } />
-                                            </div>
-                                        
-                                    </div>}
+                                        <div onClick={() => inputButtonRef.current?.click()} className={`text-2xl text-neutral-3 p-9 bg-white w-full aspect-square border border-dashed border-neutral-2 rounded-2xl ${previewURIs.length >= 4 ? "hidden" : "flex"} justify-center items-center`}>
+                                            <FiPlus className="text-xl" />
+                                            <input id="file-upload" type="file" ref={inputButtonRef} 
+                                                className="w-full h-full invisible absolute" onChange={handleSelectFile} disabled={isLoading} accept="images/*"
+                                            />
+                                        </div>
                                 </div>
 
                                 {/* alert size gambar */}
@@ -294,10 +294,10 @@ export default function ProductForm(props) {
                                     Preview
                                 </button>
                                 <button 
-                                    disabled={ isLoading } onClick={ handlePublish }
+                                    disabled={ isLoading } 
                                     className="flex-grow bg-purple-4 hover:bg-purple-3 py-3 text-white font-normal text-sm leading-tight rounded-[16px] 
                                     focus:shadow-lg focus:outline-none active:shadow-lg transition duration-200 ease-in-out"
-                                    type="button" data-mdb-ripple="true" data-mdb-ripple-color="dark">
+                                    type="submit" data-mdb-ripple="true" data-mdb-ripple-color="dark">
                                     Terbitkan
                                 </button>
                             </div>
