@@ -4,8 +4,8 @@ import { Link } from 'react-router-dom'
 
 import { FiArrowLeft, FiSearch, FiBell, FiList, FiUser } from 'react-icons/fi'
 
-import gambarJam from '../assets/jam1.png'
-import gambarOrang from '../assets/cover.png'
+import gambarJam from '../assets/jam.png'
+import gambarOrang from '../assets/buyer-pic.png'
 
 import { Carousel } from 'react-responsive-carousel'
 import "react-responsive-carousel/lib/styles/carousel.min.css";
@@ -89,3 +89,5 @@ function PreviewProduk() {
         </div>
     </div>
 }
+
+export default PreviewProduk;
