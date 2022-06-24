@@ -58,15 +58,25 @@ export default function ProductForm(props) {
     
         try {
             setLoading(true); 
-            const response = await axios({
-                url: 'https://secondhand-backend-kita.herokuapp.com/products/', 
-                method: 'POST',
-                headers: {
-                    Authorization: `Bearer ${token}`
-                },
-                data:  data,
-            });
-        navigate('/produkku')
+            // const response = await axios({
+            //     url: 'https://secondhand-backend-kita.herokuapp.com/products/', 
+            //     method: 'POST',
+            //     headers: {
+            //         Authorization: `Bearer ${token}`
+            //     },
+            //     data:  data,
+            // });
+            await new Promise(r => setTimeout(r, 3000))
+            toast.success('Produk berhasil ditambahkan!', {
+                position: "top-center",
+                autoClose: 5000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                });
+            navigate('/produkku')
             
         } catch (e) {
             if(e.response) setErrorMsg(e.response.message);
@@ -86,14 +96,15 @@ export default function ProductForm(props) {
     const handleDelete = async () => {
         try {
             setLoading(true); 
-            await axios({
-                url: 'https://secondhand-backend-kita.herokuapp.com/products/delete/:id', 
-                method: 'DELETE',
-                headers: {
-                    Authorization: `Bearer ${token}`
+            // await axios({
+            //     url: 'https://secondhand-backend-kita.herokuapp.com/products/delete/:id', 
+            //     method: 'DELETE',
+            //     headers: {
+            //         Authorization: `Bearer ${token}`
         
-                }
-            })
+            //     }
+            // })
+            await new Promise(r => setTimeout(r, 3000))
             toast.error('Produk berhasil dihapus!', {
                 position: "top-center",
                 autoClose: 5000,
@@ -178,7 +189,7 @@ export default function ProductForm(props) {
                                     </div>
 
                                 </div>
-                                
+
                             <p className="mb-3 text-sm">Harga Produk</p>
                                 <div className="mb-5">
                                     <input
