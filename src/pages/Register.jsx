@@ -6,6 +6,7 @@ import { useDispatch } from 'react-redux'
 import { Link, useNavigate } from 'react-router-dom'
 import { setToken } from '../redux/slices/authSlice'
 import { FiArrowLeft,FiAlertCircle } from 'react-icons/fi'
+import LoadingSpin from '../components/LoadingSpin'
 
 export default function Register() {
 
@@ -21,7 +22,8 @@ export default function Register() {
   const [ errorMsgEmail, setErrorMsgEmail ] = useState("")
   const [ errorMsgPwd, setErrorMsgPwd ] = useState("")
 
-  const handleRegister = async () => {
+  const handleRegister = async (event) => {
+    event.preventDefault()
     setLoading(true)
     try {
       const response = await axios({
@@ -66,7 +68,7 @@ export default function Register() {
             <h4 className="text-2xl font-bold mb-4 pt-6">Daftar</h4>
           </div>
 
-          <form>
+          <form onSubmit={ handleRegister }>
             <p className="mb-3 text-sm">Nama</p>
             <div className="mb-5">
 
@@ -119,10 +121,11 @@ export default function Register() {
 
             <div className="text-center pt-2 mb-6">
               <button 
-                disabled={ isLoading } onClick={ handleRegister }
-                className="inline-block bg-purple-4 hover:bg-purple-3 px-6 py-3 text-white font-normal text-sm leading-tight rounded-[16px] 
-                focus:shadow-lg focus:outline-none active:shadow-lg transition duration-200 ease-in-out w-full mb-4"
-                type="button" data-mdb-ripple="true" data-mdb-ripple-color="dark">
+                disabled={ isLoading }
+                className="flex justify-center items-center bg-purple-4 px-6 py-3 text-white font-normal text-sm leading-tight rounded-[16px] 
+                focus:shadow-lg focus:outline-none active:shadow-lg transition duration-200 ease-in-out w-full mb-4 disabled:opacity-70 focus:ring-2 focus:ring-offset-2 focus:ring-purple-4"
+                type="submit" data-mdb-ripple="true" data-mdb-ripple-color="dark">
+                  { isLoading && <LoadingSpin /> }
                 Daftar
               </button>
             </div>
