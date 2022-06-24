@@ -4,6 +4,7 @@ import { Link } from "react-router-dom";
 import { FiLogIn, FiX } from "react-icons/fi";
 
 export default function Sidebar(props) {
+
 	return (
 		<div
 			className={`w-screen h-screen fixed top-0 left-0 bg-black bg-opacity-70 z-[100] lg:hidden ${

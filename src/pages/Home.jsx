@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
+import { useSelector } from ""
 
 import { FiLogIn, FiMenu, FiSearch } from "react-icons/fi";
 
-import gambarKado from "../assets/png_gift_88837.png";
 import gambarJam from "../assets/jam.png";
+import gambarKado from "../assets/png_gift_88837.png";
 import ProductCard from "../components/ProductCard";
 
 import Sidebar from "../components/Sidebar";
@@ -82,6 +83,9 @@ const fakeProductsData = [
 ];
 
 export default function Home() {
+
+	const isLoggedIn = !!useSelector(state => state.auth.token)
+
 	const [selectedCategory, setSelectedCategory] = useState(categories[0]); //Defaultnya nampilkan semua produk
 	const [products, setProducts] = useState([]);
 	const [isLoading, setLoading] = useState(true);
@@ -107,6 +111,7 @@ export default function Home() {
 			<Sidebar
 				show={isMobileSidebarOpen}
 				close={() => setMobileSidebarOpen(false)}
+				loggedIn={ isLoggedIn }
 			/>
 			{/* Hero */}
 			<div className="bg-gradient-to-b from-[#FFE9C9] to-transparent pb-12">

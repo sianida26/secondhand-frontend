@@ -11,7 +11,7 @@ import AkunSaya from "./pages/AkunSaya";
 function App() {
   return (
     <Routes>
-      <Route path="/home" element={<Home />} />
+      <Route path="/" element={<Home />} />
       <Route path="/register" element={<Register />} />
       <Route path="/login" element={<Login />} />
       <Route path="/buat-produk" element={<ProductForm />} />
