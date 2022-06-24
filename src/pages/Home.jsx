@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-import { useSelector } from ""
+import { useSelector } from "react-redux"
 
 import { FiLogIn, FiMenu, FiSearch } from "react-icons/fi";
 
@@ -101,6 +101,7 @@ export default function Home() {
 			await new Promise((r) => setTimeout(r, 3000));
 			setProducts(fakeProductsData);
 		} catch (e) {
+			setSelectedCategory(0)
 		} finally {
 			setLoading(false);
 		}
