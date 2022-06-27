@@ -1,9 +1,12 @@
 import React from "react";
 import { Link } from "react-router-dom";
+import { useSelector } from "react-redux";
 
 import { FiLogIn, FiX } from "react-icons/fi";
 
 export default function Sidebar(props) {
+
+	const isLoggedIn = useSelector(state => !!state.auth.token);
 
 	return (
 		<div
@@ -17,14 +20,14 @@ export default function Sidebar(props) {
 				onClick={(e) => e.stopPropagation()}
 			>
 				<div className="flex justify-between items-center">
-					<h1 className="font-bold text-lg">Second Hand</h1>
+					<Link to="/"><h1 className="font-bold text-lg">Second Hand</h1></Link>
 					<FiX
 						className="text-xl text-neutral-5"
 						onClick={props.close}
 					/>
 				</div>
-				<div className="mt-4 flex flex-col">
-					{props.loggedIn ? (
+				<div className="mt-4 flex flex-col gap-3">
+					{isLoggedIn ? (
 						<>
 							<Link to="/notifikasi" className="">
 								Notifikasi
