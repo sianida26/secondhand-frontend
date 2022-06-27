@@ -1,17 +1,29 @@
-import React from 'react'
+import React, { useState } from 'react'
+import { faker } from '@faker-js/faker';
 
-import { FiBox, FiDollarSign, FiHeart, FiPlus } from 'react-icons/fi'
+import { FiBox, FiChevronRight, FiDollarSign, FiHeart, FiPlus } from 'react-icons/fi'
 
 import buyerPic from '../assets/buyer-pic.png';
 import watchPic from '../assets/jam.png';
+import emptyImage from '../assets/undraw_selection.svg';
 import Header from '../components/Header';
+import { formatRupiah } from '../utils/helpers';
 
 export default function DaftarJualSaya() {
+
+  const [ activeTab, setActiveTab ] = useState(0);
+  const [ loading, setLoading ] = useState(true);
+  const [ products, setProducts ] = useState([...new Array(10)].map((_,i) => ({ id: i, image: faker.image.animals(640, 480, true), category: faker.commerce.product(), name: faker.animal.cat(), price: Math.floor(Math.random()*1000)+10000 })));
+  const [ diminatis, setDiminatis ] = useState([]);
+  const [ terjuals, setTerjuals ] = useState([...new Array(10)].map((_,i) => ({ id: i, image: faker.image.animals(640, 480, true), name: faker.animal.cat(), price: Math.floor(Math.random()*1000)+10000, bidPrice: Math.floor(Math.random()*1000)+10000 })));
+
   return (
     <div className="w-screen min-h-screen">
-      <Header title="Daftar Jual Saya" withoutSearchBar />
+      <Header title="Daftar Jual Saya" />
 
-      <div className="flex flex-col w-full px-4 py-8">
+      <div className="flex flex-col w-full px-4 py-8 lg:max-w-screen-lg lg:mx-auto">
+
+        <h1 className="hidden lg:block font-bold text-xl mb-4">Daftar Jual Saya</h1>
 
         {/* Penjual */}
         <div className="shadow-low w-full flex rounded-lg p-4 items-center">
@@ -21,108 +33,164 @@ export default function DaftarJualSaya() {
             <p className="text-xs text-neutral-3">Kota</p>
           </div>
           <div className="flex-none flex items-center">
-            <button className="border border-purple-4 rounded-xl px-4 py-1 font-medium text-neutral-5 focus:ring-2 focus:outline-none focus:ring-purple-4">Edit</button>
+            <button className="border border-purple-4 rounded-xl px-4 py-1 font-medium text-neutral-5 focus:ring-2 focus:outline-none focus:ring-purple-4 hover:bg-gray-100">Edit</button>
           </div>
         </div>
 
         {/* Categories */}
-        <div className="w-full overflow-x-auto flex gap-2 mt-2 py-2 pl-2">
-          <button className="btn focus:ring-2 focus:ring-offset-2 focus:ring-purple-4"><FiBox /> Produk</button>
-          <button className="btn bg-purple-1 text-neutral-4 focus:ring-2 focus:ring-offset-2 focus:ring-purple-2 focus:bg-purple-2"><FiHeart /> Diminati</button>
-          <button className="btn bg-purple-1 text-neutral-4 focus:ring-2 focus:ring-offset-2 focus:ring-purple-2 focus:bg-purple-2"><FiDollarSign /> Terjual</button>
+        <div className="w-full overflow-x-auto flex gap-2 mt-2 py-2 pl-2 lg:hidden">
+          <button onClick={ () => setActiveTab(0) } className={ `btn ${ activeTab === 0 ? 'mobile-category-active' : 'mobile-category' }` }><FiBox /> Produk</button>
+          <button onClick={ () => setActiveTab(1) } className={ `btn ${ activeTab === 1 ? 'mobile-category-active' : 'mobile-category' }` }><FiHeart /> Diminati</button>
+          <button onClick={ () => setActiveTab(2) } className={ `btn ${ activeTab === 2 ? 'mobile-category-active' : 'mobile-category' }` }><FiDollarSign /> Terjual</button>
         </div>
 
-        {/* Fragment Container */}
-        <div className="w-full mt-4">
+        <div className="flex mt-4 gap-8">
+          {/* Dekstop Categories */}
+          <div className="hidden lg:flex w-56 shadow-high bg-white py-4 rounded-xl flex-col gap-2 flex-none self-start">
+            <p className="font-medium text-black px-4">Kategori</p>
 
-          { renderTerjualFragment() }
+            <div className="flex flex-col divide-y divide-[#E5E5E5]">
+              <button className={ `flex justify-between items-center py-3 px-4 ${ activeTab === 0 && "text-purple-4 font-medium" } hover:bg-gray-200 focus:outline-none focus:bg-gray-200` } onClick={ () => setActiveTab(0) }>
+                <span className="flex gap-2 items-center"><FiBox /> Semua Produk</span>
+                <FiChevronRight className={ activeTab !== 0 && "text-neutral-2" } />
+              </button>
+              <button className={ `flex justify-between items-center py-3 px-4 ${ activeTab === 1 && "text-purple-4 font-medium" } hover:bg-gray-200 focus:outline-none focus:bg-gray-200` } onClick={ () => setActiveTab(1) }>
+                <span className="flex gap-2 items-center"><FiHeart /> Diminati</span>
+                <FiChevronRight className={ activeTab !== 1 && "text-neutral-2" } />
+              </button>
+              <button className={ `flex justify-between items-center py-3 px-4 ${ activeTab === 2 && "text-purple-4 font-medium" } hover:bg-gray-200 focus:outline-none focus:bg-gray-200` } onClick={ () => setActiveTab(2) }>
+                <span className="flex gap-2 items-center"><FiDollarSign /> Terjual</span>
+                <FiChevronRight className={ activeTab !== 2 && "text-neutral-2" } />
+              </button>
+            </div>
+          </div>
+
+          {/* Fragment Container */}
+          <div className="w-full">
+
+            { 
+              activeTab === 0 ? renderProductFragment(products, loading)
+              : activeTab === 1 ? renderDiminatiFragment(diminatis, loading)
+              : activeTab === 2 ? renderTerjualFragment(terjuals, loading)
+              : "Invalid tab!"
+            }
+          </div>
         </div>
       </div>
     </div>
   )
 }
 
-const renderTerjualFragment = () => {
+const renderTerjualFragment = (terjuals, isLoading) => {
 
   return (
     <div className="flex flex-col divide-y px-4 divide-[#E5E5E5]">
-      <div className="flex gap-4 py-3">
-        <img className="w-12 h-12 object-cover rounded-lg flex-none" alt="Foto Produk" src={ watchPic } />
-        
-        <div className="flex-grow flex flex-col">
-          <p className="text-xs text-neutral-3">Penjualan Produk</p>
-          <p>Jam Tangan Casio</p>
-          <p><s>Rp 250.000</s></p>
-          <p>Terjual Rp 200.000</p>
-        </div>
+      {
+        isLoading ? [ ...new Array(12) ].map((_,i) => (
+          <div className="flex gap-4 py-3" key={ i }>
+            <div className="w-12 h-12 rounded-lg flex-none animate-pulse bg-slate-700" />
+            
+            <div className="flex-grow flex flex-col gap-2">
+              <div className="w-20 h-3 bg-slate-700 animate-pulse rounded-md" />
+              <div className="w-32 h-4 bg-slate-700 animate-pulse rounded-md" />
+              <div className="w-24 h-4 bg-slate-700 animate-pulse rounded-md" />
+              <div className="w-28 h-4 bg-slate-700 animate-pulse rounded-md" />
+            </div>
 
-        <span className="flex-none text-xs text-neutral-3">20 Apr, 14:04</span>
-      </div>
-      <div className="flex gap-4 py-3">
-        <img className="w-12 h-12 object-cover rounded-lg flex-none" alt="Foto Produk" src={ watchPic } />
-        
-        <div className="flex-grow flex flex-col">
-          <p className="text-xs text-neutral-3">Penjualan Produk</p>
-          <p>Jam Tangan Casio</p>
-          <p><s>Rp 250.000</s></p>
-          <p>Terjual Rp 200.000</p>
-        </div>
+            <div className="w-20 h-3 bg-slate-700 animate-pulse rounded-md" />
+          </div>
+        ))
+        : terjuals.length ? terjuals.map(terjual => (<div className="flex gap-4 py-3">
+            <img className="w-12 h-12 object-cover rounded-lg flex-none" alt="Foto Produk" src={ terjual.image } />
+            
+            <div className="flex-grow flex flex-col">
+              <p className="text-xs text-neutral-3">Penjualan Produk</p>
+              <p>{ terjual.name }</p>
+              <p><s>{ formatRupiah(terjual.price) }</s></p>
+              <p>Terjual { formatRupiah(terjual.bidPrice) }</p>
+            </div>
 
-        <span className="flex-none text-xs text-neutral-3">20 Apr, 14:04</span>
-      </div>
+            <span className="flex-none text-xs text-neutral-3">20 Apr, 14:04</span>
+          </div>
+        ))
+        : <div className="w-full h-full flex flex-col items-center justify-center py-8 gap-4">
+            <img className="h-64" src={ emptyImage } alt="Ilustrasi" />
+            <p className="text-center text-neutral-3">Belum ada produkmu yang diminati nih, sabar ya rejeki nggak kemana kok</p>
+        </div>
+      }
     </div>
   )
 }
 
-const renderDiminatiFragment = () => {
+const renderDiminatiFragment = (diminatis, isLoading) => {
 
   return (
     <div className="flex flex-col divide-y px-4 divide-[#E5E5E5]">
-      <div className="flex gap-4 py-3">
-        <img className="w-12 h-12 object-cover rounded-lg flex-none" alt="Foto Produk" src={ watchPic } />
-        
-        <div className="flex-grow flex flex-col">
-          <p className="text-xs text-neutral-3">Penawaran Produk</p>
-          <p>Jam Tangan Casio</p>
-          <p>Rp 250.000</p>
-          <p>Ditawar Rp 200.000</p>
-        </div>
+      {
+        isLoading ? [ ...new Array(12) ].map((_,i) => (
+          <div className="flex gap-4 py-3" key={ i }>
+            <div className="w-12 h-12 rounded-lg flex-none animate-pulse bg-slate-700" />
+            
+            <div className="flex-grow flex flex-col gap-2">
+              <div className="w-20 h-3 bg-slate-700 animate-pulse rounded-md" />
+              <div className="w-32 h-4 bg-slate-700 animate-pulse rounded-md" />
+              <div className="w-24 h-4 bg-slate-700 animate-pulse rounded-md" />
+              <div className="w-28 h-4 bg-slate-700 animate-pulse rounded-md" />
+            </div>
 
-        <span className="flex-none text-xs text-neutral-3">20 Apr, 14:04</span>
-      </div>
-      <div className="flex gap-4 py-3">
-        <img className="w-12 h-12 object-cover rounded-lg flex-none" alt="Foto Produk" src={ watchPic } />
-        
-        <div className="flex-grow flex flex-col">
-          <p className="text-xs text-neutral-3">Penawaran Produk</p>
-          <p>Jam Tangan Casio</p>
-          <p>Rp 250.000</p>
-          <p>Ditawar Rp 200.000</p>
-        </div>
+            <div className="w-20 h-3 bg-slate-700 animate-pulse rounded-md" />
+          </div>
+        ))
+        : diminatis.length ? diminatis.map(diminati => (<div className="flex gap-4 py-3">
+            <img className="w-12 h-12 object-cover rounded-lg flex-none" alt="Foto Produk" src={ diminati.image } />
+            
+            <div className="flex-grow flex flex-col">
+              <p className="text-xs text-neutral-3">Penawaran Produk</p>
+              <p>{ diminati.name }</p>
+              <p>{ formatRupiah(diminati.price) }</p>
+              <p>Ditawar { formatRupiah(diminati.bidPrice) }</p>
+            </div>
 
-        <span className="flex-none text-xs text-neutral-3">20 Apr, 14:04</span>
-      </div>
+            <span className="flex-none text-xs text-neutral-3">20 Apr, 14:04</span>
+          </div>
+        ))
+        : <div className="w-full h-full flex flex-col items-center justify-center py-8 gap-4">
+            <img className="h-64" src={ emptyImage } alt="Ilustrasi" />
+            <p className="text-center text-neutral-3">Belum ada produkmu yang diminati nih, sabar ya rejeki nggak kemana kok</p>
+        </div>
+      }
     </div>
   )
 }
 
-const renderProductFragment = () => {
+const renderProductFragment = (products, isLoading) => {
 
   return (
-    <div className="grid grid-cols-2 gap-4">
+    <div className="grid grid-cols-2 gap-4 lg:grid-cols-3">
       {/* Add Product */}
-      <div className="flex flex-col justify-center items-center w-full h-full border border-neutral-2 border-dashed text-neutral-3">
+      <button className="flex flex-col justify-center items-center w-full h-full min-h-[16rem] border border-neutral-2 border-dashed text-neutral-3 hover:bg-gray-200 focus:ring-2 focus:ring-offset-2 focus:ring-neutral-2 focus:outline-none">
         <FiPlus />
         <p>Tambah Produk</p>
-      </div>
+      </button>
 
-      {/* Contoh Produk */}
-      <div className="flex flex-col w-full h-full bg-neutral-1 shadow-low rounded-md py-3 px-2 gap-2">
-        <img className="w-full aspect-[7/5] object-cover" alt="Foto Produk" src={ watchPic } />
-        <p className="text-neutral-5">Jam Tangan Casio</p>
-        <p className="text-xs text-neutral-3">Aksesoris</p>
-        <p className="text-neutral-5">Rp250.000</p>
-      </div>
+      {
+        isLoading ? [ ...new Array(11) ].map((_,i) => (
+          <div className="flex flex-col w-full h-full items-start bg-neutral-1 shadow-low rounded-md py-3 px-2 gap-2 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-neutral-2 animate-pulse">
+            <div className="w-full aspect-[7/5] object-cover bg-slate-700" />
+            <div className="w-32 h-4 bg-slate-700 rounded-md" />
+            <div className="w-24 h-3 bg-slate-700 rounded-md" />
+            <div className="w-28 h-4 bg-slate-700 rounded-md" />
+          </div>
+        ))
+        : products.map(product => (<button className="flex flex-col w-full h-full items-start bg-neutral-1 shadow-low rounded-md py-3 px-2 gap-2 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-neutral-2">
+            <img className="w-full aspect-[7/5] object-cover" alt="Foto Produk" src={ product.image } />
+            <p className="text-neutral-5">{ product.name }</p>
+            <p className="text-xs text-neutral-3">{ product.category }</p>
+            <p className="text-neutral-5">{ formatRupiah(product.price) }</p>
+          </button>
+        ))
+      }
+      
     </div>
   )
 }
