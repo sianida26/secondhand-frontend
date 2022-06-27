@@ -1,4 +1,6 @@
 import React from "react";
+import { Link } from "react-router-dom";
+
 import { FiCamera, FiLogOut, FiPlusCircle, FiSettings } from "react-icons/fi";
 import { FiEdit } from "react-icons/fi";
 import { FiHome, FiBell, FiList, FiUser } from "react-icons/fi";
@@ -24,10 +26,10 @@ export default function akunSaya() {
           Pengaturan Akun
         </div>
 
-        <div className="items-center flex gap-2 py-6 font-medium text-sm ">
+        <Link to="/logout" className="items-center flex gap-2 py-6 font-medium text-sm ">
           <FiLogOut className="text-2xl text-purple-4" />
           Keluar
-        </div>
+        </Link>
       </div>
 
       <div className="py-2 text-ls text-center text-gray-400 font-normal">Version 1.0.0</div>

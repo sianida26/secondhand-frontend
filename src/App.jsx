@@ -3,6 +3,7 @@ import { Routes, Route } from "react-router-dom";
 import Home from './pages/Home';
 import Register from './pages/Register';
 import Login from './pages/Login';
+import Logout from "./pages/Logout";
 import ProductForm from './pages/ProductForm';
 import BuyerInfo from './pages/BuyerInfo';
 import Profile from "./pages/Profile";
@@ -14,6 +15,7 @@ function App() {
   return (
     <Routes>
       <Route path="/" element={<Home />} />
+
       <Route path="/register" element={<Register />} />
       <Route path="/login" element={<Login />} />
       <Route path="/buat-produk" element={<ProductForm />} />
@@ -23,6 +25,7 @@ function App() {
       <Route path="/profile" element={<Profile />} />
       <Route path="/preview-produk" element={<PreviewProduk />} />
       <Route path="/produkku" element={<DaftarJualSaya />} />
+      <Route path="/logout" element={<Logout />} />
     </Routes>
   );
 }
