@@ -36,7 +36,7 @@ export default function Login() {
         profilePhoto: response.data.profilePhoto,
         city: response.data.city, 
       }))
-      navigate(location.state.referrer ?? '/');
+      navigate(location.state?.referrer || '/');
     } catch (e) {
       if (e.response) setErrorMsg(e.response.data.message);
       else setErrorMsg("Terjadi Kesalahan. Silakan periksa koneksi anda");
