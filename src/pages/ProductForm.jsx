@@ -3,7 +3,6 @@ import { toast } from 'react-toastify';
 import { useNavigate } from 'react-router-dom'
 import { FiPlus, FiArrowLeft, FiAlertCircle } from 'react-icons/fi'
 import { useDispatch, useSelector } from 'react-redux'
-import { setPreviewProductData } from '../redux/slices/previewProductSlice'
 import Header from '../components/Header'
 import axios from 'axios'
 
@@ -90,7 +89,7 @@ export default function ProductForm(props) {
     //handle untuk preview
     const handlePreview = () => {
         if(!validateInput()) return
-        dispatch(setPreviewProductData({name, price, category, description, files, previewURIs}))
+        // dispatch(setPreviewProductData({name, price, category, description, files, previewURIs}))
         navigate('/preview-produk')
     } 
 
