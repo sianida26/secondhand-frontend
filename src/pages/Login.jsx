@@ -6,7 +6,7 @@ import { Link, useNavigate } from 'react-router-dom'
 import { FiArrowLeft,FiAlertCircle } from 'react-icons/fi'
 
 import pic from '../assets/register.png'
-import { setToken } from '../redux/slices/authSlice'
+import { setData } from '../redux/slices/authSlice'
 import LoadingSpin from '../components/LoadingSpin'
 
 export default function Login() {
@@ -29,8 +29,12 @@ export default function Login() {
         method: 'POST',
         data: { email, password }
       })
-      const token = response.data.token;
-      dispatch(setToken(token))
+      dispatch(setData({
+        name: response.data.name,
+        token: response.data.token,
+        profilePhoto: response.data.profilePhoto,
+        city: response.data.city, 
+      }))
       navigate('/')
     } catch (e) {
       if (e.response) setErrorMsg(e.response.data.message);
