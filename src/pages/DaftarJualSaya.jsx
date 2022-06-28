@@ -2,7 +2,7 @@ import React, { useCallback, useEffect, useState } from 'react'
 import axios from 'axios';
 
 import { useSelector } from 'react-redux';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import { faker } from '@faker-js/faker';
 
 import { FiBox, FiChevronRight, FiDollarSign, FiHeart, FiPlus } from 'react-icons/fi'
@@ -18,6 +18,9 @@ export default function DaftarJualSaya() {
 
   const navigate = useNavigate();
   const token = useSelector(state => state.auth.token);
+  const name = useSelector(state => state.auth.name);
+  const profilePic = useSelector(state => state.auth.profilePhoto);
+  const city = useSelector(state => state.auth.city);
 
   const [ activeTab, setActiveTab ] = useState(0);
   const [ loading, setLoading ] = useState(true);
@@ -65,13 +68,13 @@ export default function DaftarJualSaya() {
 
         {/* Penjual */}
         <div className="shadow-low w-full flex rounded-lg p-4 items-center">
-          <img src={ buyerPic } alt="Penjual" className="w-12 h-12 object-cover flex-none" />
+          <img src={ profilePic } alt="Penjual" className="w-12 h-12 object-cover flex-none" />
           <div className="flex-grow flex flex-col justify-center px-4">
-            <p className="font-medium text-neutral-5">Nama Penjual</p>
-            <p className="text-xs text-neutral-3">Kota</p>
+            <p className="font-medium text-neutral-5">{ name }</p>
+            <p className="text-xs text-neutral-3">{ city }</p>
           </div>
           <div className="flex-none flex items-center">
-            <button className="border border-purple-4 rounded-xl px-4 py-1 font-medium text-neutral-5 focus:ring-2 focus:outline-none focus:ring-purple-4 hover:bg-gray-100">Edit</button>
+            <Link to="/profil" className="border border-purple-4 rounded-xl px-4 py-1 font-medium text-neutral-5 focus:ring-2 focus:outline-none focus:ring-purple-4 hover:bg-gray-100">Edit</Link>
           </div>
         </div>
 
@@ -138,7 +141,7 @@ const renderTerjualFragment = (terjuals, isLoading) => {
             <div className="w-20 h-3 bg-slate-700 animate-pulse rounded-md" />
           </div>
         ))
-        : terjuals.length ? terjuals.map(terjual => (<div key={ terjual.id } className="flex gap-4 py-3">
+        : terjuals.length ? terjuals.map(terjual => (<Link to={{ pathname:"/penawaran", state: { bidId: terjual.id } }} key={ terjual.id } className="flex gap-4 py-3">
             <img className="w-12 h-12 object-cover rounded-lg flex-none" alt="Foto Produk" src={ terjual.image } />
             
             <div className="flex-grow flex flex-col">
@@ -149,7 +152,7 @@ const renderTerjualFragment = (terjuals, isLoading) => {
             </div>
 
             <span className="flex-none text-xs text-neutral-3">20 Apr, 14:04</span>
-          </div>
+          </Link>
         ))
         : <div className="w-full h-full flex flex-col items-center justify-center py-8 gap-4">
             <img className="h-64" src={ emptyImage } alt="Ilustrasi" />
@@ -179,7 +182,7 @@ const renderDiminatiFragment = (diminatis, isLoading) => {
             <div className="w-20 h-3 bg-slate-700 animate-pulse rounded-md" />
           </div>
         ))
-        : diminatis.length ? diminatis.map(diminati => (<div key={ diminati.id } className="flex gap-4 py-3">
+        : diminatis.length ? diminatis.map(diminati => (<Link to={{ pathname:"/penawaran", state: { bidId: diminati.id } }} key={ diminati.id } className="flex gap-4 py-3">
             <img className="w-12 h-12 object-cover rounded-lg flex-none" alt="Foto Produk" src={ diminati.image } />
             
             <div className="flex-grow flex flex-col">
@@ -190,7 +193,7 @@ const renderDiminatiFragment = (diminatis, isLoading) => {
             </div>
 
             <span className="flex-none text-xs text-neutral-3">20 Apr, 14:04</span>
-          </div>
+          </Link>
         ))
         : <div className="w-full h-full flex flex-col items-center justify-center py-8 gap-4">
             <img className="h-64" src={ emptyImage } alt="Ilustrasi" />
@@ -206,10 +209,10 @@ const renderProductFragment = (products, isLoading) => {
   return (
     <div className="grid grid-cols-2 gap-4 lg:grid-cols-3">
       {/* Add Product */}
-      <button className="flex flex-col justify-center items-center w-full h-full min-h-[16rem] border border-neutral-2 border-dashed text-neutral-3 hover:bg-gray-200 focus:ring-2 focus:ring-offset-2 focus:ring-neutral-2 focus:outline-none">
+      <Link to="/buat-produk" className="flex flex-col justify-center items-center w-full h-full min-h-[16rem] border border-neutral-2 border-dashed text-neutral-3 hover:bg-gray-200 focus:ring-2 focus:ring-offset-2 focus:ring-neutral-2 focus:outline-none">
         <FiPlus />
         <p>Tambah Produk</p>
-      </button>
+      </Link>
 
       {
         isLoading ? [ ...new Array(11) ].map((_,i) => (
@@ -220,12 +223,12 @@ const renderProductFragment = (products, isLoading) => {
             <div className="w-28 h-4 bg-slate-700 rounded-md" />
           </div>
         ))
-        : products.map(product => (<button key={ product.id } className="flex flex-col w-full h-full items-start bg-neutral-1 shadow-low rounded-md py-3 px-2 gap-2 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-neutral-2">
+        : products.map(product => (<Link to={{ pathname: '/edit-produk', state: product }} key={ product.id } className="flex flex-col w-full h-full items-start bg-neutral-1 shadow-low rounded-md py-3 px-2 gap-2 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-neutral-2">
             <img className="w-full aspect-[7/5] object-cover" alt="Foto Produk" src={ product.image } />
             <p className="text-neutral-5">{ product.name }</p>
             <p className="text-xs text-neutral-3">{ product.category }</p>
             <p className="text-neutral-5">{ formatRupiah(product.price) }</p>
-          </button>
+          </Link>
         ))
       }
       
