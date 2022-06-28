@@ -138,7 +138,7 @@ const renderTerjualFragment = (terjuals, isLoading) => {
             <div className="w-20 h-3 bg-slate-700 animate-pulse rounded-md" />
           </div>
         ))
-        : terjuals.length ? terjuals.map(terjual => (<div className="flex gap-4 py-3">
+        : terjuals.length ? terjuals.map(terjual => (<div key={ terjual.id } className="flex gap-4 py-3">
             <img className="w-12 h-12 object-cover rounded-lg flex-none" alt="Foto Produk" src={ terjual.image } />
             
             <div className="flex-grow flex flex-col">
@@ -179,7 +179,7 @@ const renderDiminatiFragment = (diminatis, isLoading) => {
             <div className="w-20 h-3 bg-slate-700 animate-pulse rounded-md" />
           </div>
         ))
-        : diminatis.length ? diminatis.map(diminati => (<div className="flex gap-4 py-3">
+        : diminatis.length ? diminatis.map(diminati => (<div key={ diminati.id } className="flex gap-4 py-3">
             <img className="w-12 h-12 object-cover rounded-lg flex-none" alt="Foto Produk" src={ diminati.image } />
             
             <div className="flex-grow flex flex-col">
@@ -213,14 +213,14 @@ const renderProductFragment = (products, isLoading) => {
 
       {
         isLoading ? [ ...new Array(11) ].map((_,i) => (
-          <div className="flex flex-col w-full h-full items-start bg-neutral-1 shadow-low rounded-md py-3 px-2 gap-2 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-neutral-2 animate-pulse">
+          <div key={ i } className="flex flex-col w-full h-full items-start bg-neutral-1 shadow-low rounded-md py-3 px-2 gap-2 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-neutral-2 animate-pulse">
             <div className="w-full aspect-[7/5] object-cover bg-slate-700" />
             <div className="w-32 h-4 bg-slate-700 rounded-md" />
             <div className="w-24 h-3 bg-slate-700 rounded-md" />
             <div className="w-28 h-4 bg-slate-700 rounded-md" />
           </div>
         ))
-        : products.map(product => (<button className="flex flex-col w-full h-full items-start bg-neutral-1 shadow-low rounded-md py-3 px-2 gap-2 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-neutral-2">
+        : products.map(product => (<button key={ product.id } className="flex flex-col w-full h-full items-start bg-neutral-1 shadow-low rounded-md py-3 px-2 gap-2 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-neutral-2">
             <img className="w-full aspect-[7/5] object-cover" alt="Foto Produk" src={ product.image } />
             <p className="text-neutral-5">{ product.name }</p>
             <p className="text-xs text-neutral-3">{ product.category }</p>
