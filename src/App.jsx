@@ -1,15 +1,16 @@
 import { Routes, Route } from "react-router-dom";
 
-import Home from './pages/Home';
-import Register from './pages/Register';
-import Login from './pages/Login';
+import Home from "./pages/Home";
+import Register from "./pages/Register";
+import Login from "./pages/Login";
 import Logout from "./pages/Logout";
-import ProductForm from './pages/ProductForm';
-import BuyerInfo from './pages/BuyerInfo';
+import ProductForm from "./pages/ProductForm";
+import BuyerInfo from "./pages/BuyerInfo";
 import Profile from "./pages/Profile";
 import AkunSaya from "./pages/AkunSaya";
 import PreviewProduk from "./pages/PreviewProduk";
 import DaftarJualSaya from "./pages/DaftarJualSaya";
+import Buyer13 from "./pages/Buyer13";
 
 function App() {
   return (
@@ -24,6 +25,7 @@ function App() {
       <Route path="/akun-saya" element={<AkunSaya />} />
       <Route path="/profile" element={<Profile />} />
       <Route path="/preview-produk" element={<PreviewProduk />} />
+      <Route path="/buyer13" element={<Buyer13 />} />
       <Route path="/produkku" element={<DaftarJualSaya />} />
       <Route path="/logout" element={<Logout />} />
     </Routes>
