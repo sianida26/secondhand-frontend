@@ -1,14 +1,11 @@
-import React, { useCallback, useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import axios from 'axios';
 
 import { useSelector } from 'react-redux';
 import { useNavigate, Link } from 'react-router-dom';
-import { faker } from '@faker-js/faker';
 
 import { FiBox, FiChevronRight, FiDollarSign, FiHeart, FiPlus } from 'react-icons/fi'
 
-import buyerPic from '../assets/buyer-pic.png';
-import watchPic from '../assets/jam.png';
 import emptyImage from '../assets/undraw_selection.svg';
 import Header from '../components/Header';
 import configs from '../utils/configs';
