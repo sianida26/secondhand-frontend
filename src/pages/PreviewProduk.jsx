@@ -1,6 +1,7 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 
-import { Link } from 'react-router-dom'
+import { useSelector } from 'react-redux'
+import { Link, useLocation } from 'react-router-dom'
 
 import { FiArrowLeft, FiSearch, FiBell, FiList, FiUser } from 'react-icons/fi'
 
@@ -9,10 +10,22 @@ import gambarOrang from '../assets/buyer-pic.png'
 
 import { Carousel } from 'react-responsive-carousel'
 import "react-responsive-carousel/lib/styles/carousel.min.css";
+import { formatRupiah, toTitleCase } from '../utils/helpers'
 
 function PreviewProduk() {
 
+    const location = useLocation();
+    const auth = useSelector(state => state.auth);
+
     const [ isLoading, setLoading ] = useState(true);
+    const [ productName, setProductName ] = useState(location.state?.previewData?.name)
+    const [ category, setCategory ] = useState(location.state?.previewData?.category)
+    const [ price, setPrice ] = useState(location.state?.previewData?.price)
+    const [ description, setDescription ] = useState(location.state?.previewData?.description)
+
+    useEffect(() => {
+        
+    }, [])
 
     return <div className="w-screen min-h-screen">
 
@@ -41,8 +54,8 @@ function PreviewProduk() {
         <div className="flex flex-col md:flex-row md:max-w-screen-lg md:mx-auto md:mt-12">
             <div className="w-full aspect-[6/5] relative md:w-3/5 md:flex-shrink-0">
                 <Carousel showThumbs={false} showArrows={false} showStatus={false} infiniteLoop={true}>
-                    <img className="w-full aspect-[6/5] object-cover md:rounded-xl" src={gambarJam} />
-                    <img className="w-full aspect-[6/5] object-cover md:rounded-xl" src={gambarJam} />
+                    <img alt="Produk" className="w-full aspect-[6/5] object-cover md:rounded-xl" src={gambarJam} />
+                    <img alt="Produk" className="w-full aspect-[6/5] object-cover md:rounded-xl" src={gambarJam} />
                 </Carousel>
                 <button className="absolute top-4 left-4 rounded-full w-8 h-8 bg-white flex justify-center items-center">
                     <FiArrowLeft />
@@ -51,9 +64,9 @@ function PreviewProduk() {
 
             <div className="px-4 flex flex-col relative bottom-2 gap-4 md:flex-grow md:bottom-0">
                 <div className="bg-white rounded-xl px-6 py-4 flex flex-col shadow-low md:shadow-high">
-                    <h1 className="font-medium">Jam Tangan Casio</h1>
-                    <p className="text-sm text-neutral-3">Aksesoris</p>
-                    <p className="">Rp 250.000</p>
+                    <h1 className="font-medium">{ productName }</h1>
+                    <p className="text-sm text-neutral-3">{ toTitleCase(category) }</p>
+                    <p className="">{ formatRupiah(price) }</p>
 
                     <button className="hidden md:block w-full bg-purple-4 font-medium text-white text-center py-2 mt-4 rounded-lg">
                         Terbitkan
@@ -64,10 +77,10 @@ function PreviewProduk() {
                 </div>
 
                 <div className="flex bg-white rounded-xl px-6 py-4 shadow-low gap-4">
-                    <img className="h-14 aspect-square rounded-xl object-cover" src={gambarOrang} />
+                    <img className="h-14 aspect-square rounded-xl object-cover" src={ auth.profilePhoto } alt={ auth.name } />
                     <div className="flex flex-col justify-center">
-                        <h1 className="font-medium">Nama Penjual</h1>
-                        <p className="text-sm text-neutral-3">Kota</p>
+                        <h1 className="font-medium">{ auth.name }</h1>
+                        <p className="text-sm text-neutral-3">{ auth.city }</p>
                     </div>
                 </div>
             </div>

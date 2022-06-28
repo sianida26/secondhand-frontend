@@ -1,6 +1,6 @@
 import React, { useRef, useState } from 'react'
 import { toast } from 'react-toastify';
-import { useNavigate } from 'react-router-dom'
+import { useLocation, useNavigate } from 'react-router-dom'
 import { FiPlus, FiArrowLeft, FiAlertCircle } from 'react-icons/fi'
 import { useDispatch, useSelector } from 'react-redux'
 import Header from '../components/Header'
@@ -8,10 +8,11 @@ import axios from 'axios'
 
 
 export default function ProductForm(props) {
-
+    
     const isEditProduct = window.location.pathname === '/edit-produk'
     const navigate = useNavigate()
     const dispatch = useDispatch()
+    const location = useLocation()
 
     const inputButtonRef = useRef(null)
     const token = useSelector(state => state.auth.token)
@@ -75,7 +76,7 @@ export default function ProductForm(props) {
                 pauseOnHover: true,
                 draggable: true,
                 progress: undefined,
-                });
+            });
             navigate('/produkku')
             
         } catch (e) {
@@ -89,8 +90,16 @@ export default function ProductForm(props) {
     //handle untuk preview
     const handlePreview = () => {
         if(!validateInput()) return
-        // dispatch(setPreviewProductData({name, price, category, description, files, previewURIs}))
-        navigate('/preview-produk')
+        const state = {
+            id: location.state?.id,
+            file: files,
+            name: name,
+            price: price,
+            category: category,
+            description: description,
+            urls: previewURIs,
+        }
+        navigate('/preview-produk', { state: { previewData: state } })
     } 
 
     const handleDelete = async () => {
