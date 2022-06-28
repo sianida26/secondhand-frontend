@@ -32,7 +32,7 @@ export default function Sidebar(props) {
 							<Link to="/notifikasi" className="">
 								Notifikasi
 							</Link>
-							<Link to="/daftar-jual" className="">
+							<Link to="/produkku" className="">
 								Daftar Jual
 							</Link>
 							<Link to="/akun-saya" className="">

@@ -1,4 +1,8 @@
-import React, { useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
+import axios from 'axios';
+
+import { useSelector } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
 import { faker } from '@faker-js/faker';
 
 import { FiBox, FiChevronRight, FiDollarSign, FiHeart, FiPlus } from 'react-icons/fi'
@@ -7,15 +11,49 @@ import buyerPic from '../assets/buyer-pic.png';
 import watchPic from '../assets/jam.png';
 import emptyImage from '../assets/undraw_selection.svg';
 import Header from '../components/Header';
+import configs from '../utils/configs';
 import { formatRupiah } from '../utils/helpers';
 
 export default function DaftarJualSaya() {
 
+  const navigate = useNavigate();
+  const token = useSelector(state => state.auth.token);
+
   const [ activeTab, setActiveTab ] = useState(0);
   const [ loading, setLoading ] = useState(true);
-  const [ products, setProducts ] = useState([...new Array(10)].map((_,i) => ({ id: i, image: faker.image.animals(640, 480, true), category: faker.commerce.product(), name: faker.animal.cat(), price: Math.floor(Math.random()*1000)+10000 })));
+  const [ products, setProducts ] = useState([]);
   const [ diminatis, setDiminatis ] = useState([]);
-  const [ terjuals, setTerjuals ] = useState([...new Array(10)].map((_,i) => ({ id: i, image: faker.image.animals(640, 480, true), name: faker.animal.cat(), price: Math.floor(Math.random()*1000)+10000, bidPrice: Math.floor(Math.random()*1000)+10000 })));
+  const [ terjuals, setTerjuals ] = useState([]);
+
+  useEffect(() => {
+
+    const fetchData = async () => {
+      try {
+        setLoading(true)
+        const response = await axios({
+          url: `${ configs.apiRootURL }/products/my-products`,
+          method: 'GET',
+          headers: {
+            Authorization: `Bearer ${ token }`
+          }
+        })
+        setProducts(response.data.products);
+        setDiminatis(response.data.diminati);
+        setTerjuals(response.data.terjual);
+      } catch (error) {
+        console.log(error);
+      } finally {
+        setLoading(false)
+      }
+    }
+
+    if (!token) {
+      navigate('/login', { replace: true });
+      return;
+    }; 
+
+    fetchData();
+  },[token, navigate]);
 
   return (
     <div className="w-screen min-h-screen">
@@ -115,7 +153,7 @@ const renderTerjualFragment = (terjuals, isLoading) => {
         ))
         : <div className="w-full h-full flex flex-col items-center justify-center py-8 gap-4">
             <img className="h-64" src={ emptyImage } alt="Ilustrasi" />
-            <p className="text-center text-neutral-3">Belum ada produkmu yang diminati nih, sabar ya rejeki nggak kemana kok</p>
+            <p className="text-center text-neutral-3">Belum ada produkmu yang terjual nih, sabar ya rejeki nggak kemana kok</p>
         </div>
       }
     </div>
