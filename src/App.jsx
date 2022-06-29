@@ -20,7 +20,8 @@ function App() {
       <Route path="/login" element={<Login />} />
       <Route path="/buat-produk" element={<ProductForm />} />
       <Route path="/edit-produk" element={<ProductForm />} />
-      <Route path="/buyerinfo" element={<BuyerInfo />} />
+      <Route path="/info-buyer" element={<BuyerInfo />} />
+      <Route path="/accept-produk" element={<BuyerInfo />} />
       <Route path="/akun-saya" element={<AkunSaya />} />
       <Route path="/profile" element={<Profile />} />
       <Route path="/preview-produk" element={<PreviewProduk />} />
