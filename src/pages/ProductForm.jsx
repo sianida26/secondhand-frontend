@@ -1,11 +1,11 @@
-import React, { useRef, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { toast } from 'react-toastify';
 import { useLocation, useNavigate } from 'react-router-dom'
 import { FiPlus, FiArrowLeft, FiAlertCircle } from 'react-icons/fi'
 import { useDispatch, useSelector } from 'react-redux'
 import Header from '../components/Header'
 import axios from 'axios'
-import { Validator } from '../utils/helpers';
+import Validator from '../utils/Validator';
 
 
 export default function ProductForm(props) {
@@ -27,6 +27,8 @@ export default function ProductForm(props) {
     const [ files, setFiles ] = useState([]);
     const [ formErrors, setFormErrors ] = useState({});
     const [ errorMsg, setErrorMsg ] = useState("");
+
+    useEffect(() => console.log(location.state), [ location ])
 
     //handle file photo
     const handleSelectFile = async (e) => {
@@ -156,7 +158,7 @@ export default function ProductForm(props) {
                 <button className="hidden lg:inline-block mt-4 aspect-square p-2 relative right-8 rounded-full focus:ring-4 focus:ring-gray-500 focus:outline-none hover:bg-gray-200" onClick={() => navigate(-1)}>
                     <FiArrowLeft className='text-2xl' />
                 </button>
-                <div className="w-full px-4 items-center my-8 lg:mt-0">
+                <div className="w-full px-8 items-center my-8 lg:mt-0">
                     <div className="">
 
                         {/* alert error message */}

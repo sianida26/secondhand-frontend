@@ -60,7 +60,7 @@ function PreviewProduk() {
                         previewURIs.map((uri, i) => <img key={ i } alt="Produk" className="w-full aspect-[6/5] object-cover md:rounded-xl" src={ uri } />)
                     }
                 </Carousel>
-                <button onClick={ () => navigate(-1) } className="absolute top-4 left-4 rounded-full w-8 h-8 bg-white flex justify-center items-center focus:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500">
+                <button onClick={ () => navigate(-1, { state: location.state }) } className="absolute top-4 left-4 rounded-full w-8 h-8 bg-white flex justify-center items-center focus:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500">
                     <FiArrowLeft />
                 </button>
             </div>
@@ -74,7 +74,7 @@ function PreviewProduk() {
                     <button className="hidden md:block w-full bg-purple-4 font-medium text-white text-center py-2 mt-4 rounded-lg">
                         Terbitkan
                     </button>
-                    <button className="hidden md:block w-full border border-purple-4 bg-white font-medium text-neutral-5 text-center py-2 mt-4 rounded-lg">
+                    <button onClick={ () => navigate(-1, { state: location.state }) } className="hidden md:block w-full border border-purple-4 bg-white font-medium text-neutral-5 text-center py-2 mt-4 rounded-lg">
                         Edit
                     </button>
                 </div>
