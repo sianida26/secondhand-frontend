@@ -3,9 +3,11 @@ import { toast } from 'react-toastify';
 import { useLocation, useNavigate } from 'react-router-dom'
 import { FiPlus, FiArrowLeft, FiAlertCircle } from 'react-icons/fi'
 import { useDispatch, useSelector } from 'react-redux'
-import Header from '../components/Header'
 import axios from 'axios'
+
 import Validator from '../utils/Validator';
+import configs from '../utils/configs';
+import Header from '../components/Header';
 
 
 export default function ProductForm(props) {
@@ -17,6 +19,7 @@ export default function ProductForm(props) {
 
     const inputButtonRef = useRef(null)
     const token = useSelector(state => state.auth.token)
+    const productId = location.state?.productId
 
     const [ isLoading, setLoading ] = useState(false);
     const [ name, setName ] = useState("");
@@ -49,24 +52,24 @@ export default function ProductForm(props) {
         event.preventDefault();
         if(!validateInput()) return
         const data = new FormData();
-        data.append("file", files);
-        data.append("name", name);
-        data.append("price", price);
-        data.append("category", category);
-        data.append("description", description);
-    
         try {
-            setLoading(true); 
-            // const response = await axios({
-            //     url: 'https://secondhand-backend-kita.herokuapp.com/products/', 
-            //     method: 'POST',
-            //     headers: {
-            //         Authorization: `Bearer ${token}`
-            //     },
-            //     data:  data,
-            // });
-            await new Promise(r => setTimeout(r, 3000))
-            toast.success('Produk berhasil ditambahkan!', {
+            setLoading(true);
+            const formData = new FormData()
+            formData.append('name', name);
+            formData.append('price', price);
+            formData.append('description', description);
+            formData.append('category', category);
+            formData.append('filenames', files);
+            
+            const response = await axios({
+                url: `${ configs.apiRootURL }${ productId ? '/products/'+productId : '/products' }`,
+                method: productId ? 'PUT' : 'POST',
+                headers: {
+                    Authorization: `Bearer ${ token }`
+                },
+                data: formData,
+            })
+            toast.success('Produk berhasil ditambahkan', {
                 position: "top-center",
                 autoClose: 5000,
                 hideProgressBar: false,
@@ -74,12 +77,20 @@ export default function ProductForm(props) {
                 pauseOnHover: true,
                 draggable: true,
                 progress: undefined,
+                theme: 'colored',
             });
-            navigate('/produkku')
-            
-        } catch (e) {
-            if(e.response) setErrorMsg(e.response.message);
-            else setErrorMsg("Terjadi Kesalahan. Silakan periksa koneksi Anda")
+            navigate('/produkku', { replace: true })
+        } catch (error) {
+            toast.error(error.response?.data?.message || 'Terjadi Kesalahan. Silakan coba lagi', {
+                position: "top-center",
+                autoClose: 5000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: 'colored',
+            });
         } finally {
             setLoading(false);
         }
@@ -103,16 +114,15 @@ export default function ProductForm(props) {
     const handleDelete = async () => {
         try {
             setLoading(true); 
-            // await axios({
-            //     url: 'https://secondhand-backend-kita.herokuapp.com/products/delete/:id', 
-            //     method: 'DELETE',
-            //     headers: {
-            //         Authorization: `Bearer ${token}`
+            await axios({
+                url: 'https://secondhand-backend-kita.herokuapp.com/products/delete/:id', 
+                method: 'DELETE',
+                headers: {
+                    Authorization: `Bearer ${token}`
         
-            //     }
-            // })
-            await new Promise(r => setTimeout(r, 3000))
-            toast.error('Produk berhasil dihapus!', {
+                }
+            })
+            toast.success('Produk berhasil dihapus!', {
                 position: "top-center",
                 autoClose: 5000,
                 hideProgressBar: false,
@@ -120,6 +130,7 @@ export default function ProductForm(props) {
                 pauseOnHover: true,
                 draggable: true,
                 progress: undefined,
+                theme: 'colored'
                 });
             navigate(-1,{replace: true})
         } catch (e) {
@@ -153,7 +164,6 @@ export default function ProductForm(props) {
         <main className='w-screen'>
             <Header title="Lengkapi Info Produk" withoutSearchBar />
             
-
             <div className='flex items-center flex-wrap max-w-lg mx-auto w-full'>
                 <button className="hidden lg:inline-block mt-4 aspect-square p-2 relative right-8 rounded-full focus:ring-4 focus:ring-gray-500 focus:outline-none hover:bg-gray-200" onClick={() => navigate(-1)}>
                     <FiArrowLeft className='text-2xl' />
