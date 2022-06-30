@@ -2,17 +2,18 @@ import React, { useState } from 'react'
 import axios from 'axios'
 import {Input} from "antd"
 import { useDispatch } from 'react-redux'
-import { Link, useNavigate } from 'react-router-dom'
+import { Link, useNavigate, useLocation } from 'react-router-dom'
 import { FiArrowLeft,FiAlertCircle } from 'react-icons/fi'
 
 import pic from '../assets/register.png'
-import { setToken } from '../redux/slices/authSlice'
+import { setData } from '../redux/slices/authSlice'
 import LoadingSpin from '../components/LoadingSpin'
 
 export default function Login() {
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const location = useLocation();
 
   const [ email, setEmail ] = useState("")
   const [ password, setPassword ] = useState("")
@@ -29,9 +30,13 @@ export default function Login() {
         method: 'POST',
         data: { email, password }
       })
-      const token = response.data.token;
-      dispatch(setToken(token))
-      navigate('/')
+      dispatch(setData({
+        name: response.data.name,
+        token: response.data.token,
+        profilePhoto: response.data.profilePhoto,
+        city: response.data.city, 
+      }))
+      navigate(location.state?.referrer || '/');
     } catch (e) {
       if (e.response) setErrorMsg(e.response.data.message);
       else setErrorMsg("Terjadi Kesalahan. Silakan periksa koneksi anda");

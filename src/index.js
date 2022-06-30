@@ -5,7 +5,8 @@ import reportWebVitals from "./reportWebVitals";
 import { BrowserRouter as Router } from "react-router-dom";
 import { store } from "./redux/store";
 import { Provider } from "react-redux";  
-
+import { persistStore } from 'redux-persist'
+import { PersistGate } from 'redux-persist/integration/react'
 
 import 'react-toastify/dist/ReactToastify.css';
 import "antd/dist/antd.css";
@@ -13,14 +14,17 @@ import "./styles/tailwind.css";
 import "./styles/custom.css";
 import { ToastContainer } from "react-toastify";
 
-
+const persistor = persistStore(store)
 const root = ReactDOM.createRoot(document.getElementById("root"));
+
 root.render(
 	<React.StrictMode>
 		<Router>
 			<Provider store={store}>
-				<ToastContainer />
-				<App />
+				<PersistGate loading={ <div>Loading...</div> } persistor={ persistor }>
+					<ToastContainer />
+					<App />
+				</PersistGate>
 			</Provider>
 		</Router>
 	</React.StrictMode>

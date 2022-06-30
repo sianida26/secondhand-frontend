@@ -8,7 +8,7 @@ import Sidebar from './Sidebar';
 export default function Header(props) {
 
   const navigate = useNavigate();
-  const isLoggedIn = useSelector(state => state.auth.login);
+  const isLoggedIn = useSelector(state => state.auth.token);
 
   const [ showSidebar, setShowSidebar ] = useState(false);
 
