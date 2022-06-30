@@ -155,7 +155,7 @@ export default function ProductForm(props) {
 
     return (
         <section className='h-full'>
-            <Header title="Lengkapi Info Produk" />
+            <Header title="Lengkapi Info Produk" withoutSearchBar useBackButton />
             
 
             <div className='flex xl:justify-center lg:justify-center justify-center items-center flex-wrap'>

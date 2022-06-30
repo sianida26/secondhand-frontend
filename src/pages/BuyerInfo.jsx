@@ -7,11 +7,15 @@ import { formatRupiah } from '../utils/helpers'
 import buyer from '../assets/buyer-pic.png'
 import product from '../assets/product.png'
 
+import LoadingSpin from '../components/LoadingSpin'
+
 export default function BuyerInfo(props) {
 
   const navigate = useNavigate()
   const isAcceptProduct = window.location.pathname === '/accept-produk'
 
+  const [ isLoading, setLoading ] = useState(false);
+  
   const [ isModalAcceptShow, setModalAcceptShow ] = useState(false);
   const [ isModalDeniedShow, setModalDeniedShow ] = useState(false);
   const [ isModalStatusShow, setModalStatusShow ] = useState(false);
@@ -22,8 +26,24 @@ export default function BuyerInfo(props) {
     setModalStatusShow(false)
     setModalDeniedShow(false)
   }
-  const handleOpenAcceptModal=() => {
-    setModalAcceptShow(true)
+  const handleOpenAcceptModal= async (event) => {
+    event.preventDefault();
+    setModalAcceptShow(true);
+    try {
+            setLoading(true); 
+            // const response = await axios({
+            // url: 'https://secondhand-backend-kita.herokuapp.com/products/', 
+            //     method: 'GET',
+            //     headers: {
+            //         Authorization: `Bearer ${token}`
+            //     },
+            //     data:  {},
+            // });
+    } catch (error) {
+        
+    } finally{
+        setLoading(false)
+    }
   }
   const handleOpenDeniedModal=() => {
     setModalDeniedShow(true)
@@ -73,15 +93,17 @@ export default function BuyerInfo(props) {
 
                             {/* Buttons */}
                             <div className={`${isAcceptProduct? 'hidden' : 'grid'} grid-cols-2 lg:float-right text-center pt-4 pb-4`}>
-                                <button className="mr-2 px-[48px] py-2 inline-block bg-white border border-purple-4 hover:bg-gray-200 text-black hover:text-white font-normal text-sm leading-tight rounded-[16px] 
+                                <button className="mr-2 px-[48px] py-2 inline-block bg-white border border-purple-4 hover:bg-gray-200 font-normal text-sm leading-tight rounded-[16px] 
                                     focus:shadow-lg focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-4 disabled:opacity-70"
                                     type="button" onClick={handleOpenDeniedModal}>
                                     Tolak
                                 </button>
-                                <button className="ml-2 px-[48px] py-2 inline-block bg-purple-4 hover:bg-purple-5  text-white font-normal text-sm leading-tight rounded-[16px] 
+                                <button disabled={isLoading}
+                                    className="ml-2 px-[48px] py-2 inline-block bg-purple-4 hover:bg-purple-5  text-white font-normal text-sm leading-tight rounded-[16px] 
                                     focus:shadow-lg focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-5 disabled:opacity-70"
                                     type="button" onClick={handleOpenAcceptModal} >
                                     Terima
+                                    { isLoading && <LoadingSpin /> }
                                 </button>
                             </div>
                             <div className={`${isAcceptProduct? 'grid' : 'hidden'} grid grid-cols-2 lg:float-right text-center pt-4 pb-4`}>
@@ -108,7 +130,7 @@ export default function BuyerInfo(props) {
     <div onClick={handleCloseModal} className={`w-screen h-screen fixed ${isModalShow?'flex':'hidden'} items-center justify-center bg-black bg-opacity-70 top-0 left-0 z-50`}>
 
         {/* Modal for Terima */}
-        <div onClick={(e)=>e.stopPropagation()} className={`${isModalAcceptShow?'bg-white':'hidden'} relative p-6 w-full max-w-sm md:h-auto rounded-2xl`}>
+        <div onClick={(e)=>e.stopPropagation()} className={`${isModalAcceptShow?'bg-white':'hidden'} absolute bottom-0 lg:relative  p-6 w-full max-w-sm md:h-auto rounded-2xl`}>
             <button className='float-right'>
                 <FiX onClick={handleCloseModal} className='text-xl mb-2' />
             </button>
@@ -146,12 +168,13 @@ export default function BuyerInfo(props) {
         </div>
 
         {/* Modal for Tolak */}
-        <div onClick={(e)=>e.stopPropagation()} className={`${isModalDeniedShow?'bg-white':'hidden'}  relative p-6 w-full max-w-sm md:h-auto rounded-2xl`}>
+        <div onClick={(e)=>e.stopPropagation()} className={`${isModalDeniedShow?'bg-white':'hidden'} absolute bottom-0 lg:relative p-6 w-full max-w-sm md:h-auto rounded-2xl`}>
             <div className='flex justify-center items-center'>
             <FiAlertCircle className='text-red-600 text-6xl' />
             </div>
-            <p className='text-center text-sm font-medium pb-2 my-4'>Apakah anda yakin ingin menolak tawaran ini?</p>
-            
+            <p className='text-center text-sm font-medium pb-2 my-4'>
+                Apakah anda yakin ingin menolak tawaran ini?
+            </p>
             <div className='grid grid-cols-2'>
             <button onClick={handleCloseModal} className="flex items-center justify-center  py-2 bg-purple-4 hover:bg-purple-5 text-white font-normal text-sm rounded-[16px] 
                         focus:shadow-lg focus:outline-none active:shadow-lg mr-2" type="button"  >
@@ -165,7 +188,7 @@ export default function BuyerInfo(props) {
         </div>
 
         {/* Modal for Status */}
-        <div onClick={(e)=>e.stopPropagation()} className={`${isModalStatusShow?'bg-white':'hidden'} relative p-6 w-full max-w-sm md:h-auto rounded-2xl`}>
+        <div onClick={(e)=>e.stopPropagation()} className={`${isModalStatusShow?'bg-white':'hidden'} absolute bottom-0 lg:relative p-6 w-full max-w-sm md:h-auto rounded-2xl`}>
             <button className='float-right'>
                 <FiX onClick={handleCloseModal} className='text-xl mb-2' />
             </button>
@@ -174,8 +197,8 @@ export default function BuyerInfo(props) {
             </p>
             <div className='pt-6'>
                 <div className="flex pb-3">
-                    <div className="items-center h-5">
-                        <input checked id="radio1" name="status" type="radio" value="" className="accent-purple-4 bg-[#C4C4C4] rounded border-[#C4C4C4] focus:ring-[#C4C4C4] focus:ring-2" />
+                    <div className="flex items-center h-5">
+                        <input checked id="radio1" name="status" type="radio" value="" className="accent-purple-4 focus:ring-[#C4C4C4] focus:ring-2" />
                     </div>
                     <div className="ml-3 text-sm">
                         <label for="radio1" className="font-medium text-sm">
@@ -187,8 +210,8 @@ export default function BuyerInfo(props) {
                     </div>
                 </div>
                 <div className="flex">
-                    <div className="items-center h-5">
-                        <input id="radio2" name="status" type="radio" value="" className="accent-purple-4 bg-[#C4C4C4] rounded border-[#C4C4C4] focus:ring-[#C4C4C4] focus:ring-2" />
+                    <div className="flex items-center h-5">
+                        <input id="radio2" name="status" type="radio" value="" className="accent-purple-4 focus:ring-[#C4C4C4] focus:ring-2" />
                     </div>
                     <div className="ml-3 text-sm">
                         <label for="radio2" className="font-medium text-sm">
