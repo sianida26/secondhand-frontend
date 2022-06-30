@@ -90,14 +90,14 @@ export default function ProductForm(props) {
         if(!validateInput()) return
         const state = {
             id: location.state?.id,
-            file: files,
+            files: files,
             name: name,
             price: price,
             category: category,
             description: description,
             uris: previewURIs,
         }
-        navigate('/preview-produk', { state: { previewData: state } })
+        navigate('/preview-produk', { replace: true, state: { previewData: state, prevPathname: location.pathname } })
     } 
 
     const handleDelete = async () => {
