@@ -1,19 +1,32 @@
-import React from "react";
-import { Link } from "react-router-dom";
+import React, { useEffect } from "react";
+import { Link, useNavigate, useLocation } from "react-router-dom";
+import { useSelector } from "react-redux";
 
 import { FiCamera, FiLogOut, FiPlusCircle, FiSettings } from "react-icons/fi";
 import { FiEdit } from "react-icons/fi";
 import { FiHome, FiBell, FiList, FiUser } from "react-icons/fi";
 import Header from "../components/Header";
 
-export default function akunSaya() {
+export default function AkunSaya() {
+
+  const auth = useSelector(state => state.auth);
+
+  const navigate = useNavigate();
+  const location = useLocation();
+
+  useEffect(() => {
+    if (!auth.token){
+      navigate('/login', { replace: true, state: { referrer: location.pathname } });
+    }
+  }, [auth, navigate, location.pathname])
+
   return (
     <section className="h-full max-w-lg lg:max-w-full mx-auto">
       <Header title="Akun Saya" />
 
       <div className={`flex text-purple-4 items-center justify-center text-2xl  mx-auto h-24 mt-4 w-24 rounded-xl relative group`}>
         {/* Preview gambar */}
-        <img src="https://ui-avatars.com/api/?background=random&name=aa&rounded=true" className="h-full w-full object-cover rounded-xl" alt="Foto Profil" />
+        <img src={ auth.profilePhoto } className="h-full w-full object-cover rounded-xl" alt="Profile" />
       </div>
 
       <div className="  text-2xl first-letter px-4 lg:px-16 divide-y divide-gray-300">

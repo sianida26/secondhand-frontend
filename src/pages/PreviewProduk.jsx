@@ -1,73 +1,134 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react';
+import { useSelector } from 'react-redux';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 
-import { Link } from 'react-router-dom'
-
-import { FiArrowLeft, FiSearch, FiBell, FiList, FiUser } from 'react-icons/fi'
-
-import gambarJam from '../assets/jam.png'
-import gambarOrang from '../assets/buyer-pic.png'
-
-import { Carousel } from 'react-responsive-carousel'
+import axios from 'axios';
+import { Carousel } from 'react-responsive-carousel';
+import { toast } from 'react-toastify';
 import "react-responsive-carousel/lib/styles/carousel.min.css";
+
+import { FiArrowLeft, FiSearch, FiBell, FiList, FiUser } from 'react-icons/fi';
+
+import Header from '../components/Header';
+import LoadingSpin from '../components/LoadingSpin';
+import configs from '../utils/configs';
+
+import { formatRupiah, toTitleCase } from '../utils/helpers';
 
 function PreviewProduk() {
 
-    const [ isLoading, setLoading ] = useState(true);
+    const auth = useSelector(state => state.auth);
+    const location = useLocation();
+    const navigate = useNavigate();
+
+    const [ isLoading, setLoading ] = useState(false);
+    const [ productName, setProductName ] = useState(location.state?.previewData?.name)
+    const [ category, setCategory ] = useState(location.state?.previewData?.category)
+    const [ price, setPrice ] = useState(location.state?.previewData?.price)
+    const [ description, setDescription ] = useState(location.state?.previewData?.description)
+    const [ previewURIs, setPreviewURIs ] = useState(location.state?.previewData?.uris)
+    const [ files, setFiles ] = useState(location.state?.previewData?.files)
+    const [ productId, setProductId ] = useState(location.state?.previewData?.productId || 0);
+
+    const sendData = async () => {
+        try {
+            setLoading(true);
+            const formData = new FormData()
+            formData.append('name', productName);
+            formData.append('price', price);
+            formData.append('description', description);
+            formData.append('category', category);
+            formData.append('filenames', files);
+            //TODO: Lanjutkan setelah ada perbaikan endpoint dari backend
+            const response = await axios({
+                url: `${ configs.apiRootURL }${ productId ? '/products/'+productId : '/products' }`,
+                method: productId ? 'PUT' : 'POST',
+                headers: {
+                    Authorization: `Bearer ${ auth.token }`
+                },
+                data: formData,
+            })
+            navigate('/produkku', { replace: true })
+        } catch (error) {
+            toast.error(error.response?.data?.message || 'Terjadi Kesalahan. Silakan coba lagi', {
+                position: "top-center",
+                autoClose: 5000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: 'colored',
+            });
+        } finally {
+            setLoading(false);
+        }
+    }
 
     return <div className="w-screen min-h-screen">
 
         {/* Header */}
-        <div className="w-full pt-8 px-4 gap-4 md:bg-white md:shadow-high md:justify-between md:py-4 md:px-16 hidden md:flex items-center">
-
-            <div className="flex-grow md:flex-grow-0 md:flex md:justify-center md:items-center md:gap-4">
-                <div className="hidden md:inline w-[5.88rem] h-8 bg-purple-5"></div>
-                <div className="h-12 bg-white rounded-2xl py-3 px-6 text-neutral-3 flex md:bg-[#EEEEEE]">
-                    <input
-                        className="w-full h-full bg-transparent"
-                        placeholder="Cari di sini ..."
-                    />
-                    <FiSearch className="text-2xl" />
-                </div>
-            </div>
-
-            <div className="flex gap-4 items-center text-2xl">
-                <FiList />
-                <FiBell />
-                <FiUser />
-            </div>
+        <div className="hidden md:block">
+            <Header />
         </div>
-
 
         <div className="flex flex-col md:flex-row md:max-w-screen-lg md:mx-auto md:mt-12">
             <div className="w-full aspect-[6/5] relative md:w-3/5 md:flex-shrink-0">
-                <Carousel showThumbs={false} showArrows={false} showStatus={false} infiniteLoop={true}>
-                    <img className="w-full aspect-[6/5] object-cover md:rounded-xl" src={gambarJam} />
-                    <img className="w-full aspect-[6/5] object-cover md:rounded-xl" src={gambarJam} />
+                <Carousel 
+                    infiniteLoop={true}
+                    showArrows={false} 
+                    showStatus={false} 
+                    showThumbs={false} 
+                >
+                    {
+                        previewURIs.map((uri, i) => <img 
+                            key={ i } 
+                            alt="Produk" 
+                            className="w-full aspect-[6/5] object-cover md:rounded-xl" 
+                            src={ uri } />
+                        )
+                    }
                 </Carousel>
-                <button className="absolute top-4 left-4 rounded-full w-8 h-8 bg-white flex justify-center items-center">
+                <button 
+                    onClick={ () => navigate(location.state?.prevPathname || -1, { state: location.state }) } 
+                    disabled={ isLoading }
+                    className="absolute top-4 left-4 rounded-full w-8 h-8 bg-white flex justify-center items-center focus:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500"
+                >
                     <FiArrowLeft />
                 </button>
             </div>
 
             <div className="px-4 flex flex-col relative bottom-2 gap-4 md:flex-grow md:bottom-0">
                 <div className="bg-white rounded-xl px-6 py-4 flex flex-col shadow-low md:shadow-high">
-                    <h1 className="font-medium">Jam Tangan Casio</h1>
-                    <p className="text-sm text-neutral-3">Aksesoris</p>
-                    <p className="">Rp 250.000</p>
+                    <h1 className="font-medium">{ productName }</h1>
+                    <p className="text-sm text-neutral-3">{ toTitleCase(category) }</p>
+                    <p className="">{ formatRupiah(price) }</p>
 
-                    <button className="hidden md:block w-full bg-purple-4 font-medium text-white text-center py-2 mt-4 rounded-lg">
+                    <button 
+                        className="hidden md:block w-full bg-purple-4 font-medium text-white text-center py-2 mt-4 rounded-lg focus:ring-2 focus:ring-offset-2 focus:ring-purple-4 focus:outline-none"
+                        disabled={ isLoading } 
+                        onClick={ sendData } 
+                    >
                         Terbitkan
                     </button>
-                    <button className="hidden md:block w-full border border-purple-4 bg-white font-medium text-neutral-5 text-center py-2 mt-4 rounded-lg">
+                    <button 
+                        className="hidden md:block w-full border border-purple-4 bg-white font-medium text-neutral-5 text-center py-2 mt-4 rounded-lg"
+                        disabled={ isLoading }
+                        onClick={ () => navigate(location.state?.prevPathname || -1, { state: location.state }) } 
+                    >
                         Edit
                     </button>
                 </div>
 
                 <div className="flex bg-white rounded-xl px-6 py-4 shadow-low gap-4">
-                    <img className="h-14 aspect-square rounded-xl object-cover" src={gambarOrang} />
+                    <img 
+                        className="h-14 aspect-square rounded-xl object-cover" 
+                        src={ auth.profilePhoto } 
+                        alt={ auth.name } 
+                    />
                     <div className="flex flex-col justify-center">
-                        <h1 className="font-medium">Nama Penjual</h1>
-                        <p className="text-sm text-neutral-3">Kota</p>
+                        <h1 className="font-medium">{ auth.name }</h1>
+                        <p className="text-sm text-neutral-3">{ auth.city }</p>
                     </div>
                 </div>
             </div>
@@ -76,15 +137,17 @@ function PreviewProduk() {
         <div className="pb-20 px-4 mt-2 md:max-w-screen-lg md:mt-4 md:mx-auto md:px-0 md:pb-0">
             <div className="flex bg-white rounded-xl px-6 py-4 shadow-low flex-col gap-2 md:w-3/5">
                 <h1 className="font-medium">Deskripsi</h1>
-                <p className="text-neutral-3">
-                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam at vestibulum tortor. Pellentesque tristique augue lorem, eget lacinia diam rutrum in. In pretium lacus vel dolor finibus, nec molestie sapien condimentum. Morbi mollis hendrerit eros quis viverra. Donec augue magna, mattis id lectus id, congue venenatis odio. Ut a consectetur eros. Phasellus convallis convallis vestibulum. Curabitur fermentum dolor quam, vitae ultricies sem facilisis eget. Suspendisse et blandit ex. Nullam libero orci, placerat sed posuere pretium, vestibulum quis tellus. Maecenas ut massa auctor, mollis nulla non, consectetur augue. Morbi malesuada vulputate dolor ac tempus. Cras nec nisl tincidunt, venenatis eros quis, tincidunt dolor. Nulla facilisi. Fusce at luctus risus.
-                </p>
+                <p className="text-neutral-3">{ description }</p>
             </div>
         </div>
 
         <div className="fixed w-full bottom-4 px-4 md:hidden">
-            <button className="bg-purple-4 font-medium text-white text-center py-4 w-full rounded-xl">
-                Terbitkan
+            <button 
+                disabled={ isLoading } 
+                onClick={ sendData }
+                className="bg-purple-4 font-medium text-white text-center py-4 flex justify-center w-full rounded-xl focus:ring-2 focus:ring-offset-2 focus:ring-purple-4 focus:outline-none disabled:opacity-70"
+            >
+                { isLoading ? <span className="flex items-center"><LoadingSpin /> Mengirim...</span> : "Terbitkan" }
             </button>
         </div>
     </div>

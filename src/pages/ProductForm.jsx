@@ -1,18 +1,19 @@
-import React, { useRef, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { toast } from 'react-toastify';
-import { useNavigate } from 'react-router-dom'
+import { useLocation, useNavigate } from 'react-router-dom'
 import { FiPlus, FiArrowLeft, FiAlertCircle } from 'react-icons/fi'
 import { useDispatch, useSelector } from 'react-redux'
-import { setPreviewProductData } from '../redux/slices/previewProductSlice'
 import Header from '../components/Header'
 import axios from 'axios'
+import Validator from '../utils/Validator';
 
 
 export default function ProductForm(props) {
-
+    
     const isEditProduct = window.location.pathname === '/edit-produk'
     const navigate = useNavigate()
     const dispatch = useDispatch()
+    const location = useLocation()
 
     const inputButtonRef = useRef(null)
     const token = useSelector(state => state.auth.token)
@@ -24,13 +25,10 @@ export default function ProductForm(props) {
     const [ description, setDescription ] = useState("");
     const [ previewURIs, setPreviewURIs ] = useState([]);
     const [ files, setFiles ] = useState([]);
+    const [ formErrors, setFormErrors ] = useState({});
     const [ errorMsg, setErrorMsg ] = useState("");
-    const [ errorSize, setErrorSize ] = useState("");
-    const [ errorName, setErrorName ] = useState("");
-    const [ errorPrice, setErrorPrice ] = useState("");
-    const [ errorCategory, setErrorCategory ] = useState("");
-    const [ errorDesc, setErrorDesc ] = useState("");
-    const [ errorPhoto, setErrorPhoto ] = useState("");
+
+    useEffect(() => console.log(location.state), [ location ])
 
     //handle file photo
     const handleSelectFile = async (e) => {
@@ -40,7 +38,7 @@ export default function ProductForm(props) {
         // validasi ukuran files
         const isAnyOversize = !!iFiles.find(file => file.size>2e+6)
         if (isAnyOversize) {
-            setErrorSize("Ukuran foto maksimal 2 MB")
+            setFormErrors(prev => ({ ...prev, files: 'Ukuran foto maksimal adalah 2 MB' }))
         }
         setPreviewURIs([...previewURIs, ...iFiles.map(file => URL.createObjectURL(file))].slice(0,4))
         setFiles([...files,...iFiles].slice(0,4))
@@ -76,7 +74,7 @@ export default function ProductForm(props) {
                 pauseOnHover: true,
                 draggable: true,
                 progress: undefined,
-                });
+            });
             navigate('/produkku')
             
         } catch (e) {
@@ -90,8 +88,16 @@ export default function ProductForm(props) {
     //handle untuk preview
     const handlePreview = () => {
         if(!validateInput()) return
-        dispatch(setPreviewProductData({name, price, category, description, files, previewURIs}))
-        navigate('/preview-produk')
+        const state = {
+            id: location.state?.id,
+            files: files,
+            name: name,
+            price: price,
+            category: category,
+            description: description,
+            uris: previewURIs,
+        }
+        navigate('/preview-produk', { replace: true, state: { previewData: state, prevPathname: location.pathname } })
     } 
 
     const handleDelete = async () => {
@@ -123,44 +129,37 @@ export default function ProductForm(props) {
     }
 
     const validateInput = () => {
-        if(!name){
-            setErrorName('nama harus diisi')
-        }else{
-            setErrorName('')
-        }        
-        if(!price){
-            setErrorPrice('harga harus diisi')
-        }else{
-            setErrorPrice('')
-        }
-        if(!category){
-            setErrorCategory('harus memilih kategory')
-        }else{
-            setErrorCategory('')
-        }
-        if(!description){
-            setErrorDesc('deskripsi harus diisi')
-        }else{
-            setErrorDesc('')
-        }
-        if(!files){
-            setErrorPhoto('foto harus diisi')
-        }else{
-            setErrorPhoto('')
-        }
 
-        return (!errorName || !errorPrice || !errorCategory || !errorDesc || !errorPhoto )
+        const rules = Validator.rules
+        
+        const validator = new Validator({ name, price, category, description, files }, {
+            name: [ rules.required(), rules.max(255) ],
+            price: [ rules.required(), rules.number(), rules.min(0) ],
+            category: [ rules.required(), rules.inArray(['hobi', 'kendaraan', 'baju', 'elektronik', 'kesehatan']) ],
+            description: [ rules.required() ],
+            files: [ rules.required(), rules.array(), rules.min(1, "Foto harus diisi"), rules.max(4, "Foto maksimal 4"), {
+                test: (value) => value.every(photo => photo.size < 2e+6),
+                errorMsg: 'Ukuran foto maksimal adalah 2MB'
+            }]
+        })
+
+        setFormErrors(validator.getErrors(true));
+
+        return validator.ok();
     }
     
 
     return (
-        <section className='h-full'>
-            <Header title="Lengkapi Info Produk" withoutSearchBar useBackButton />
+        <main className='w-screen'>
+            <Header title="Lengkapi Info Produk" withoutSearchBar />
             
 
-            <div className='flex xl:justify-center lg:justify-center justify-center items-center flex-wrap'>
-                <div className="w-full px-4 items-center my-8">
-                    <div className="lg:px-72 md:mx-12">
+            <div className='flex items-center flex-wrap max-w-lg mx-auto w-full'>
+                <button className="hidden lg:inline-block mt-4 aspect-square p-2 relative right-8 rounded-full focus:ring-4 focus:ring-gray-500 focus:outline-none hover:bg-gray-200" onClick={() => navigate(-1)}>
+                    <FiArrowLeft className='text-2xl' />
+                </button>
+                <div className="w-full px-8 items-center my-8 lg:mt-0">
+                    <div className="">
 
                         {/* alert error message */}
                         <div className={ `flex items-center bg-red-600 text-white px-4 py-2 my-3 rounded relative ${errorMsg? "block":"hidden"}`}>
@@ -168,25 +167,24 @@ export default function ProductForm(props) {
                             <p>{errorMsg}</p>
                         </div>
                         
-                        <form onSubmit={ handlePublish }>
-                            <p className="mb-3 text-sm">
-                                    <button onClick={() => navigate(-1)}>
-                                        <FiArrowLeft className='invisible lg:visible mx-[-64px] mb-[-8px] text-2xl' />
-                                    </button>
-                            Nama Produk</p>
+                        <form onSubmit={ handlePublish } className="w-full">
+                            <p className="mb-3 text-sm">Nama Produk</p>
 
                                 <div className="mb-5">
                                     <input
                                         onChange={(e) => setName(e.target.value)}
-                                        type="text" className="form-control rounded-[16px] w-full px-4 py-2 font-normal text-sm text-neutral-3 bg-white 
-                                        border border-neutral-2  transition ease-in-out m-0 focus:text-gray-700 focus:outline-none"
+                                        type="text" className={ `rounded-[16px] w-full px-4 py-2 font-normal text-sm bg-white 
+                                        border transition ease-in-out m-0 focus:outline-none 
+                                        ${ formErrors.name ? "focus:ring-1 focus:ring-red-500 border-red-500 caret-red-500 text-red-500" 
+                                            : "focus:ring-2 focus:ring-purple-3 focus:caret-purple-3 text-neutral-3 border-neutral-2 focus:text-gray-700" 
+                                        }`}
                                         id="nameInput" placeholder="Nama Produk" 
                                     />
 
                                     {/* error preview name */}
-                                    <div className={`flex items-center text-red-600 text-sm mt-2 ${errorName? "block":"hidden"}`}>
+                                    <div className={`flex items-center text-red-600 text-sm mt-2 ${formErrors.name? "block":"hidden"}`}>
                                         <FiAlertCircle className='mr-2'/>
-                                        <p>{errorName}</p>
+                                        <p>{formErrors.name}</p>
                                     </div>
 
                                 </div>
@@ -195,15 +193,18 @@ export default function ProductForm(props) {
                                 <div className="mb-5">
                                     <input
                                         onChange={(e) => setPrice(e.target.value)}
-                                        type="text" className="form-control w-full px-4 py-2 font-normal text-sm text-neutral-3 bg-white 
-                                        border border-neutral-2 rounded-[16px] transition ease-in-out m-0 focus:text-gray-700 focus:outline-none"
+                                        type="text" className={ `rounded-[16px] w-full px-4 py-2 font-normal text-sm bg-white 
+                                            border transition ease-in-out m-0 focus:outline-none 
+                                            ${ formErrors.price ? "focus:ring-1 focus:ring-red-500 border-red-500 caret-red-500 text-red-500" 
+                                                : "focus:ring-2 focus:ring-purple-3 focus:caret-purple-3 text-neutral-3 border-neutral-2 focus:text-gray-700" 
+                                        }`}
                                         id="priceInput" placeholder="Rp 0,00" 
                                     />
 
                                     {/* error preview price */}
-                                    <div className={`flex items-center text-red-600 text-sm mt-2 ${errorPrice? "block":"hidden"}`}>
+                                    <div className={`flex items-center text-red-600 text-sm mt-2 ${formErrors.price? "block":"hidden"}`}>
                                         <FiAlertCircle className='mr-2'/>
-                                        <p>{errorPrice}</p>
+                                        <p>{formErrors.price}</p>
                                     </div>
 
                                 </div>
@@ -213,8 +214,11 @@ export default function ProductForm(props) {
                                 <div className="mb-5">
                                     <select
                                         onChange={(e) => setCategory(e.target.value)}
-                                        className='form-select w-full px-4 py-2 font-normal text-sm text-neutral-3 bg-white 
-                                        border border-neutral-2 rounded-[16px] transition ease-in-out focus:text-gray-700 focus:outline-none'>
+                                        className={ `rounded-[16px] w-full px-4 py-2 font-normal text-sm bg-white 
+                                            border transition ease-in-out m-0 focus:outline-none 
+                                            ${ formErrors.category ? "focus:ring-1 focus:ring-red-500 border-red-500 caret-red-500 text-red-500" 
+                                                : "focus:ring-2 focus:ring-purple-3 focus:caret-purple-3 text-neutral-3 border-neutral-2 focus:text-gray-700" 
+                                        }`}>
                                             <option selected>Pilih kategori</option>
                                             <option value="hobi">Hobi</option>
                                             <option value="kendaraan">Kendaraan</option>
@@ -224,9 +228,9 @@ export default function ProductForm(props) {
                                     </select>
 
                                     {/* error preview category */}
-                                    <div className={`flex items-center text-red-600 text-sm mt-2 ${errorCategory? "block":"hidden"}`}>
+                                    <div className={`flex items-center text-red-600 text-sm mt-2 ${formErrors.category? "block":"hidden"}`}>
                                         <FiAlertCircle className='mr-2'/>
-                                        <p>{errorCategory}</p>
+                                        <p>{formErrors.category}</p>
                                     </div>  
 
                                 </div>
@@ -236,15 +240,18 @@ export default function ProductForm(props) {
                                 <div className="mb-5">
                                     <textarea
                                         onChange={(e) => setDescription(e.target.value)}
-                                        type="text" className="form-control w-full px-4 py-2 font-normal text-sm text-neutral-3 bg-white 
-                                        border border-neutral-2 rounded-[16px] transition ease-in-out m-0 focus:text-gray-700 focus:outline-none"
+                                        type="text" className={ `rounded-[16px] w-full px-4 py-2 font-normal text-sm bg-white 
+                                            border transition ease-in-out m-0 focus:outline-none 
+                                            ${ formErrors.description ? "focus:ring-1 focus:ring-red-500 border-red-500 caret-red-500 text-red-500" 
+                                                : "focus:ring-2 focus:ring-purple-3 focus:caret-purple-3 text-neutral-3 border-neutral-2 focus:text-gray-700" 
+                                        }`}
                                         id="descInput" rows="3" placeholder="Contoh: Jalan Ikan Hiu No 33" 
                                     />
 
                                     {/* error preview description */}
-                                    <div className={`flex items-center text-red-600 text-sm mt-2 ${errorDesc? "block":"hidden"}`}>
+                                    <div className={`flex items-center text-red-600 text-sm mt-2 ${formErrors.description? "block":"hidden"}`}>
                                         <FiAlertCircle className='mr-2'/>
-                                        <p>{errorDesc}</p>
+                                        <p>{formErrors.description}</p>
                                     </div>  
 
                                 </div>
@@ -258,24 +265,19 @@ export default function ProductForm(props) {
                                         ))
 
                                     }
-                                        <div onClick={() => inputButtonRef.current?.click()} className={`text-2xl text-neutral-3 p-9 bg-white w-full aspect-square border border-dashed border-neutral-2 rounded-2xl ${previewURIs.length >= 4 ? "hidden" : "flex"} justify-center items-center`}>
+                                        <button onClick={() => inputButtonRef.current?.click()} type="button" className={`text-2xl text-neutral-3 p-9 bg-white w-full aspect-square border border-dashed border-neutral-2 rounded-2xl ${previewURIs.length >= 4 ? "hidden" : "flex"} justify-center items-center focus:ring-2 focus:ring-offset-2 focus:ring-purple-3 focus:outline-none focus:border-purple-3 focus:text-purple-3 hover:bg-gray-200`}>
                                             <FiPlus className="text-xl" />
                                             <input id="file-upload" type="file" ref={inputButtonRef} 
-                                                className="w-full h-full invisible absolute" onChange={handleSelectFile} disabled={isLoading} accept="images/*"
+                                                className="w-full invisible absolute" onChange={handleSelectFile} disabled={isLoading} accept="images/*"
                                             />
-                                        </div>
+                                        </button>
                                 </div>
 
                                 {/* alert size gambar */}
-                                <div className={`flex items-center text-red-600 text-sm mt-2 ${errorSize? "block":"hidden"}`}>
+                                <div className={`flex items-center text-red-600 text-sm mt-2 ${formErrors.files? "block":"hidden"}`}>
                                     <FiAlertCircle className='mr-2'/>
-                                    <p>{errorSize}</p>
-                                </div>
-                                {/* error preview photo */}
-                                <div className={`flex items-center text-red-600 text-sm mt-2 ${errorPhoto? "block":"hidden"}`}>
-                                    <FiAlertCircle className='mr-2'/>
-                                    <p>{errorPhoto}</p>
-                                </div>                                
+                                    <p>{formErrors.files}</p>
+                                </div>                          
                                 
                             {/* buttons */}
                             <div className="flex gap-4 w-full text-center pt-2">
@@ -289,14 +291,14 @@ export default function ProductForm(props) {
                                 <button 
                                     disabled={ isLoading } onClick={ handlePreview }
                                     className="flex-grow bg-white border border-purple-4 py-3 text-black font-normal text-sm leading-tight rounded-[16px] 
-                                    focus:shadow-lg focus:outline-none active:shadow-lg transition duration-200 ease-in-out"
+                                    focus:shadow-lg focus:outline-none active:shadow-lg transition duration-200 ease-in-out focus:ring-2 focus:ring-purple-4 focus:text-purple-4 focus:font-medium hover:bg-purple-1"
                                     type="button" data-mdb-ripple="true" data-mdb-ripple-color="dark">
                                     Preview
                                 </button>
                                 <button 
                                     disabled={ isLoading } 
-                                    className="flex-grow bg-purple-4 hover:bg-purple-3 py-3 text-white font-normal text-sm leading-tight rounded-[16px] 
-                                    focus:shadow-lg focus:outline-none active:shadow-lg transition duration-200 ease-in-out"
+                                    className="flex-grow bg-purple-4 hover:bg-purple-5 py-3 text-white font-normal text-sm leading-tight rounded-[16px] 
+                                    focus:shadow-lg focus:outline-none active:shadow-lg transition duration-200 ease-in-out focus:ring-2 focus:ring-offset-2 focus:ring-purple-3"
                                     type="submit" data-mdb-ripple="true" data-mdb-ripple-color="dark">
                                     Terbitkan
                                 </button>
@@ -305,6 +307,6 @@ export default function ProductForm(props) {
                     </div>
                 </div> 
             </div>
-        </section>
+        </main>
     )
 }
