@@ -130,7 +130,7 @@ export default function BuyerInfo(props) {
     <div onClick={handleCloseModal} className={`w-screen h-screen fixed ${isModalShow?'flex':'hidden'} items-center justify-center bg-black bg-opacity-70 top-0 left-0 z-50`}>
 
         {/* Modal for Terima */}
-        <div onClick={(e)=>e.stopPropagation()} className={`${isModalAcceptShow?'bg-white':'hidden'} absolute bottom-0 lg:relative  p-6 w-full max-w-sm md:h-auto rounded-2xl`}>
+        <div onClick={(e)=>e.stopPropagation()} className={`${isModalAcceptShow?'bg-white':'hidden'} absolute bottom-0 lg:relative p-6 w-full lg:max-w-sm md:h-auto rounded-t-2xl lg:rounded-2xl`}>
             <button className='float-right'>
                 <FiX onClick={handleCloseModal} className='text-xl mb-2' />
             </button>
@@ -168,7 +168,7 @@ export default function BuyerInfo(props) {
         </div>
 
         {/* Modal for Tolak */}
-        <div onClick={(e)=>e.stopPropagation()} className={`${isModalDeniedShow?'bg-white':'hidden'} absolute bottom-0 lg:relative p-6 w-full max-w-sm md:h-auto rounded-2xl`}>
+        <div onClick={(e)=>e.stopPropagation()} className={`${isModalDeniedShow?'bg-white':'hidden'} relative p-6 w-full mx-4 max-w-sm md:h-auto rounded-2xl`}>
             <div className='flex justify-center items-center'>
             <FiAlertCircle className='text-red-600 text-6xl' />
             </div>
@@ -176,11 +176,11 @@ export default function BuyerInfo(props) {
                 Apakah anda yakin ingin menolak tawaran ini?
             </p>
             <div className='grid grid-cols-2'>
-            <button onClick={handleCloseModal} className="flex items-center justify-center  py-2 bg-purple-4 hover:bg-purple-5 text-white font-normal text-sm rounded-[16px] 
+            <button onClick={handleCloseModal} className="flex items-center justify-center  py-2 bg-purple-4 hover:bg-purple-5 text-white font-normal text-sm rounded-2xl
                         focus:shadow-lg focus:outline-none active:shadow-lg mr-2" type="button"  >
                     Cancel
                 </button>
-                <button className="flex items-center justify-center  py-2 border border-red-500 text-red-500 hover:bg-red-500 hover:text-white font-normal text-sm rounded-[16px] 
+                <button className="flex items-center justify-center  py-2 border border-red-500 text-red-500 hover:bg-red-500 hover:text-white font-normal text-sm rounded-2xl 
                         focus:shadow-lg focus:outline-none active:shadow-lg" type="button"  >
                     Tolak
                 </button>
@@ -188,7 +188,7 @@ export default function BuyerInfo(props) {
         </div>
 
         {/* Modal for Status */}
-        <div onClick={(e)=>e.stopPropagation()} className={`${isModalStatusShow?'bg-white':'hidden'} absolute bottom-0 lg:relative p-6 w-full max-w-sm md:h-auto rounded-2xl`}>
+        <div onClick={(e)=>e.stopPropagation()} className={`${isModalStatusShow?'bg-white':'hidden'} absolute bottom-0 lg:relative p-6 w-full lg:max-w-sm md:h-auto rounded-t-2xl lg:rounded-2xl`}>
             <button className='float-right'>
                 <FiX onClick={handleCloseModal} className='text-xl mb-2' />
             </button>

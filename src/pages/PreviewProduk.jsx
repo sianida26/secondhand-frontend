@@ -118,6 +118,12 @@ function PreviewProduk() {
                     >
                         Edit
                     </button>
+                    <button 
+                        className="hidden md:block w-full bg-red-600 hover:bg-red-700 font-medium text-white text-center py-2 mt-4 rounded-[16px] focus:ring-2 focus:ring-offset-2 focus:ring-red-600 focus:outline-none"
+                        disabled={ isLoading }
+                    >
+                        Delete
+                    </button>
                 </div>
 
                 <div className="flex bg-white rounded-xl px-6 py-4 shadow-low gap-4">
