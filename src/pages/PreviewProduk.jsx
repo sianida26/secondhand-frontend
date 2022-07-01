@@ -38,15 +38,15 @@ function PreviewProduk() {
             formData.append('price', price);
             formData.append('description', description);
             formData.append('category', category);
-            formData.append('filenames', files);
-            //TODO: Lanjutkan setelah ada perbaikan endpoint dari backend
-            const response = await axios({
+            files.forEach(file => formData.append("filenames]",file)); 
+            await axios({
                 url: `${ configs.apiRootURL }${ productId ? '/products/'+productId : '/products' }`,
                 method: productId ? 'PUT' : 'POST',
                 headers: {
                     Authorization: `Bearer ${ auth.token }`
                 },
                 data: formData,
+                timeout: 20000, //20 s
             })
             navigate('/produkku', { replace: true })
         } catch (error) {

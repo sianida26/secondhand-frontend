@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useEffect, useParams, useRef, useState } from 'react'
 import { toast } from 'react-toastify';
 import { useLocation, useNavigate } from 'react-router-dom'
 import { FiPlus, FiArrowLeft, FiAlertCircle } from 'react-icons/fi'
@@ -6,6 +6,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import Header from '../components/Header'
 import axios from 'axios'
 import Validator from '../utils/Validator';
+import configs from '../utils/configs';
 
 
 export default function ProductForm(props) {
@@ -14,6 +15,7 @@ export default function ProductForm(props) {
     const navigate = useNavigate()
     const dispatch = useDispatch()
     const location = useLocation()
+    const { id } = useParams()
 
     const inputButtonRef = useRef(null)
     const token = useSelector(state => state.auth.token)
@@ -49,24 +51,25 @@ export default function ProductForm(props) {
         event.preventDefault();
         if(!validateInput()) return
         const data = new FormData();
-        data.append("file", files);
         data.append("name", name);
         data.append("price", price);
         data.append("category", category);
         data.append("description", description);
-    
+        files.forEach(file => data.append("filenames]",file));    
         try {
-            setLoading(true); 
-            // const response = await axios({
-            //     url: 'https://secondhand-backend-kita.herokuapp.com/products/', 
-            //     method: 'POST',
-            //     headers: {
-            //         Authorization: `Bearer ${token}`
-            //     },
-            //     data:  data,
-            // });
-            await new Promise(r => setTimeout(r, 3000))
-            toast.success('Produk berhasil ditambahkan!', {
+            setLoading(true);
+            await axios({
+                url: `https://secondhand-backend-kita.herokuapp.com${ id ? '/products/'+id : '/products' }`,
+                method: id ? 'PUT' : 'POST',
+                headers: {
+                    Authorization: `Bearer ${ token }`
+                },
+                data: data,
+                timeout: 20000, //20 s
+            })
+            navigate('/produkku', { replace: true })
+        } catch (error) {
+            toast.error(error.response?.data?.message || 'Terjadi Kesalahan. Silakan coba lagi', {
                 position: "top-center",
                 autoClose: 5000,
                 hideProgressBar: false,
@@ -74,12 +77,8 @@ export default function ProductForm(props) {
                 pauseOnHover: true,
                 draggable: true,
                 progress: undefined,
+                theme: 'colored',
             });
-            navigate('/produkku')
-            
-        } catch (e) {
-            if(e.response) setErrorMsg(e.response.message);
-            else setErrorMsg("Terjadi Kesalahan. Silakan periksa koneksi Anda")
         } finally {
             setLoading(false);
         }
