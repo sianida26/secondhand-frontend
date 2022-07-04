@@ -1,9 +1,10 @@
 import React, { useState } from 'react'
 import Header from '../components/Header'
-import {useNavigate} from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 import { FiArrowLeft, FiX, FiAlertCircle } from 'react-icons/fi'
 import { FaWhatsapp } from "react-icons/fa";
 import { formatRupiah } from '../utils/helpers'
+import { useSelector } from 'react-redux'
 import buyer from '../assets/buyer-pic.png'
 import product from '../assets/product.png'
 
@@ -11,8 +12,8 @@ import LoadingSpin from '../components/LoadingSpin'
 
 export default function BuyerInfo(props) {
 
-  const navigate = useNavigate()
   const isAcceptProduct = window.location.pathname === '/accept-produk'
+  const navigate = useNavigate()
 
   const [ isLoading, setLoading ] = useState(false);
   
@@ -82,10 +83,10 @@ export default function BuyerInfo(props) {
                             <img className="w-12 h-12 object-cover rounded-lg flex-none" alt="Foto Produk" src={ product } />
                             
                             <div className="flex-grow flex flex-col">
-                                <p className="text-[10px] text-neutral-3 mb-1">Penjualan Produk</p>
+                                <p className="text-[10px] text-neutral-3 mb-1">Penawaran Produk</p>
                                 <p className='mb-1'>Jam Tangan Casio</p>
-                                <p className='mb-1'><s>{ formatRupiah(20000) }</s></p>
-                                <p>Terjual { formatRupiah(10000) }</p>
+                                <p className='mb-1'>{ formatRupiah(20000) }</p>
+                                <p>Ditawar { formatRupiah(10000) }</p>
                             </div>
 
                             <span className="flex-none text-[10px] text-neutral-3">20 Apr, 14:04</span>

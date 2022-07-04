@@ -10,6 +10,7 @@ import Profile from "./pages/Profile";
 import AkunSaya from "./pages/AkunSaya";
 import PreviewProduk from "./pages/PreviewProduk";
 import DaftarJualSaya from "./pages/DaftarJualSaya";
+import EmailConfirm from "./pages/EmailConfirm";
 
 function App() {
   return (
@@ -26,6 +27,7 @@ function App() {
       <Route path="/profile" element={<Profile />} />
       <Route path="/preview-produk" element={<PreviewProduk />} />
       <Route path="/produkku" element={<DaftarJualSaya />} />
+      <Route path="/konfirmasi-email" element={<EmailConfirm />} />
       <Route path="/logout" element={<Logout />} />
     </Routes>
   );
