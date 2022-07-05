@@ -10,8 +10,42 @@ import gambarOrang from "../assets/buyer-pic.png";
 import { Carousel } from "react-responsive-carousel";
 import "react-responsive-carousel/lib/styles/carousel.min.css";
 
-function buyer13() {
-  //   const [isLoading, setLoading] = useState(true);
+function Buyer13() {
+  // const [isLoading, setLoading] = useState(true);
+  // const dispatch = useDispatch();
+  // const navigate = useNavigate();
+  // const location = useLocation();
+
+  // const [email, setEmail] = useState("");
+  // const [password, setPassword] = useState("");
+
+  // const [errorMsg, setErrorMsg] = useState("");
+  // const handleLogin = async (event) => {
+  //   event.preventDefault();
+  //   setLoading(true);
+  //   try {
+  //     const response = await axios({
+  // url: "https://secondhand-backend-kita.herokuapp.com/users/login",
+  // method: "POST",
+  // data: { email, password },
+  //     });
+  //     dispatch(
+  //       setData({
+  //         name: response.data.name,
+  //         token: response.data.token,
+  //         profilePhoto: response.data.profilePhoto,
+  //         city: response.data.city,
+  //       })
+  //     );
+  //     navigate(location.state?.referrer || "/");
+  //   } catch (e) {
+  //     if (e.response) setErrorMsg(e.response.data.message);
+  //     else setErrorMsg("Terjadi Kesalahan. Silakan periksa koneksi anda");
+  //   } finally {
+  //     setLoading(false);
+  //   }
+  // };
+
   return (
     <div className="w-screen min-h-screen">
       {/* Header */}
@@ -48,7 +82,7 @@ function buyer13() {
             <p className="text-sm text-neutral-3">Aksesoris</p>
             <p className="">Rp 250.000</p>
 
-            <button className="hidden md:block w-full bg-purple-4 font-medium text-white text-center py-2 mt-4 rounded-lg">Saya Tertarik dan Ingin Nego</button>
+            <button className="hidden md:block w-full bg-purple-4 font-medium text-white text-center py-2 mt-4 rounded-lg">Saya tertarik dan ingin nego</button>
             {/* <button className="hidden md:block w-full border border-purple-4 bg-white font-medium text-neutral-5 text-center py-2 mt-4 rounded-lg">Edit</button> */}
           </div>
 
@@ -75,10 +109,10 @@ function buyer13() {
       </div>
 
       <div className="fixed w-full bottom-4 px-4 md:hidden">
-        <button className="bg-purple-4 font-medium text-white text-center py-4 w-full rounded-xl">Saya Tertarik dan Ingin Nego</button>
+        <button className="bg-purple-4 font-medium text-white text-center py-4 w-full rounded-xl">Saya tertatik dan ingin nego</button>
       </div>
     </div>
   );
 }
 
-export default buyer13;
+export default Buyer13;

@@ -26,6 +26,7 @@ function App() {
       <Route path="/profile" element={<Profile />} />
       <Route path="/preview-produk" element={<PreviewProduk />} />
       <Route path="/buyer13" element={<Buyer13 />} />
+
       <Route path="/produkku" element={<DaftarJualSaya />} />
       <Route path="/logout" element={<Logout />} />
     </Routes>
