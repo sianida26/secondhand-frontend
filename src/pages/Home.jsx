@@ -2,13 +2,15 @@ import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { useSelector } from "react-redux"
 
+import axios from 'axios';
+
 import { FiLogIn, FiMenu, FiSearch } from "react-icons/fi";
 
 import gambarJam from "../assets/jam.png";
 import gambarKado from "../assets/png_gift_88837.png";
 import ProductCard from "../components/ProductCard";
-
 import Sidebar from "../components/Sidebar";
+import configs from "../utils/configs";
 
 const categories = [
 	"Semua",
@@ -84,7 +86,8 @@ const fakeProductsData = [
 
 export default function Home() {
 
-	const isLoggedIn = !!useSelector(state => state.auth.token)
+	const token = useSelector(state => state.auth.token);
+	const isLoggedIn = !!token;
 
 	const [selectedCategory, setSelectedCategory] = useState(categories[0]); //Defaultnya nampilkan semua produk
 	const [products, setProducts] = useState([]);
@@ -98,10 +101,17 @@ export default function Home() {
 	const fetchProducts = async () => {
 		try {
 			setLoading(true);
-			await new Promise((r) => setTimeout(r, 3000));
-			setProducts(fakeProductsData);
+			const response = await axios({
+				url: `${configs.apiRootURL}/products/available`,
+				method: 'GET',
+				headers: {
+					Authorization: `Bearer ${ token }`
+				}
+			});
+			setProducts(response.data);
 		} catch (e) {
 			setSelectedCategory(0)
+			console.log(e);
 		} finally {
 			setLoading(false);
 		}
@@ -170,12 +180,13 @@ export default function Home() {
 			<div className="flex flex-col px-4">
 				<p className="font-medium">Telusuri Kategori</p>
 				<div className="flex overflow-x-scroll gap-4 mt-4">
-					{categories.map((category) => (
+					{categories.map((category, i) => (
 						<button
 							className={`btn py-4 flex-shrink-0 ${
 								selectedCategory !== category &&
-								"bg-purple-1 text-neutral-4 focus:bg-purple-2"
+								"bg-purple-1 text-neutral-4 focus:bg-purple-2 hover:bg-purple-2"
 							}`}
+							key={ i }
 						>
 							<FiSearch className="text-2xl" />
 							{category}
@@ -190,11 +201,13 @@ export default function Home() {
 					? [...new Array(10)].map((x) => <ProductCard isLoading />)
 					: products.map((product) => (
 							<ProductCard
+								key={ product.id }
 								isLoading={isLoading}
-								image={product.image}
+								image={product.image[0]}
 								name={product.name}
 								category={product.category}
 								price={product.price}
+								id={ product.id }
 							/>
 					  ))}
 			</div>

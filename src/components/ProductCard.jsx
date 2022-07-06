@@ -1,10 +1,14 @@
 import React from "react";
+import { Link, useNavigate } from "react-router-dom";
 
 import { formatRupiah } from "../utils/helpers";
 
 export default function ProductCard(props) {
+
+	const navigate = useNavigate();
+
 	return (
-		<div className="shadow-low p-4 text-neutral-5 rounded-lg w-full">
+		<Link to={ `/produk/${ props.id }` } className="shadow-low p-4 text-neutral-5 rounded-lg w-full">
 			{/* Product image */}
 			{props.isLoading ? (
 				<div className="w-full aspect-[7/5] animate-pulse bg-slate-700" />
@@ -30,6 +34,6 @@ export default function ProductCard(props) {
 					<p>{formatRupiah(props.price)}</p>
 				</div>
 			)}
-		</div>
+		</Link>
 	);
 }
