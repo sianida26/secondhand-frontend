@@ -107,7 +107,7 @@ export default function BuyerInfo(props) {
                                     { isLoading && <LoadingSpin /> }
                                 </button>
                             </div>
-                            <div className={`${isAcceptProduct? 'grid' : 'hidden'} grid grid-cols-2 lg:float-right text-center pt-4 pb-4`}>
+                            <div className={`${isAcceptProduct? 'grid' : 'hidden'} grid-cols-2 lg:float-right text-center pt-4 pb-4`}>
                                 <button className="flex items-center justify-center mr-2 px-8 py-2 bg-white border border-purple-4 hover:bg-gray-200 font-normal text-sm leading-tight rounded-[16px] 
                                     focus:shadow-lg focus:outline-none focus:ring-offset-2 focus:ring-purple-4 disabled:opacity-70"
                                     type="button" onClick={handleOpenStatusModal}>

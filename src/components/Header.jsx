@@ -70,7 +70,7 @@ export default function Header(props) {
                 <FiList />
               </Link>
               <div className="relative">
-                <FiBell onClick={() => setShowNotification(prev => !prev)} />
+               <button className="mt-2 hover:text-purple-4"> <FiBell onClick={() => setShowNotification(prev => !prev)} /> </button>
 
                 {/* Notifikasi */}
 

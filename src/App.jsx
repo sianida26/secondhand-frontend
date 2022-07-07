@@ -11,6 +11,7 @@ import AkunSaya from "./pages/AkunSaya";
 import PreviewProduk from "./pages/PreviewProduk";
 import DaftarJualSaya from "./pages/DaftarJualSaya";
 import EmailConfirm from "./pages/EmailConfirm";
+import ForgotPassword from "./pages/ForgotPassword";
 
 function App() {
   return (
@@ -27,7 +28,8 @@ function App() {
       <Route path="/profile" element={<Profile />} />
       <Route path="/preview-produk" element={<PreviewProduk />} />
       <Route path="/produkku" element={<DaftarJualSaya />} />
-      <Route path="/konfirmasi-email" element={<EmailConfirm />} />
+      <Route path="/waiting-email-confirmation" element={<EmailConfirm />} />
+      <Route path="/forgot-password" element={<ForgotPassword />} />
       <Route path="/logout" element={<Logout />} />
     </Routes>
   );
