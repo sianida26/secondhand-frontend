@@ -8,6 +8,7 @@ import { FiArrowLeft,FiAlertCircle } from 'react-icons/fi'
 import pic from '../assets/register.png'
 import { setData } from '../redux/slices/authSlice'
 import LoadingSpin from '../components/LoadingSpin'
+import configs from '../utils/configs'
 
 export default function Login() {
 
@@ -26,10 +27,11 @@ export default function Login() {
     setLoading(true)
     try {
       const response = await axios({
-        url: 'https://secondhand-backend-kita.herokuapp.com/users/login',
+        url: `${ configs.apiRootURL }/users/login`,
         method: 'POST',
         data: { email, password }
-      })
+      });
+      
       dispatch(setData({
         name: response.data.name,
         token: response.data.token,

@@ -203,7 +203,7 @@ export default function Home() {
 							<ProductCard
 								key={ product.id }
 								isLoading={isLoading}
-								image={product.image[0]}
+								image={product.image ? product.image[0] : ''}
 								name={product.name}
 								category={product.category}
 								price={product.price}

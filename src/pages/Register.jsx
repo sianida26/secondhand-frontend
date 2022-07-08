@@ -7,6 +7,7 @@ import { Link, useNavigate } from 'react-router-dom'
 import { setData } from '../redux/slices/authSlice'
 import { FiArrowLeft,FiAlertCircle } from 'react-icons/fi'
 import LoadingSpin from '../components/LoadingSpin'
+import configs from '../utils/configs';
 
 export default function Register() {
 
@@ -27,7 +28,7 @@ export default function Register() {
     setLoading(true)
     try {
       const response = await axios({
-        url: 'https://secondhand-backend-kita.herokuapp.com/users/register',
+        url: `${ configs.apiRootURL }/users/register`,
         method: 'POST',
         data: { name, email, password }
       })
@@ -39,6 +40,7 @@ export default function Register() {
       }))
       navigate('/')
     } catch (e) {
+      console.log(e)
       if(e.response?.data?.errors?.name) setErrorMsgName(e.response?.data?.errors?.name);
       if(e.response?.data?.errors?.email) setErrorMsgEmail(e.response?.data?.errors?.email);
       if(e.response?.data?.errors?.password) setErrorMsgPwd(e.response?.data?.errors?.password);

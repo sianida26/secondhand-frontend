@@ -32,6 +32,7 @@ function PreviewProdukBuyer() {
   const [isLoading, setLoading] = useState(true); //is Loading product data
   const [showModal, setShowModal] = useState(false); //Is modal penawaran showing
   const [errorMessage, setErrorMessage] = useState("");
+  const [bidPrice, setBidPrice] = useState(0);
   const [productDetail, setProductDetail] = useState({
     id: 0,
     images: [],
@@ -94,13 +95,19 @@ function PreviewProdukBuyer() {
     try {
       setSending(true);
       await axios({
-        url: `${ configs.apiRootURL }/products/make-bid`,
+        url: `${ configs.apiRootURL }/bids/make-bid`,
         method: 'POST',
         headers: {
-          Authentication: `Bearer ${ token }`,
+          Authorization: `Bearer ${ token }`,
+        },
+        data: {
+          id: productDetail.id,
+          bidPrice: bidPrice,
         }
       })
-      requestProductDetail()
+      requestProductDetail();
+      setBidPrice(0);
+      setShowModal(false);
     } catch (e) {
       showErrorToast(e.response?.data?.message || 'Terjadi Kesalahan. Silakan coba lagi')
     } finally {
@@ -235,7 +242,9 @@ function PreviewProdukBuyer() {
             className="rounded-xl shadow-high py-3 px-4 mt-2 border border-[#D0D0D0] disabled:opacity-70"
             type="number"
             placeholder="Rp 0,00"
-            disabled={isSending}
+            value={ bidPrice ? bidPrice : "" }
+            disabled={ isSending }
+            onChange={ (e) => setBidPrice(e.target.value) }
           />
 
           <button
