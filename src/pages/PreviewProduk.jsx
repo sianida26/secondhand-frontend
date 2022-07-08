@@ -101,22 +101,28 @@ function PreviewProduk() {
             <div className="px-4 flex flex-col relative bottom-2 gap-4 md:flex-grow md:bottom-0">
                 <div className="bg-white rounded-xl px-6 py-4 flex flex-col shadow-low md:shadow-high">
                     <h1 className="font-medium">{ productName }</h1>
-                    <p className="text-sm text-neutral-3">{ toTitleCase(category) }</p>
+                    <p className="text-sm text-neutral-3 mt-1 mb-2">{ toTitleCase(category) }</p>
                     <p className="">{ formatRupiah(price) }</p>
 
                     <button 
-                        className="hidden md:block w-full bg-purple-4 font-medium text-white text-center py-2 mt-4 rounded-lg focus:ring-2 focus:ring-offset-2 focus:ring-purple-4 focus:outline-none"
+                        className="hidden md:block w-full bg-purple-4 font-medium text-white text-center py-2 mt-4 rounded-[16px] focus:ring-2 focus:ring-offset-2 focus:ring-purple-4 focus:outline-none"
                         disabled={ isLoading } 
                         onClick={ terbitkanProduk } 
                     >
                         Terbitkan
                     </button>
                     <button 
-                        className="hidden md:block w-full border border-purple-4 bg-white font-medium text-neutral-5 text-center py-2 mt-4 rounded-lg"
+                        className="hidden md:block w-full border border-purple-4 bg-white font-medium text-neutral-5 text-center py-2 mt-4 rounded-[16px]"
                         disabled={ isLoading }
                         onClick={ () => navigate(location.state?.prevPathname || -1, { state: location.state }) } 
                     >
                         Edit
+                    </button>
+                    <button 
+                        className="hidden md:block w-full bg-red-600 hover:bg-red-700 font-medium text-white text-center py-2 mt-4 rounded-[16px] focus:ring-2 focus:ring-offset-2 focus:ring-red-600 focus:outline-none"
+                        disabled={ isLoading }
+                    >
+                        Delete
                     </button>
                 </div>
 

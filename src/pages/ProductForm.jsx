@@ -3,11 +3,12 @@ import { toast } from 'react-toastify';
 import { useLocation, useNavigate, useParams } from 'react-router-dom'
 import { FiPlus, FiArrowLeft, FiAlertCircle } from 'react-icons/fi'
 import { useDispatch, useSelector } from 'react-redux'
-import Header from '../components/Header'
 import axios from 'axios'
+
 import Validator from '../utils/Validator';
 import configs from '../utils/configs';
-
+import LoadingSpin from '../components/LoadingSpin';
+import Header from '../components/Header';
 
 export default function ProductForm(props) {
     
@@ -19,6 +20,7 @@ export default function ProductForm(props) {
 
     const inputButtonRef = useRef(null)
     const token = useSelector(state => state.auth.token)
+    const productId = location.state?.productId
 
     const [ isLoading, setLoading ] = useState(false);
     const [ name, setName ] = useState("");
@@ -51,22 +53,33 @@ export default function ProductForm(props) {
         event.preventDefault();
         if(!validateInput()) return
         const data = new FormData();
-        data.append("name", name);
-        data.append("price", price);
-        data.append("category", category);
-        data.append("description", description);
-        files.forEach(file => data.append("filenames]",file));    
         try {
             setLoading(true);
-            await axios({
-                url: `https://secondhand-backend-kita.herokuapp.com${ id ? '/products/'+id : '/products' }`,
-                method: id ? 'PUT' : 'POST',
+            const formData = new FormData()
+            formData.append('name', name);
+            formData.append('price', price);
+            formData.append('description', description);
+            formData.append('category', category);
+            formData.append('filenames', files);
+            
+            const response = await axios({
+                url: `${ configs.apiRootURL }${ productId ? '/products/'+productId : '/products' }`,
+                method: productId ? 'PUT' : 'POST',
                 headers: {
                     Authorization: `Bearer ${ token }`
                 },
-                data: data,
-                timeout: 20000, //20 s
+                data: formData,
             })
+            toast.success('Produk berhasil ditambahkan', {
+                position: "top-center",
+                autoClose: 5000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: 'colored',
+            });
             navigate('/produkku', { replace: true })
         } catch (error) {
             toast.error(error.response?.data?.message || 'Terjadi Kesalahan. Silakan coba lagi', {
@@ -152,8 +165,7 @@ export default function ProductForm(props) {
         <main className='w-screen'>
             <Header title="Lengkapi Info Produk" withoutSearchBar />
             
-
-            <div className='flex items-center flex-wrap max-w-lg mx-auto w-full'>
+            <div className='flex items-center flex-wrap max-w-xl mx-auto w-full'>
                 <button className="hidden lg:inline-block mt-4 aspect-square p-2 relative right-8 rounded-full focus:ring-4 focus:ring-gray-500 focus:outline-none hover:bg-gray-200" onClick={() => navigate(-1)}>
                     <FiArrowLeft className='text-2xl' />
                 </button>
@@ -280,25 +292,27 @@ export default function ProductForm(props) {
                                 
                             {/* buttons */}
                             <div className="flex gap-4 w-full text-center pt-2">
-                                <button 
+                                {/* <button 
                                     disabled={ isLoading } onClick={ handleDelete }
-                                    className={`${isEditProduct ? 'flex-grow' : 'hidden'} bg-red-600 hover:bg-red-500 py-3 text-white font-normal text-sm leading-tight rounded-[16px] 
+                                    className={`${isEditProduct ? 'flex-grow' : 'hidden'} bg-red-600 hover:bg-red-700 py-3 text-white font-normal text-sm leading-tight rounded-[16px] 
                                     focus:shadow-lg focus:outline-none active:shadow-lg transition duration-200 ease-in-out`}
-                                    type="button" data-mdb-ripple="true" data-mdb-ripple-color="dark">
+                                    type="button">
                                     Delete
-                                </button>
+                                </button> */}
                                 <button 
                                     disabled={ isLoading } onClick={ handlePreview }
                                     className="flex-grow bg-white border border-purple-4 py-3 text-black font-normal text-sm leading-tight rounded-[16px] 
                                     focus:shadow-lg focus:outline-none active:shadow-lg transition duration-200 ease-in-out focus:ring-2 focus:ring-purple-4 focus:text-purple-4 focus:font-medium hover:bg-purple-1"
-                                    type="button" data-mdb-ripple="true" data-mdb-ripple-color="dark">
+                                    type="button">
+                                    { isLoading && <LoadingSpin /> }
                                     Preview
                                 </button>
                                 <button 
                                     disabled={ isLoading } 
                                     className="flex-grow bg-purple-4 hover:bg-purple-5 py-3 text-white font-normal text-sm leading-tight rounded-[16px] 
                                     focus:shadow-lg focus:outline-none active:shadow-lg transition duration-200 ease-in-out focus:ring-2 focus:ring-offset-2 focus:ring-purple-3"
-                                    type="submit" data-mdb-ripple="true" data-mdb-ripple-color="dark">
+                                    type="submit">
+                                    { isLoading && <LoadingSpin /> }
                                     Terbitkan
                                 </button>
                             </div>

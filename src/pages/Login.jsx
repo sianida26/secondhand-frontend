@@ -91,6 +91,14 @@ export default function Login() {
                 type="password" className="form-control px-2 py-2 font-normal text-base text-neutral-3 bg-white 
                 border-neutral-2 rounded-[16px] transition ease-in-out m-0 focus:text-gray-700 focus:outline-none"
                 id="passwordInput" placeholder="Masukkan password" />
+
+              
+                <Link to="/forgot-password" >
+                  <button className="float-right text-purple-4 hover:text-purple-5 font-base py-2 mb-4">
+                    Lupa Password?
+                  </button>
+                </Link>
+            
                 
             </div>
 
@@ -107,7 +115,7 @@ export default function Login() {
             <div className="text-center text-sm">
               <p>Belum punya akun?
                 <Link to="/register" >
-                  <button className="text-purple-4 hover:text-purple-3 font-semibold pl-1 
+                  <button className="text-purple-4 hover:text-purple-5 font-semibold pl-1 
                     transition duration-300 ease-in-out">Daftar disini
                   </button>
                 </Link>
