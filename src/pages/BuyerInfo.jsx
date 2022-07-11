@@ -12,11 +12,12 @@ import LoadingSpin from '../components/LoadingSpin'
 
 export default function BuyerInfo(props) {
 
-  const isAcceptProduct = window.location.pathname === '/accept-produk'
+//   const isAcceptProduct = window.location.pathname === '/accept-produk'
   const navigate = useNavigate()
 
   const [ isLoading, setLoading ] = useState(false);
   
+  const [ isAcceptProduct, setAcceptProduct ] = useState(false);
   const [ isModalAcceptShow, setModalAcceptShow ] = useState(false);
   const [ isModalDeniedShow, setModalDeniedShow ] = useState(false);
   const [ isModalStatusShow, setModalStatusShow ] = useState(false);

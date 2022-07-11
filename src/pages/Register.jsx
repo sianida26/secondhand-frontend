@@ -51,10 +51,10 @@ export default function Register() {
   }
 
   return (
-    <section className="h-full">
+    <section className="h-screen">
     <div className="flex md:flex-none xl:justify-center lg:justify-center justify-center items-center flex-wrap h-full">
-      <div className="hidden md:block lg:w-6/12 items-center">
-        <img src={pic} className="w-full m-0" alt="image register" />
+      <div className="hidden md:block h-full lg:w-6/12 items-center">
+        <img src={pic} className="object-cover h-full w-full m-0" alt="image register" />
       </div>
       <div className="lg:w-6/12 w-full px-4 md:px-0 items-center my-8">
         <div className="lg:px-12 md:mx-12">

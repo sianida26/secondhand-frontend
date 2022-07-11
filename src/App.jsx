@@ -12,6 +12,7 @@ import PreviewProduk from "./pages/PreviewProduk";
 import DaftarJualSaya from "./pages/DaftarJualSaya";
 import EmailConfirm from "./pages/EmailConfirm";
 import ForgotPassword from "./pages/ForgotPassword";
+import NewPassword from "./pages/NewPassword";
 
 function App() {
   return (
@@ -30,6 +31,7 @@ function App() {
       <Route path="/produkku" element={<DaftarJualSaya />} />
       <Route path="/waiting-email-confirmation" element={<EmailConfirm />} />
       <Route path="/forgot-password" element={<ForgotPassword />} />
+      <Route path="/forgot-password/:token" element={<NewPassword />} />
       <Route path="/logout" element={<Logout />} />
     </Routes>
   );
