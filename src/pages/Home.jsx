@@ -9,7 +9,7 @@ import { FiLogIn, FiMenu, FiSearch } from "react-icons/fi";
 import gambarJam from "../assets/jam.png";
 import gambarKado from "../assets/png_gift_88837.png";
 import ProductCard from "../components/ProductCard";
-import Sidebar from "../components/Sidebar";
+import Header from "../components/Header";
 import configs from "../utils/configs";
 
 const categories = [
@@ -19,69 +19,6 @@ const categories = [
 	"Baju",
 	"Elektronik",
 	"Kesehatan",
-];
-
-const fakeProductsData = [
-	{
-		id: 1,
-		category: "Hobi",
-		image: gambarJam,
-		price: Math.floor(Math.random() * 90000) + 1000,
-	},
-	{
-		id: 2,
-		category: "Kendaraan",
-		image: gambarJam,
-		price: Math.floor(Math.random() * 90000) + 1000,
-	},
-	{
-		id: 3,
-		category: "Baju",
-		image: gambarJam,
-		price: Math.floor(Math.random() * 90000) + 1000,
-	},
-	{
-		id: 4,
-		category: "Elektronik",
-		image: gambarJam,
-		price: Math.floor(Math.random() * 90000) + 1000,
-	},
-	{
-		id: 5,
-		category: "Kesehatan",
-		image: gambarJam,
-		price: Math.floor(Math.random() * 90000) + 1000,
-	},
-	{
-		id: 6,
-		category: "Hobi",
-		image: gambarJam,
-		price: Math.floor(Math.random() * 90000) + 1000,
-	},
-	{
-		id: 6,
-		category: "Hobi",
-		image: gambarJam,
-		price: Math.floor(Math.random() * 90000) + 1000,
-	},
-	{
-		id: 6,
-		category: "Hobi",
-		image: gambarJam,
-		price: Math.floor(Math.random() * 90000) + 1000,
-	},
-	{
-		id: 6,
-		category: "Hobi",
-		image: gambarJam,
-		price: Math.floor(Math.random() * 90000) + 1000,
-	},
-	{
-		id: 6,
-		category: "Hobi",
-		image: gambarJam,
-		price: Math.floor(Math.random() * 90000) + 1000,
-	},
 ];
 
 export default function Home() {
@@ -119,42 +56,9 @@ export default function Home() {
 
 	return (
 		<div className="w-screen min-h-screen">
-			<Sidebar
-				show={isMobileSidebarOpen}
-				close={() => setMobileSidebarOpen(false)}
-				loggedIn={ isLoggedIn }
-			/>
+			<Header  />
 			{/* Hero */}
 			<div className="bg-gradient-to-b from-[#FFE9C9] to-transparent pb-12">
-				{/* Header */}
-				<div className="w-full flex pt-8 px-4 gap-4 lg:bg-white lg:shadow-high lg:justify-between lg:py-4 lg:px-16">
-					<button
-						className="w-12 h-12 p-3 bg-white rounded-2xl lg:hidden"
-						onClick={() => setMobileSidebarOpen(true)}
-					>
-						<FiMenu className="w-full h-full" />
-					</button>
-
-					<div className="flex-grow lg:flex-grow-0 lg:flex lg:justify-center lg:items-center lg:gap-4">
-						<div className="hidden lg:inline w-[5.88rem] h-8 bg-purple-5"></div>
-						<div className="h-12 bg-white rounded-2xl py-3 px-6 text-neutral-3 flex lg:bg-[#EEEEEE]">
-							<input
-								className="w-full h-full bg-transparent"
-								placeholder="Cari di sini ..."
-							/>
-							<FiSearch className="text-2xl" />
-						</div>
-					</div>
-
-					<div className="hidden lg:flex">
-						<Link to="/login">
-							<button className="btn shadow-none">
-								<FiLogIn />
-								Masuk
-							</button>
-						</Link>
-					</div>
-				</div>
 
 				{/* Content */}
 				<div className="flex py-4 px-3 pt-12 items-center justify-center">

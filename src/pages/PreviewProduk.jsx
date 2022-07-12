@@ -38,7 +38,7 @@ function PreviewProduk() {
             formData.append('price', price);
             formData.append('description', description);
             formData.append('category', category);
-            files.forEach(file => formData.append("filenames",file)); 
+            files.forEach(file => formData.append("files",file)); 
             await axios({
                 url: `${ configs.apiRootURL }${ productId ? '/products/'+productId : '/products' }`,
                 method: productId ? 'PUT' : 'POST',

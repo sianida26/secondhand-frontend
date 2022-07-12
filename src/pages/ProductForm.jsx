@@ -51,8 +51,9 @@ export default function ProductForm(props) {
     // handle untuk button terbitkan
     const handlePublish = async (event) => {
         event.preventDefault();
-        if(!validateInput()) return
-        const data = new FormData();
+
+        if(!validateInput()) return;
+        
         try {
             setLoading(true);
             const formData = new FormData()
@@ -60,9 +61,8 @@ export default function ProductForm(props) {
             formData.append('price', price);
             formData.append('description', description);
             formData.append('category', category);
-            formData.append('filenames', files);
-            
-            const response = await axios({
+            files.forEach(file => formData.append("files",file)); 
+            await axios({
                 url: `${ configs.apiRootURL }${ productId ? '/products/'+productId : '/products' }`,
                 method: productId ? 'PUT' : 'POST',
                 headers: {

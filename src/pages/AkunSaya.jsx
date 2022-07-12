@@ -34,10 +34,10 @@ export default function AkunSaya() {
           <FiEdit className=" text-2xl text-purple-4 " />
           Ubah Akun
         </div>
-        <div className="items-center flex gap-2 py-6 font-medium text-sm">
+        <Link to="/profil" className="items-center flex gap-2 py-6 font-medium text-sm">
           <FiSettings className=" text-2xl text-purple-4 " />
           Pengaturan Akun
-        </div>
+        </Link>
 
         <Link to="/logout" className="items-center flex gap-2 py-6 font-medium text-sm ">
           <FiLogOut className="text-2xl text-purple-4" />

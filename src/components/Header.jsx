@@ -66,7 +66,7 @@ export default function Header(props) {
         <div className="w-8 lg:w-auto lg:flex-grow-0">
           {isLoggedIn ? (
             <div className="lg:flex gap-4 items-center text-2xl hidden">
-              <Link to="/daftar-jual">
+              <Link to="/produkku">
                 <FiList />
               </Link>
               <div className="relative">
