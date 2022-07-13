@@ -5,6 +5,7 @@ import { useDispatch } from "react-redux";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import { FiArrowLeft, FiAlertCircle } from "react-icons/fi";
 
+import configs from "../utils/configs";  
 import pic from "../assets/register.png";
 import { setData } from "../redux/slices/authSlice";
 import LoadingSpin from "../components/LoadingSpin";
@@ -24,7 +25,7 @@ export default function Login() {
     setLoading(true);
     try {
       const response = await axios({
-        url: "https://secondhand-backend-kita.herokuapp.com/users/login",
+        url: `${configs.apiRootURL}/users/login`,
         method: "POST",
         data: { email, password },
       });
@@ -38,8 +39,11 @@ export default function Login() {
       );
       navigate(location.state?.referrer || "/");
     } catch (e) {
-      if (e.response) setErrorMsg(e.response.data.message);
-      else setErrorMsg("Terjadi Kesalahan. Silakan periksa koneksi anda");
+      // if (e.response) setErrorMsg(e.response.data.message);
+      // else setErrorMsg("Terjadi Kesalahan. Silakan periksa koneksi anda");
+      setErrorMsg(
+        e.response?.data?.message || "Terjadi kesalahan, silahkan periksa koneksi kamu!"
+      )
     } finally {
       setLoading(false);
     }
