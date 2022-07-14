@@ -3,6 +3,7 @@ import axios from 'axios';
 
 import { useSelector } from 'react-redux';
 import { useNavigate, Link } from 'react-router-dom';
+import PullToRefresh from 'react-simple-pull-to-refresh';
 
 import { FiBox, FiChevronRight, FiDollarSign, FiHeart, FiPlus } from 'react-icons/fi'
 
@@ -25,27 +26,27 @@ export default function DaftarJualSaya() {
   const [ diminatis, setDiminatis ] = useState([]);
   const [ terjuals, setTerjuals ] = useState([]);
 
-  useEffect(() => {
-
-    const fetchData = async () => {
-      try {
-        setLoading(true)
-        const response = await axios({
-          url: `${ configs.apiRootURL }/products/my-products`,
-          method: 'GET',
-          headers: {
-            Authorization: `Bearer ${ token }`
-          }
-        })
-        setProducts(response.data.products);
-        setDiminatis(response.data.diminati);
-        setTerjuals(response.data.terjual);
-      } catch (error) {
-        console.log(error);
-      } finally {
-        setLoading(false)
-      }
+  const fetchData = async () => {
+    try {
+      setLoading(true)
+      const response = await axios({
+        url: `${ configs.apiRootURL }/products/my-products`,
+        method: 'GET',
+        headers: {
+          Authorization: `Bearer ${ token }`
+        }
+      })
+      setProducts(response.data.products);
+      setDiminatis(response.data.diminati);
+      setTerjuals(response.data.terjual);
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setLoading(false)
     }
+  }
+
+  useEffect(() => {
 
     if (!token) {
       navigate('/login', { replace: true });
@@ -59,62 +60,64 @@ export default function DaftarJualSaya() {
     <div className="w-screen min-h-screen">
       <Header title="Daftar Jual Saya" />
 
-      <div className="flex flex-col w-full px-4 py-8 lg:max-w-screen-lg lg:mx-auto">
+      <PullToRefresh onRefresh={ fetchData }>
+        <div className="flex flex-col w-full px-4 py-8 lg:max-w-screen-lg lg:mx-auto">
 
-        <h1 className="hidden lg:block font-bold text-xl mb-4">Daftar Jual Saya</h1>
+          <h1 className="hidden lg:block font-bold text-xl mb-4">Daftar Jual Saya</h1>
 
-        {/* Penjual */}
-        <div className="shadow-low w-full flex rounded-lg p-4 items-center">
-          <img src={ profilePic } alt="Penjual" className="w-12 h-12 object-cover flex-none" />
-          <div className="flex-grow flex flex-col justify-center px-4">
-            <p className="font-medium text-neutral-5">{ name }</p>
-            <p className="text-xs text-neutral-3">{ city }</p>
-          </div>
-          <div className="flex-none flex items-center">
-            <Link to="/profil" className="border border-purple-4 rounded-xl px-4 py-1 font-medium text-neutral-5 focus:ring-2 focus:outline-none focus:ring-purple-4 hover:bg-gray-100">Edit</Link>
-          </div>
-        </div>
-
-        {/* Categories */}
-        <div className="w-full overflow-x-auto flex gap-2 mt-2 py-2 pl-2 lg:hidden">
-          <button onClick={ () => setActiveTab(0) } className={ `btn ${ activeTab === 0 ? 'mobile-category-active' : 'mobile-category' }` }><FiBox /> Produk</button>
-          <button onClick={ () => setActiveTab(1) } className={ `btn ${ activeTab === 1 ? 'mobile-category-active' : 'mobile-category' }` }><FiHeart /> Diminati</button>
-          <button onClick={ () => setActiveTab(2) } className={ `btn ${ activeTab === 2 ? 'mobile-category-active' : 'mobile-category' }` }><FiDollarSign /> Terjual</button>
-        </div>
-
-        <div className="flex mt-4 gap-8">
-          {/* Dekstop Categories */}
-          <div className="hidden lg:flex w-56 shadow-high bg-white py-4 rounded-xl flex-col gap-2 flex-none self-start">
-            <p className="font-medium text-black px-4">Kategori</p>
-
-            <div className="flex flex-col divide-y divide-[#E5E5E5]">
-              <button className={ `flex justify-between items-center py-3 px-4 ${ activeTab === 0 && "text-purple-4 font-medium" } hover:bg-gray-200 focus:outline-none focus:bg-gray-200` } onClick={ () => setActiveTab(0) }>
-                <span className="flex gap-2 items-center"><FiBox /> Semua Produk</span>
-                <FiChevronRight className={ activeTab !== 0 && "text-neutral-2" } />
-              </button>
-              <button className={ `flex justify-between items-center py-3 px-4 ${ activeTab === 1 && "text-purple-4 font-medium" } hover:bg-gray-200 focus:outline-none focus:bg-gray-200` } onClick={ () => setActiveTab(1) }>
-                <span className="flex gap-2 items-center"><FiHeart /> Diminati</span>
-                <FiChevronRight className={ activeTab !== 1 && "text-neutral-2" } />
-              </button>
-              <button className={ `flex justify-between items-center py-3 px-4 ${ activeTab === 2 && "text-purple-4 font-medium" } hover:bg-gray-200 focus:outline-none focus:bg-gray-200` } onClick={ () => setActiveTab(2) }>
-                <span className="flex gap-2 items-center"><FiDollarSign /> Terjual</span>
-                <FiChevronRight className={ activeTab !== 2 && "text-neutral-2" } />
-              </button>
+          {/* Penjual */}
+          <div className="shadow-low w-full flex rounded-lg p-4 items-center">
+            <img src={ profilePic } alt="Penjual" className="w-12 h-12 object-cover flex-none" />
+            <div className="flex-grow flex flex-col justify-center px-4">
+              <p className="font-medium text-neutral-5">{ name }</p>
+              <p className="text-xs text-neutral-3">{ city }</p>
+            </div>
+            <div className="flex-none flex items-center">
+              <Link to="/profil" className="border border-purple-4 rounded-xl px-4 py-1 font-medium text-neutral-5 focus:ring-2 focus:outline-none focus:ring-purple-4 hover:bg-gray-100">Edit</Link>
             </div>
           </div>
 
-          {/* Fragment Container */}
-          <div className="w-full">
+          {/* Categories */}
+          <div className="w-full overflow-x-auto flex gap-2 mt-2 py-2 pl-2 lg:hidden">
+            <button onClick={ () => setActiveTab(0) } className={ `btn ${ activeTab === 0 ? 'mobile-category-active' : 'mobile-category' }` }><FiBox /> Produk</button>
+            <button onClick={ () => setActiveTab(1) } className={ `btn ${ activeTab === 1 ? 'mobile-category-active' : 'mobile-category' }` }><FiHeart /> Diminati</button>
+            <button onClick={ () => setActiveTab(2) } className={ `btn ${ activeTab === 2 ? 'mobile-category-active' : 'mobile-category' }` }><FiDollarSign /> Terjual</button>
+          </div>
 
-            { 
-              activeTab === 0 ? renderProductFragment(products, loading)
-              : activeTab === 1 ? renderDiminatiFragment(diminatis, loading)
-              : activeTab === 2 ? renderTerjualFragment(terjuals, loading)
-              : "Invalid tab!"
-            }
+          <div className="flex mt-4 gap-8">
+            {/* Dekstop Categories */}
+            <div className="hidden lg:flex w-56 shadow-high bg-white py-4 rounded-xl flex-col gap-2 flex-none self-start">
+              <p className="font-medium text-black px-4">Kategori</p>
+
+              <div className="flex flex-col divide-y divide-[#E5E5E5]">
+                <button className={ `flex justify-between items-center py-3 px-4 ${ activeTab === 0 && "text-purple-4 font-medium" } hover:bg-gray-200 focus:outline-none focus:bg-gray-200` } onClick={ () => setActiveTab(0) }>
+                  <span className="flex gap-2 items-center"><FiBox /> Semua Produk</span>
+                  <FiChevronRight className={ activeTab !== 0 && "text-neutral-2" } />
+                </button>
+                <button className={ `flex justify-between items-center py-3 px-4 ${ activeTab === 1 && "text-purple-4 font-medium" } hover:bg-gray-200 focus:outline-none focus:bg-gray-200` } onClick={ () => setActiveTab(1) }>
+                  <span className="flex gap-2 items-center"><FiHeart /> Diminati</span>
+                  <FiChevronRight className={ activeTab !== 1 && "text-neutral-2" } />
+                </button>
+                <button className={ `flex justify-between items-center py-3 px-4 ${ activeTab === 2 && "text-purple-4 font-medium" } hover:bg-gray-200 focus:outline-none focus:bg-gray-200` } onClick={ () => setActiveTab(2) }>
+                  <span className="flex gap-2 items-center"><FiDollarSign /> Terjual</span>
+                  <FiChevronRight className={ activeTab !== 2 && "text-neutral-2" } />
+                </button>
+              </div>
+            </div>
+
+            {/* Fragment Container */}
+            <div className="w-full">
+
+              { 
+                activeTab === 0 ? renderProductFragment(products, loading)
+                : activeTab === 1 ? renderDiminatiFragment(diminatis, loading)
+                : activeTab === 2 ? renderTerjualFragment(terjuals, loading)
+                : "Invalid tab!"
+              }
+            </div>
           </div>
         </div>
-      </div>
+      </PullToRefresh>
     </div>
   )
 }

@@ -6,6 +6,8 @@ import axios from 'axios';
 
 import { FiArrowLeft, FiSearch, FiBell, FiList, FiUser, FiX } from "react-icons/fi";
 
+import PullToRefresh from "react-simple-pull-to-refresh";
+
 import gambarJam from "../assets/jam.png";
 import gambarOrang from "../assets/buyer-pic.png";
 import Header from "../components/Header";
@@ -134,7 +136,8 @@ function PreviewProdukBuyer() {
   return (
     <div className="w-screen min-h-screen overflow-x-none">
       {/* Header */}
-      <Header title="TODO: Kasih title" />
+      <Header title="" />
+      <PullToRefresh onRefresh={ requestProductDetail }>
       {
         errorMessage ? renderErrorScreen()
           : <><div className="flex flex-col md:flex-row md:max-w-screen-lg md:mx-auto md:mt-12">
@@ -216,18 +219,20 @@ function PreviewProdukBuyer() {
             <div className="fixed w-full bottom-4 px-4 md:hidden">
               <button
                 onClick={openModal}
-                disabled={isLoading || productStatus === "WAITING_CONFIRMATION"}
+                disabled={isLoading || ["WAITING_CONFIRMATION", "TRANSACTION_DECLINED"].includes(productStatus)}
                 className="btn w-full py-4 font-medium disabled:bg-purple-2 disabled:opacity-100"
               >
                 {
                   productStatus === "BIDDABLE" ? "Saya tertarik dan ingin nego"
                   : productStatus === "WAITING_CONFIRMATION" ? "Menunggu Respon Penjual"
+                  : productStatus === "TRANSACTION_DECLINED" ? "Penawaranmu Ditolak Penjual"
                   : ""
                 }
               </button>
             </div>
         </>
       }
+      </PullToRefresh>
 
       {/* Modal */}
       <div className={`w-screen h-screen fixed top-0 left-0 z-50 bg-black bg-opacity-70 items-center justify-center p-4 ${showModal ? 'flex' : 'hidden'}`} onClick={closeModal}>
