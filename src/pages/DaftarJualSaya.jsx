@@ -179,7 +179,7 @@ const renderDiminatiFragment = (diminatis, isLoading) => {
             <div className="w-20 h-3 bg-slate-700 animate-pulse rounded-md" />
           </div>
         ))
-        : diminatis.length ? diminatis.map(diminati => (<Link to={{ pathname:"/penawaran", state: { bidId: diminati.id } }} key={ diminati.id } className="flex gap-4 py-3">
+        : diminatis.length ? diminatis.map(diminati => (<Link to={`/penawaran/${ diminati.id }`} key={ diminati.id } className="flex gap-4 py-3">
             <img className="w-12 h-12 object-cover rounded-lg flex-none" alt="Foto Produk" src={ diminati.image } />
             
             <div className="flex-grow flex flex-col">

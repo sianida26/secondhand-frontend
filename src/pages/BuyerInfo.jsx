@@ -1,21 +1,27 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import Header from '../components/Header'
-import { useNavigate } from 'react-router-dom'
+import { useParams, useNavigate } from 'react-router-dom'
 import { FiArrowLeft, FiX, FiAlertCircle } from 'react-icons/fi'
 import { FaWhatsapp } from "react-icons/fa";
-import { formatRupiah } from '../utils/helpers'
 import { useSelector } from 'react-redux'
-import buyer from '../assets/buyer-pic.png'
-import product from '../assets/product.png'
+import axios from 'axios'
+
+import { formatRupiah } from '../utils/helpers'
+import buyerPic from '../assets/buyer-pic.png'
+import productPic from '../assets/product.png'
 
 import LoadingSpin from '../components/LoadingSpin'
+import configs from '../utils/configs'
+import moment from 'moment'
 
 export default function BuyerInfo(props) {
 
 //   const isAcceptProduct = window.location.pathname === '/accept-produk'
-  const navigate = useNavigate()
+  const token = useSelector(state => state.auth.token); 
+  const { id } = useParams();
+  const navigate = useNavigate();
 
-  const [ isLoading, setLoading ] = useState(false);
+  const [ isLoading, setLoading ] = useState(true);
   
   const [ isAcceptProduct, setAcceptProduct ] = useState(false);
   const [ isModalAcceptShow, setModalAcceptShow ] = useState(false);
@@ -23,11 +29,18 @@ export default function BuyerInfo(props) {
   const [ isModalStatusShow, setModalStatusShow ] = useState(false);
   const isModalShow = isModalAcceptShow || isModalStatusShow || isModalDeniedShow;
 
+  const [ data, setData ] = useState({})
+
+  useEffect(() => {
+    fetchData();
+  }, [])
+
   const handleCloseModal=() => {
     setModalAcceptShow(false)
     setModalStatusShow(false)
     setModalDeniedShow(false)
   }
+
   const handleOpenAcceptModal= async (event) => {
     event.preventDefault();
     setModalAcceptShow(true);
@@ -47,11 +60,30 @@ export default function BuyerInfo(props) {
         setLoading(false)
     }
   }
+  
   const handleOpenDeniedModal=() => {
     setModalDeniedShow(true)
   }
   const handleOpenStatusModal=() => {
     setModalStatusShow(true)
+  }
+
+  const fetchData = async () => {
+    try {
+        setLoading(true);
+        const response = await axios({
+            url: `${ configs.apiRootURL }/products/history/${ id }`,
+            method: 'GET',
+            headers: {
+                Authorization: `Bearer ${ token }`
+            }
+        });
+        setData(response.data);
+    } catch (error) {
+        console.error(error);
+    } finally {
+        setLoading(false);
+    }
   }
 
   return (
@@ -66,46 +98,71 @@ export default function BuyerInfo(props) {
                     <FiArrowLeft className='invisible lg:visible mx-[-64px] mb-[-22px] text-2xl' />
                 </button>
             
-                <div className="flex flex-row items-center bg-white rounded-[12px] border shadow-md">
-                    <div className="w-[48px] h-[48px] rounded-[12px] border border-neutral-2 m-4">
-                        <img src={buyer} />
-                    </div>
-                    <div className="flex flex-col justify-between leading-normal">
-                        <p className="mb-1 text-black text-sm font-normal">Nama Pembeli</p>
-                        <p className="font-normal text-[10px] text-neutral-3 ">Kota</p>
-                    </div>
+                <div className="flex flex-row items-center bg-white rounded-[12px] border shadow-md p-4 gap-4">
+                    {
+                        // Foto Penjual
+                        isLoading ? <div className="w-12 aspect-square rounded-xl bg-slate-400 animate-pulse" />
+                        : <img src={data.buyerPic} className="w-12 aspect-square object-cover rounded-xl border border-neutral-2" alt="Penjual" />
+                    }
+                    {
+                        //Detail Penjual
+                        isLoading ? <div className="flex flex-col justify-between animate-pulse">
+                            <div className="mb-1 rounded-md bg-slate-400 h-4 w-24" />
+                            <div className="mb-1 rounded-md bg-slate-400 h-3 w-16" />
+                        </div>
+                        : <div className="flex flex-col justify-between leading-normal">
+                            <p className="mb-1 text-black text-sm font-normal">{ data.buyerName }</p>
+                            <p className="font-normal text-[10px] text-neutral-3 ">{ data.buyerCity }</p>
+                        </div>
+                    }
                 </div>
 
-                <p className='py-4 my-2 font-normal text-sm'>Daftar Produkmu yang Ditawar</p>
+                <p className='py-4 my-2 font-normal text-sm'>Produkmu yang Ditawar</p>
 
                 <div className="grid grid-cols-1 divide-y">
                     <div>
                         <div className="flex gap-4 py-3">
-                            <img className="w-12 h-12 object-cover rounded-lg flex-none" alt="Foto Produk" src={ product } />
+                            {
+                                // Foto produk
+                                isLoading ? <div className="w-12 h-12 rounded-lg flex-none bg-slate-400 animate-pulse" />
+                                : <img className="w-12 h-12 object-cover rounded-lg flex-none" alt={ data.productName } src={ data.productImage?.[0] } />
+                            }
                             
-                            <div className="flex-grow flex flex-col">
-                                <p className="text-[10px] text-neutral-3 mb-1">Penawaran Produk</p>
-                                <p className='mb-1'>Jam Tangan Casio</p>
-                                <p className='mb-1'>{ formatRupiah(20000) }</p>
-                                <p>Ditawar { formatRupiah(10000) }</p>
-                            </div>
-
-                            <span className="flex-none text-[10px] text-neutral-3">20 Apr, 14:04</span>
+                            {
+                                //Data produk
+                                isLoading ? <div className="flex-grow flex flex-col animate-pulse">
+                                    <div className="h-2.5 rounded-md w-16 mb-1 bg-slate-400" />
+                                    <div className="h-4 rounded-md w-24 mb-2 bg-slate-400" />
+                                    <div className="h-4 rounded-md w-14 mb-2 bg-slate-400" />
+                                    <div className="h-4 rounded-md w-20 mb-2 bg-slate-400" />
+                                </div>
+                                : <div className="flex-grow flex flex-col">
+                                    <p className="text-[10px] text-neutral-3 mb-1">{ data.soldAt ? "Berhasil Terjual" : "Penawaran Produk" }</p>
+                                    <p className='mb-1'>{ data.productName }</p>
+                                    <p className='mb-1'>{ formatRupiah(data.productPrice || 0) }</p>
+                                    <p>Ditawar { formatRupiah(data.bidPrice || 0) }</p>
+                                </div>
+                            }
+                            
+                            {
+                                isLoading ? <span className="flex-none h-2.5 w-10 bg-slate-400 rounded-md animate-pulse" />
+                                    // : <span className="flex-none text-[10px] text-neutral-3">20 Apr, 14:04</span>
+                                    : <span className="flex-none text-[10px] text-neutral-3">{ moment(data.soldAt ?? data.declinedAt ?? data.acceptedAt ?? data.bidAt).format('D MMM, HH:mm') }</span>
+                            }
                         </div>
 
                             {/* Buttons */}
                             <div className={`${isAcceptProduct? 'hidden' : 'grid'} grid-cols-2 lg:float-right text-center pt-4 pb-4`}>
                                 <button className="mr-2 px-[48px] py-2 inline-block bg-white border border-purple-4 hover:bg-gray-200 font-normal text-sm leading-tight rounded-[16px] 
                                     focus:shadow-lg focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-4 disabled:opacity-70"
-                                    type="button" onClick={handleOpenDeniedModal}>
+                                    type="button" onClick={handleOpenDeniedModal} disabled={ isLoading }>
                                     Tolak
                                 </button>
                                 <button disabled={isLoading}
-                                    className="ml-2 px-[48px] py-2 inline-block bg-purple-4 hover:bg-purple-5  text-white font-normal text-sm leading-tight rounded-[16px] 
-                                    focus:shadow-lg focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-5 disabled:opacity-70"
+                                    className="btn"
                                     type="button" onClick={handleOpenAcceptModal} >
-                                    Terima
                                     { isLoading && <LoadingSpin /> }
+                                    { isLoading ? "Memproses..." : "Terima"}
                                 </button>
                             </div>
                             <div className={`${isAcceptProduct? 'grid' : 'hidden'} grid-cols-2 lg:float-right text-center pt-4 pb-4`}>
@@ -147,14 +204,14 @@ export default function BuyerInfo(props) {
                     Product Match
                 </p>
                 <div className="flex flex-row items-center">
-                    <img className="w-[48px] h-[48px] rounded-[12px] border border-neutral-2" alt="buyer" src={buyer} />
+                    <img className="w-[48px] h-[48px] rounded-[12px] border border-neutral-2" alt="buyer" src={buyerPic} />
                     <div className="flex flex-col justify-between ml-4">
                         <p className="mb-1 font-medium text-sm">Nama Pembeli</p>
                         <p className="font-normal text-[10px] text-neutral-3 ">Kota</p>
                     </div>
                 </div>
                 <div className="flex flex-row items-center mt-4">
-                    <img className="w-[48px] h-[48px] rounded-[12px] border border-neutral-2" alt="produk" src={product} />
+                    <img className="w-[48px] h-[48px] rounded-[12px] border border-neutral-2" alt="produk" src={productPic} />
                     <div className="flex flex-col justify-between ml-4 text-sm">
                         <p className='mb-1'>Jam Tangan Casio</p>
                         <p className='mb-1'><s>{ formatRupiah(20000) }</s></p>
