@@ -40,8 +40,8 @@ export default function Login() {
       }))
       navigate(location.state?.referrer || '/');
     } catch (e) {
-      if (e.response) setErrorMsg(e.response.data.message);
-      else setErrorMsg("Terjadi Kesalahan. Silakan periksa koneksi anda");
+      console.error(e);
+      setErrorMsg(e.response?.data?.message || "Terjadi Kesalahan. Silakan periksa koneksi anda");
     } finally {
       setLoading(false)
     }

@@ -42,7 +42,8 @@ export default function ProductForm(props) {
         // validasi ukuran files
         const isAnyOversize = !!iFiles.find(file => file.size>2e+6)
         if (isAnyOversize) {
-            setFormErrors(prev => ({ ...prev, files: 'Ukuran foto maksimal adalah 2 MB' }))
+            alert('Ukuran foto maksimal adalah 2 MB');
+            return;
         }
         setPreviewURIs([...previewURIs, ...iFiles.map(file => URL.createObjectURL(file))].slice(0,4))
         setFiles([...files,...iFiles].slice(0,4))
@@ -53,7 +54,7 @@ export default function ProductForm(props) {
         event.preventDefault();
 
         if(!validateInput()) return;
-        
+
         try {
             setLoading(true);
             const formData = new FormData()
@@ -69,6 +70,7 @@ export default function ProductForm(props) {
                     Authorization: `Bearer ${ token }`
                 },
                 data: formData,
+                timeout: 20000,
             })
             toast.success('Produk berhasil ditambahkan', {
                 position: "top-center",

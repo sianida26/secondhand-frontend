@@ -32,6 +32,7 @@ function PreviewProdukBuyer() {
   const [isLoading, setLoading] = useState(true); //is Loading product data
   const [showModal, setShowModal] = useState(false); //Is modal penawaran showing
   const [errorMessage, setErrorMessage] = useState("");
+  const [productStatus, setProductStatus] = useState("")
   const [bidPrice, setBidPrice] = useState(0);
   const [productDetail, setProductDetail] = useState({
     id: 0,
@@ -78,10 +79,14 @@ function PreviewProdukBuyer() {
       setLoading(true);
       setErrorMessage("");
       const response = await axios({
-        url: `${configs.apiRootURL}/products/detail/${id}`,
+        url: `${configs.apiRootURL}/products/detail-buyer/${id}`,
+        headers: {
+          Authorization: `Bearer ${ token }`,
+        },
         method: 'GET',
       })
       setProductDetail(response.data);
+      setProductStatus(response.data.status);
     } catch (error) {
       const errorMsg = error.response?.data?.message || 'Terjadi Kesalahan. Silakan coba lagi'
       setErrorMessage(errorMsg);
@@ -211,10 +216,14 @@ function PreviewProdukBuyer() {
             <div className="fixed w-full bottom-4 px-4 md:hidden">
               <button
                 onClick={openModal}
-                disabled={isLoading}
+                disabled={isLoading || productStatus === "WAITING_CONFIRMATION"}
                 className="btn w-full py-4 font-medium disabled:bg-purple-2 disabled:opacity-100"
               >
-                Saya tertarik dan ingin nego
+                {
+                  productStatus === "BIDDABLE" ? "Saya tertarik dan ingin nego"
+                  : productStatus === "WAITING_CONFIRMATION" ? "Menunggu Respon Penjual"
+                  : ""
+                }
               </button>
             </div>
         </>
