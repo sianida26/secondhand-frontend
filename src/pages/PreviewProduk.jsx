@@ -30,7 +30,7 @@ function PreviewProduk() {
     const [ files, setFiles ] = useState(location.state?.previewData?.files)
     const [ productId, setProductId ] = useState(location.state?.previewData?.productId || 0);
 
-    const sendData = async () => {
+    const terbitkanProduk = async () => {
         try {
             setLoading(true);
             const formData = new FormData()
@@ -38,15 +38,15 @@ function PreviewProduk() {
             formData.append('price', price);
             formData.append('description', description);
             formData.append('category', category);
-            formData.append('filenames', files);
-            //TODO: Lanjutkan setelah ada perbaikan endpoint dari backend
-            const response = await axios({
+            files.forEach(file => formData.append("files",file)); 
+            await axios({
                 url: `${ configs.apiRootURL }${ productId ? '/products/'+productId : '/products' }`,
                 method: productId ? 'PUT' : 'POST',
                 headers: {
                     Authorization: `Bearer ${ auth.token }`
                 },
                 data: formData,
+                timeout: 20000, //20 s
             })
             navigate('/produkku', { replace: true })
         } catch (error) {
@@ -107,7 +107,7 @@ function PreviewProduk() {
                     <button 
                         className="hidden md:block w-full bg-purple-4 font-medium text-white text-center py-2 mt-4 rounded-[16px] focus:ring-2 focus:ring-offset-2 focus:ring-purple-4 focus:outline-none"
                         disabled={ isLoading } 
-                        onClick={ sendData } 
+                        onClick={ terbitkanProduk } 
                     >
                         Terbitkan
                     </button>
@@ -150,7 +150,7 @@ function PreviewProduk() {
         <div className="fixed w-full bottom-4 px-4 md:hidden">
             <button 
                 disabled={ isLoading } 
-                onClick={ sendData }
+                onClick={ terbitkanProduk }
                 className="bg-purple-4 font-medium text-white text-center py-4 flex justify-center w-full rounded-xl focus:ring-2 focus:ring-offset-2 focus:ring-purple-4 focus:outline-none disabled:opacity-70"
             >
                 { isLoading ? <span className="flex items-center"><LoadingSpin /> Mengirim...</span> : "Terbitkan" }

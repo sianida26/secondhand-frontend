@@ -9,6 +9,7 @@ import BuyerInfo from './pages/BuyerInfo';
 import Profile from "./pages/Profile";
 import AkunSaya from "./pages/AkunSaya";
 import PreviewProduk from "./pages/PreviewProduk";
+import PreviewProdukBuyer from "./pages/PreviewProdukBuyer";
 import DaftarJualSaya from "./pages/DaftarJualSaya";
 import EmailConfirm from "./pages/EmailConfirm";
 import ForgotPassword from "./pages/ForgotPassword";
@@ -26,13 +27,14 @@ function App() {
       <Route path="/info-buyer" element={<BuyerInfo />} />
       <Route path="/accept-produk" element={<BuyerInfo />} />
       <Route path="/akun-saya" element={<AkunSaya />} />
-      <Route path="/profile" element={<Profile />} />
+      <Route path="/profil" element={<Profile />} />
       <Route path="/preview-produk" element={<PreviewProduk />} />
       <Route path="/produkku" element={<DaftarJualSaya />} />
       <Route path="/waiting-email-confirmation" element={<EmailConfirm />} />
       <Route path="/forgot-password" element={<ForgotPassword />} />
       <Route path="/forgot-password/:token" element={<NewPassword />} />
       <Route path="/logout" element={<Logout />} />
+      <Route path="/produk/:id" element={<PreviewProdukBuyer />} />
     </Routes>
   );
 }

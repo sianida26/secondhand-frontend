@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react'
 import { toast } from 'react-toastify';
-import { useLocation, useNavigate } from 'react-router-dom'
+import { useLocation, useNavigate, useParams } from 'react-router-dom'
 import { FiPlus, FiArrowLeft, FiAlertCircle } from 'react-icons/fi'
 import { useDispatch, useSelector } from 'react-redux'
 import axios from 'axios'
@@ -16,6 +16,7 @@ export default function ProductForm(props) {
     const navigate = useNavigate()
     const dispatch = useDispatch()
     const location = useLocation()
+    const { id } = useParams()
 
     const inputButtonRef = useRef(null)
     const token = useSelector(state => state.auth.token)
@@ -41,7 +42,8 @@ export default function ProductForm(props) {
         // validasi ukuran files
         const isAnyOversize = !!iFiles.find(file => file.size>2e+6)
         if (isAnyOversize) {
-            setFormErrors(prev => ({ ...prev, files: 'Ukuran foto maksimal adalah 2 MB' }))
+            alert('Ukuran foto maksimal adalah 2 MB');
+            return;
         }
         setPreviewURIs([...previewURIs, ...iFiles.map(file => URL.createObjectURL(file))].slice(0,4))
         setFiles([...files,...iFiles].slice(0,4))
@@ -50,8 +52,9 @@ export default function ProductForm(props) {
     // handle untuk button terbitkan
     const handlePublish = async (event) => {
         event.preventDefault();
-        if(!validateInput()) return
-        const data = new FormData();
+
+        if(!validateInput()) return;
+
         try {
             setLoading(true);
             const formData = new FormData()
@@ -59,15 +62,15 @@ export default function ProductForm(props) {
             formData.append('price', price);
             formData.append('description', description);
             formData.append('category', category);
-            formData.append('filenames', files);
-            
-            const response = await axios({
+            files.forEach(file => formData.append("files",file)); 
+            await axios({
                 url: `${ configs.apiRootURL }${ productId ? '/products/'+productId : '/products' }`,
                 method: productId ? 'PUT' : 'POST',
                 headers: {
                     Authorization: `Bearer ${ token }`
                 },
                 data: formData,
+                timeout: 20000,
             })
             toast.success('Produk berhasil ditambahkan', {
                 position: "top-center",
@@ -111,33 +114,33 @@ export default function ProductForm(props) {
         navigate('/preview-produk', { replace: true, state: { previewData: state, prevPathname: location.pathname } })
     } 
 
-    // const handleDelete = async () => {
-    //     try {
-    //         setLoading(true); 
-    //         await axios({
-    //             url: 'https://secondhand-backend-kita.herokuapp.com/products/delete/:id', 
-    //             method: 'DELETE',
-    //             headers: {
-    //                 Authorization: `Bearer ${token}`
+    const handleDelete = async () => {
+        try {
+            setLoading(true); 
+            // await axios({
+            //     url: 'https://secondhand-backend-kita.herokuapp.com/products/delete/:id', 
+            //     method: 'DELETE',
+            //     headers: {
+            //         Authorization: `Bearer ${token}`
         
-    //             }
-    //         })
-    //         toast.success('Produk berhasil dihapus!', {
-    //             position: "top-center",
-    //             autoClose: 5000,
-    //             hideProgressBar: false,
-    //             closeOnClick: true,
-    //             pauseOnHover: true,
-    //             draggable: true,
-    //             progress: undefined,
-    //             theme: 'colored'
-    //             });
-    //         navigate(-1,{replace: true})
-    //     } catch (e) {
-    //         if(e.response) setErrorMsg(e.response.message);
-    //         else setErrorMsg("Terjadi Kesalahan. Silakan periksa koneksi Anda")
-    //     }
-    // }
+            //     }
+            // })
+            await new Promise(r => setTimeout(r, 3000))
+            toast.error('Produk berhasil dihapus!', {
+                position: "top-center",
+                autoClose: 5000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                });
+            navigate(-1,{replace: true})
+        } catch (e) {
+            if(e.response) setErrorMsg(e.response.message);
+            else setErrorMsg("Terjadi Kesalahan. Silakan periksa koneksi Anda")
+        }
+    }
 
     const validateInput = () => {
 

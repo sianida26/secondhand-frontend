@@ -25,25 +25,21 @@ export default function Login() {
     setLoading(true);
     try {
       const response = await axios({
-        url: `${configs.apiRootURL}/users/login`,
-        method: "POST",
-        data: { email, password },
+        url: `${ configs.apiRootURL }/users/login`,
+        method: 'POST',
+        data: { email, password }
       });
-      dispatch(
-        setData({
-          name: response.data.name,
-          token: response.data.token,
-          profilePhoto: response.data.profilePhoto,
-          city: response.data.city,
-        })
-      );
-      navigate(location.state?.referrer || "/");
+      
+      dispatch(setData({
+        name: response.data.name,
+        token: response.data.token,
+        profilePhoto: response.data.profilePhoto,
+        city: response.data.city, 
+      }))
+      navigate(location.state?.referrer || '/');
     } catch (e) {
-      // if (e.response) setErrorMsg(e.response.data.message);
-      // else setErrorMsg("Terjadi Kesalahan. Silakan periksa koneksi anda");
-      setErrorMsg(
-        e.response?.data?.message || "Terjadi kesalahan, silahkan periksa koneksi kamu!"
-      )
+      console.error(e);
+      setErrorMsg(e.response?.data?.message || "Terjadi Kesalahan. Silakan periksa koneksi anda");
     } finally {
       setLoading(false);
     }
