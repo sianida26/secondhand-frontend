@@ -68,11 +68,11 @@ export default function ProductForm(props) {
   };
 
   return (
-    <section className="h-full">
+    <main className="w-screen">
       <Header title="Lengkapi Info Akun" />
-      <div className="my-6">
-        <div className={`flex text-purple-4 items-center justify-center text-2xl  mx-auto h-24 ${!previewURI && "bg-gray-400"} w-24 rounded-xl relative group`}>
-          <div onClick={() => inputButtonRef.current?.click()} className={`absolute ${previewURI && "hidden group-hover:flex w-full h-full bg-black bg-opacity-50 justify-center items-center rounded-xl"}`}>
+      <div className="w-screen my-6">
+        <div className={`flex text-purple-4 items-center justify-center text-2xl mx-auto h-24 ${!previewURI && "bg-gray-400"} w-24 rounded-xl relative group`}>
+          <div onClick={() => inputButtonRef.current?.click()} className={`absolute ${previewURI && "hidden group-hover:flex w-full h-full bg-black bg-opacity-50 justify-center items-center rounded-xl"} `}>
             <div className="flex flex-col items-center">
               <FiCamera className="text-neutral-3 text-lg" />
             </div>
@@ -80,7 +80,7 @@ export default function ProductForm(props) {
           <input ref={inputButtonRef} disabled={isLoading} type="file" accept="images/*" className="h-full w-full opacity-0" id="prodInput" onChange={handleSelectFile} />
 
           {/* Preview gambar */}
-          {previewURI && <img src={previewURI} className="h-full w-full object-cover rounded-xl" alt="Foto Profil" />}
+          {previewURI && <img src={previewURI} className="object-cover aspect-square w-full rounded-xl" alt="Foto Profil" />}
         </div>
       </div>
 
@@ -181,6 +181,6 @@ export default function ProductForm(props) {
           </div>
         </div>
       </div>
-    </section>
+    </main>
   );
 }

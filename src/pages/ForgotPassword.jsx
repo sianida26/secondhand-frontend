@@ -2,10 +2,12 @@ import React, { useState } from "react";
 import axios from 'axios';
 import { toast } from 'react-toastify';
 import { useNavigate } from "react-router-dom";
+
 import Header from "../components/Header";
 import ForgotPassPic from "../assets/undraw_forgot_password.svg";
 import { FiAlertCircle } from 'react-icons/fi';
 import configs from "../utils/configs";  
+import LoadingSpin from '../components/LoadingSpin';
 
 export default function ForgotPassword() {
 
@@ -52,7 +54,7 @@ export default function ForgotPassword() {
             <img className="h-32" src={ForgotPassPic}></img>
             <p className="text-3xl font-bold py-4">Lupa Password</p>
             <p className="text-sm font-normal">
-              Masukkan email anda dan kami akan mengirim link untuk melakukan
+              Masukkan email kamu dan kami akan mengirim link untuk melakukan
               reset password
             </p>
             <form className="w-full my-4" onSubmit={handleForgotPassword}>
@@ -90,6 +92,7 @@ export default function ForgotPassword() {
               className="text-sm mt-3 text-purple-3 hover:text-purple-4"
               onClick={() => navigate(-1)}
             >
+              { isLoading && <LoadingSpin /> }
               &#60; Kembali ke Login
             </button>
           </div>

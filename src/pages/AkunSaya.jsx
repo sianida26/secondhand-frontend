@@ -2,9 +2,7 @@ import React, { useEffect } from "react";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import { useSelector } from "react-redux";
 
-import { FiCamera, FiLogOut, FiPlusCircle, FiSettings } from "react-icons/fi";
-import { FiEdit } from "react-icons/fi";
-import { FiHome, FiBell, FiList, FiUser } from "react-icons/fi";
+import { FiLogOut, FiSettings, FiEdit } from "react-icons/fi";
 import Header from "../components/Header";
 
 export default function AkunSaya() {
