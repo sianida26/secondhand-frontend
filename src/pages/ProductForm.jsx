@@ -22,6 +22,7 @@ export default function ProductForm(props) {
     const productId = location.state?.productId
 
     const [ isLoading, setLoading ] = useState(false);
+
     const [ name, setName ] = useState("");
     const [ price, setPrice ] = useState("");
     const [ category, setCategory ] = useState("");
@@ -30,6 +31,18 @@ export default function ProductForm(props) {
     const [ files, setFiles ] = useState([]);
     const [ formErrors, setFormErrors ] = useState({});
     const [ errorMsg, setErrorMsg ] = useState("");
+    const [ detailPict, setDetailPict ] = useState("");
+
+    const [ isModalPictShow, setModalPictShow ] = useState(false);
+    const isModalShow = isModalPictShow;
+
+    const handleOpenPictModal =(picture) => {
+        setDetailPict(picture)
+        setModalPictShow(true)
+    }
+    const handleCloseModal =() => {
+        setModalPictShow(false)
+    }
 
     useEffect(() => console.log(location.state), [ location ])
 
@@ -270,8 +283,11 @@ export default function ProductForm(props) {
                             Foto Produk</p>
                                 <div className='grid grid-cols-3 md:grid-cols-4 mb-5 gap-4'>
                                     {
+                                        
                                         previewURIs.map(uri => (
-                                            <img src={uri} className="w-full aspect-square rounded-[16px] object-cover mb-4" alt="foto produk" />
+                                            <button type='button' onClick={() => handleOpenPictModal(uri)}>
+                                                <img src={uri} className="w-full aspect-square rounded-[16px] object-cover mb-4" alt="foto produk" />
+                                            </button>
                                         ))
 
                                     }
@@ -318,6 +334,32 @@ export default function ProductForm(props) {
                         </form>
                     </div>
                 </div> 
+
+                {/* Modal for picture preview */}
+
+                {/* modal backdrop */}
+                <div onClick={handleCloseModal} className={`w-screen h-screen fixed ${isModalShow?'flex':'hidden'} items-center justify-center bg-black bg-opacity-70 top-0 left-0 z-50`}>
+
+                    {/* modal body */}
+                    <div onClick={(e)=>e.stopPropagation()} className={`${isModalPictShow?'bg-white':'hidden'} relative p-6 w-full mx-4 max-w-sm md:h-auto rounded-2xl`}>
+                        <div className='flex flex-col justify-center items-center'>
+                            <p className='text-lg font-semibold'>Detail Foto Produk</p>
+                            <img src={detailPict} className="w-60 h-60 rounded-xl aspect-square object-cover mb-6 mt-4" alt="foto produk" />
+                        </div>
+                        <div className='grid grid-cols-2'>
+                        <button className="flex items-center justify-center border border-red-500 text-red-500 hover:text-white hover:bg-red-500 font-normal text-sm rounded-2xl 
+                                    focus:shadow-lg focus:outline-none active:shadow-lg mr-2" type="button"  >
+                                Delete
+                            </button>
+                            <button onClick={handleCloseModal} className="flex items-center justify-center  py-2 bg-purple-4 hover:bg-purple-5 text-white font-normal text-sm rounded-2xl
+                                    focus:shadow-lg focus:outline-none active:shadow-lg" type="button"  >
+                                Close
+                            </button>
+                        </div>
+                    </div>
+
+                </div>
+
             </div>
         </main>
     )
