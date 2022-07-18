@@ -56,7 +56,7 @@ export default function Home() {
 
 	return (
 		<div className="w-screen min-h-screen">
-			<Header  />
+			<Header home  />
 			{/* Hero */}
 			<div className="bg-gradient-to-b from-[#FFE9C9] to-transparent pb-12">
 
@@ -83,13 +83,14 @@ export default function Home() {
 			{/* Categories */}
 			<div className="flex flex-col px-4">
 				<p className="font-medium">Telusuri Kategori</p>
-				<div className="flex overflow-x-scroll gap-4 mt-4">
+				<div className="flex overflow-x-auto gap-4 mt-4">
 					{categories.map((category, i) => (
 						<button
 							className={`btn py-4 flex-shrink-0 ${
 								selectedCategory !== category &&
 								"bg-purple-1 text-neutral-4 focus:bg-purple-2 hover:bg-purple-2"
 							}`}
+							onClick={() => setSelectedCategory(category)}
 							key={ i }
 						>
 							<FiSearch className="text-2xl" />
@@ -103,7 +104,7 @@ export default function Home() {
 			<div className="w-full grid grid-cols-2 place-items-center gap-4 px-4 mt-4 lg:grid-cols-5 xl:grid-cols-8">
 				{isLoading
 					? [...new Array(10)].map((x) => <ProductCard isLoading />)
-					: products.map((product) => (
+					: products.filter(product => selectedCategory === "Semua" || product.category === selectedCategory.toLowerCase() ).map((product) => (
 							<ProductCard
 								key={ product.id }
 								isLoading={isLoading}

@@ -9,6 +9,7 @@ import { persistStore } from 'redux-persist'
 import { PersistGate } from 'redux-persist/integration/react'
 
 import 'react-toastify/dist/ReactToastify.css';
+import 'react-perfect-scrollbar/dist/css/styles.css';
 import "antd/dist/antd.css";
 import "./styles/tailwind.css";
 import "./styles/custom.css";
