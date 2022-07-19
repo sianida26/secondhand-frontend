@@ -35,6 +35,9 @@ export default function Sidebar(props) {
 							<Link to="/produkku" className="">
 								Daftar Jual
 							</Link>
+							<Link to="/wishlist" className="">
+								Wishlist
+							</Link>
 							<Link to="/akun-saya" className="">
 								Akun Saya
 							</Link>

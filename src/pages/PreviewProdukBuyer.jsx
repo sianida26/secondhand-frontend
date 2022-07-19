@@ -4,12 +4,10 @@ import { useLocation, useNavigate, useParams } from "react-router-dom";
 
 import axios from 'axios';
 
-import { FiArrowLeft, FiSearch, FiBell, FiList, FiUser, FiX } from "react-icons/fi";
+import { FiArrowLeft, FiX, FiHeart } from "react-icons/fi";
 
 import PullToRefresh from "react-simple-pull-to-refresh";
 
-import gambarJam from "../assets/jam.png";
-import gambarOrang from "../assets/buyer-pic.png";
 import Header from "../components/Header";
 import LoadingSpin from "../components/LoadingSpin";
 import configs from "../utils/configs";
@@ -136,7 +134,7 @@ function PreviewProdukBuyer() {
   return (
     <div className="w-screen min-h-screen overflow-x-none">
       {/* Header */}
-      <Header title="" />
+      <Header title="Detail produk" />
       <PullToRefresh onRefresh={ requestProductDetail }>
       {
         errorMessage ? renderErrorScreen()
@@ -150,7 +148,7 @@ function PreviewProdukBuyer() {
                     }
                   </Carousel>
               }
-              <button className="absolute top-4 left-4 rounded-full w-8 h-8 bg-white flex justify-center items-center">
+              <button className="absolute top-4 left-4 rounded-full w-8 h-8 bg-white flex justify-center items-center"  onClick={() => navigate(-1)}>
                 <FiArrowLeft />
               </button>
             </div>
@@ -164,18 +162,24 @@ function PreviewProdukBuyer() {
                     <div className="bg-slate-700 rounded-md w-24 h-4" />
                   </div>
                     : <div className="flex flex-col">
-                      <h1 className="font-medium">{productDetail.name}</h1>
-                      <p className="text-sm text-neutral-3">{productDetail.category}</p>
-                      <p className="">{formatRupiah(productDetail.price)}</p>
+                      <h1 className="text-base font-medium">{productDetail.name}</h1>
+                      <p className="text-sm text-neutral-3 mt-1 mb-4">{productDetail.category}</p>
+                      <p className="text-base font-medium">{formatRupiah(productDetail.price)}</p>
                     </div>
                 }
 
                 <button
                   onClick={openModal}
                   disabled={isLoading}
-                  className="hidden md:block w-full bg-purple-4 font-medium text-white text-center py-2 mt-4 rounded-lg"
+                  className="hidden md:block w-full bg-purple-4 hover:bg-purple-5 font-medium text-white text-center py-2 mt-4 rounded-2xl focus:ring-2 focus:ring-offset-2 focus:ring-purple-4 focus:outline-none"
                 >
                   Saya tertarik dan ingin nego
+                </button>
+                <button
+                  disabled={isLoading}
+                  className="hidden md:block w-full justify-center items-center py-2 mt-2 rounded-2xl bg-red-500 font-medium text-white hover:bg-red-600  focus:ring-2 focus:ring-offset-2 focus:ring-red-500 focus:outline-none"
+                >
+                  <span className="flex gap-2 justify-center items-center">Masukkan ke wishlist<FiHeart className="mb-1" /></span>                 
                 </button>
                 {/* <button className="hidden md:block w-full border border-purple-4 bg-white font-medium text-neutral-5 text-center py-2 mt-4 rounded-lg">Edit</button> */}
               </div>
@@ -229,6 +233,12 @@ function PreviewProdukBuyer() {
                   : ""
                 }
               </button>
+              <button
+                  disabled={isLoading}
+                  className="btn w-full py-4 rounded-2xl bg-red-500 font-medium text-white mt-2"
+                >
+                  <span className="flex gap-2 justify-center items-center">Masukkan ke wishlist<FiHeart className="mb-1" /></span>                 
+                </button>
             </div>
         </>
       }

@@ -9,6 +9,7 @@ import {
   FiMenu,
   FiSearch,
   FiUser,
+  FiHeart
 } from "react-icons/fi";
 import { formatRupiah } from "../utils/helpers";
 import product from "../assets/product.png";
@@ -45,6 +46,7 @@ export default function Header(props) {
             <FiArrowLeft className="inline mx-4 text-2xl" />
           </button>
         ) : (
+          
           <button
             className="w-8 lg:hidden"
             onClick={() => setShowSidebar(true)}
@@ -70,7 +72,7 @@ export default function Header(props) {
                 <FiList />
               </Link>
               <div className="relative">
-               <button className="mt-2 hover:text-purple-4"> <FiBell onClick={() => setShowNotification(prev => !prev)} /> </button>
+               <button className="mt-2 hover:to-blue-500"> <FiBell onClick={() => setShowNotification(prev => !prev)} /> </button>
 
                 {/* Notifikasi */}
 
@@ -103,6 +105,9 @@ export default function Header(props) {
                 </div>
               </div>
 
+              <Link to="/wishlist">
+                <FiHeart />
+              </Link>
               <Link to="/akun-saya">
                 <FiUser />
               </Link>

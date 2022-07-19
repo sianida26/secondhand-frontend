@@ -76,14 +76,14 @@ export default function ModalTerimaTawaran(props) {
                         Product Match
                     </p>
                     <div className="flex flex-row items-center">
-                        <img className="w-[48px] h-[48px] rounded-[12px] border border-neutral-2" alt="buyer" src={props.data.buyerPic} />
+                        <img className="w-[48px] h-[48px] rounded-xl border border-neutral-2" alt="buyer" src={props.data.buyerPic} />
                         <div className="flex flex-col justify-between ml-4">
                             <p className="mb-1 font-medium text-sm">{ props.data.buyerName }</p>
                             <p className="font-normal text-[10px] text-neutral-3 ">{ props.data.buyerCity }</p>
                         </div>
                     </div>
                     <div className="flex flex-row items-center mt-4">
-                        <img className="w-[48px] h-[48px] rounded-[12px] border border-neutral-2" alt="produk" src={props.data.productImage?.[0]} />
+                        <img className="w-[48px] h-[48px] rounded-xl border border-neutral-2" alt="produk" src={props.data.productImage?.[0]} />
                         <div className="flex flex-col justify-between ml-4 text-sm">
                             <p className='mb-1'>{ props.data.productName }</p>
                             <p className='mb-1'><s>{formatRupiah(props.data.productPrice ?? 0)}</s></p>
