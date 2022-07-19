@@ -12,20 +12,36 @@ import {
   FiHeart
 } from "react-icons/fi";
 import { formatRupiah } from "../utils/helpers";
-import product from "../assets/product.png";
+import moment from "moment"
+import PerfectScrollbar from 'react-perfect-scrollbar'
 
 import Sidebar from "./Sidebar";
 
 export default function Header(props) {
   const navigate = useNavigate();
   const isLoggedIn = useSelector((state) => state.auth.token);
+  const notifications = useSelector(state => state.notification.items)
 
   const [showSidebar, setShowSidebar] = useState(false);
   const [showNotification, setShowNotification] = useState(false);
 
+  const handleClickNotification = (notificationData) => {
+    const previewData = {
+      name: notificationData.productName,
+      category: notificationData.category,
+      price: notificationData.price,
+      description: notificationData.description,
+      uris: notificationData.image,
+      productId: notificationData.productId,
+    }
+
+    if (notificationData.type === "Berhasil diterbitkan") return navigate('/preview-produk', { state: { previewData, readOnly: true } })
+    return navigate(`/penawaran/${notificationData.bidId}`);
+  }
+
   return (
     <nav
-      className={`sticky top-0 w-full flex flex-wrap items-center justify-between py-4 ${ props.home ? "bg-[#FFE9C9] lg:bg-white" : "bg-white" } text-black
+      className={`sticky top-0 w-full flex flex-wrap items-center justify-between py-4 ${props.home ? "bg-[#FFE9C9] lg:bg-white" : "bg-white"} text-black
     shadow-none lg:shadow-md navbar navbar-expand-lg navbar-light px-5 z-40`}
     >
       <div className="container-fluid w-full flex flex-wrap items-center justify-between lg:justify-around lg:max-w-screen-lg lg:mx-auto">
@@ -57,11 +73,10 @@ export default function Header(props) {
           </button>
         )}
         <div
-          className={`lg:flex-grow lg:h-12 ${
-            props.withoutSearchBar
+          className={`lg:flex-grow lg:h-12 ${props.withoutSearchBar
               ? "lg:flex lg:justify-center lg:items-center"
               : "lg:invisible"
-          }`}
+            }`}
         >
           <span className={`text-lg font-bold text-center lg:font-normal`}>
             {props.title}
@@ -74,36 +89,42 @@ export default function Header(props) {
                 <FiList />
               </Link>
               <div className="relative">
-               <button className="mt-2 hover:to-blue-500"> <FiBell onClick={() => setShowNotification(prev => !prev)} /> </button>
+                <button className="mt-2 hover:text-purple-4"> <FiBell onClick={() => setShowNotification(prev => !prev)} /> </button>
 
                 {/* Notifikasi */}
 
-                <div className={`hidden ${showNotification && "lg:block"} absolute bg-white shadow-lg border border-gray-100 w-96 mt-2 right-0 p-4 rounded-2xl text-sm`}>
+                <div className={`hidden ${showNotification && "lg:block"} absolute bg-white shadow-lg border border-gray-100 w-96 mt-2 right-0 p-4 rounded-2xl text-sm max-h-96 overflow-y-auto`}>
+                  <PerfectScrollbar>
                   <div className="grid grid-cols-1 divide-y">
-                    <div className="flex gap-4 py-3">
-                      <img
-                        className="w-12 h-12 object-cover rounded-lg flex-none"
-                        alt="Foto Produk"
-                        src={product}
-                      />
-
-                      <div className="flex-grow flex flex-col">
-                        <p className="text-[10px] text-neutral-3 mb-1">
-                          Penjualan
-                        </p>
-                        <p className="mb-1">Jam Tangan Casio</p>
-                        <p className="mb-1">
-                          <s>{formatRupiah(20000)}</s>
-                        </p>
-                        <p>Ditawar {formatRupiah(10000)}</p>
-                      </div>
-
-                      <span className="flex-none text-[10px] text-neutral-3 pr-0">
-                        20 Apr, 14:04
-                      </span>
-                      <div className="w-2 h-2 rounded-full bg-red-500 mt-1" />
-                    </div>
+                    {
+                      notifications.map(notification => (
+                        <div className="flex flex-col bg-white py-4" key={notification.id} onClick={() => handleClickNotification(notification)}>
+                          <div className="flex gap-4">
+                            <img
+                              src={notification.image[0]}
+                              alt={notification.productName}
+                              className="w-12 h-12 rounded-xl border border-neutral-2 mr-4 flex-none object-cover"
+                            />
+                            <div className="flex flex-col w-full gap-1">
+                              <div className="flex justify-between text-[10px] text-neutral-3">
+                                <p>{notification.type}</p>
+                                <div className="flex gap-2 items-center">
+                                  <p>{moment(notification.time).format('D MMM, HH:mm')}</p>
+                                  <div className="w-2 h-2 rounded-full bg-red-500"></div>
+                                </div>
+                              </div>
+                              <div className="text-sm">
+                                <p>{notification.productName}</p>
+                                <p className={notification.type === "Berhasil terjual" && "line-through"}>{formatRupiah(notification.price)}</p>
+                                <p className={notification.type === "Penawaran ditolak" && "line-through"}>{notification.bidPrice && `${notification.type === "Berhasil terjual" ? "Terjual" : "Ditawar"} ${formatRupiah(notification.bidPrice)}`}</p>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      ))
+                    }
                   </div>
+                  </PerfectScrollbar>
                 </div>
               </div>
 

@@ -1,4 +1,7 @@
+import { useEffect } from "react"
 import { Routes, Route } from "react-router-dom";
+import { useSelector, useDispatch } from "react-redux";
+import axios from "axios";
 
 import Home from './pages/Home';
 import Register from './pages/Register';
@@ -15,8 +18,39 @@ import EmailConfirm from "./pages/EmailConfirm";
 import ForgotPassword from "./pages/ForgotPassword";
 import NewPassword from "./pages/NewPassword";
 import Wishlist from "./pages/Wishlist";
+import Notifikasi from "./pages/Notifikasi";
+
+import configs from './utils/configs'
+import { setNotifications } from './redux/slices/notificationSlice'
 
 function App() {
+
+  const token = useSelector(state => state.auth.token)
+  const dispatch = useDispatch()
+
+  const fetchNotifications = async () => {
+    try {
+      const response = await axios({
+        url: `${configs.apiRootURL}/notifications`,
+        method: 'GET',
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+        timeout: 20000, // seconds
+      });
+      dispatch(setNotifications(response.data));
+    } catch (e){
+
+    } finally {
+
+    }
+  }
+
+  useEffect(() => {
+    if (!token) return;
+    fetchNotifications()
+  }, [token])
+
   return (
     <Routes>
       <Route path="/" element={<Home />} />
@@ -37,6 +71,7 @@ function App() {
       <Route path="/forgot-password/:token" element={<NewPassword />} />
       <Route path="/logout" element={<Logout />} />
       <Route path="/produk/:id" element={<PreviewProdukBuyer />} />
+      <Route path="/notifikasi" element={ <Notifikasi /> } />
     </Routes>
   );
 }

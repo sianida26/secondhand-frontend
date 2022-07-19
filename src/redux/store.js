@@ -1,6 +1,7 @@
 import { combineReducers, configureStore } from '@reduxjs/toolkit'
 
 import authReducer from './slices/authSlice'
+import notificationReducer from './slices/notificationSlice'
 
 import {
   persistReducer,
@@ -19,7 +20,7 @@ const persistConfig = {
   storage,
 }
 
-const persistedReducer = persistReducer(persistConfig, combineReducers({ auth: authReducer }))
+const persistedReducer = persistReducer(persistConfig, combineReducers({ auth: authReducer, notification: notificationReducer }))
 
 export const store = configureStore({
   reducer: persistedReducer,
