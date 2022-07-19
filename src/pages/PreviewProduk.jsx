@@ -106,21 +106,21 @@ function PreviewProduk() {
 
                     <button 
                         className="hidden md:block w-full bg-purple-4 font-medium text-white text-center py-2 mt-4 rounded-[16px] focus:ring-2 focus:ring-offset-2 focus:ring-purple-4 focus:outline-none"
-                        disabled={ isLoading } 
+                        disabled={ isLoading || location.state?.readOnly } 
                         onClick={ terbitkanProduk } 
                     >
                         Terbitkan
                     </button>
                     <button 
                         className="hidden md:block w-full border border-purple-4 bg-white font-medium text-neutral-5 text-center py-2 mt-4 rounded-[16px]"
-                        disabled={ isLoading }
+                        disabled={ isLoading || location.state?.readOnly }
                         onClick={ () => navigate(location.state?.prevPathname || -1, { state: location.state }) } 
                     >
                         Edit
                     </button>
                     <button 
                         className="hidden md:block w-full bg-red-600 hover:bg-red-700 font-medium text-white text-center py-2 mt-4 rounded-[16px] focus:ring-2 focus:ring-offset-2 focus:ring-red-600 focus:outline-none"
-                        disabled={ isLoading }
+                        disabled={ isLoading || location.state?.readOnly }
                     >
                         Delete
                     </button>
@@ -149,7 +149,7 @@ function PreviewProduk() {
 
         <div className="fixed w-full bottom-4 px-4 md:hidden">
             <button 
-                disabled={ isLoading } 
+                disabled={ isLoading || location.state?.readOnly } 
                 onClick={ terbitkanProduk }
                 className="bg-purple-4 font-medium text-white text-center py-4 flex justify-center w-full rounded-xl focus:ring-2 focus:ring-offset-2 focus:ring-purple-4 focus:outline-none disabled:opacity-70"
             >
