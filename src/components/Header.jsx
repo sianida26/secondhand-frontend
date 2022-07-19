@@ -9,6 +9,7 @@ import {
   FiMenu,
   FiSearch,
   FiUser,
+  FiHeart
 } from "react-icons/fi";
 import { formatRupiah } from "../utils/helpers";
 import moment from "moment"
@@ -45,7 +46,9 @@ export default function Header(props) {
     >
       <div className="container-fluid w-full flex flex-wrap items-center justify-between lg:justify-around lg:max-w-screen-lg lg:mx-auto">
         <div className="hidden lg:flex gap-5 items-center lg:flex-grow-0">
-          <div className="w-[5.88rem] h-8 bg-purple-5"></div>
+          <Link to="/">
+            <div className="w-[5.88rem] h-8 bg-purple-5"></div>
+          </Link>
           {!props.withoutSearchBar && (
             <div className="h-12 bg-white rounded-2xl py-3 px-6 text-neutral-3 flex lg:bg-[#EEEEEE]">
               <input
@@ -61,6 +64,7 @@ export default function Header(props) {
             <FiArrowLeft className="inline mx-4 text-2xl" />
           </button>
         ) : (
+          
           <button
             className="w-8 lg:hidden"
             onClick={() => setShowSidebar(true)}
@@ -124,6 +128,9 @@ export default function Header(props) {
                 </div>
               </div>
 
+              <Link to="/wishlist">
+                <FiHeart />
+              </Link>
               <Link to="/akun-saya">
                 <FiUser />
               </Link>

@@ -17,6 +17,7 @@ import DaftarJualSaya from "./pages/DaftarJualSaya";
 import EmailConfirm from "./pages/EmailConfirm";
 import ForgotPassword from "./pages/ForgotPassword";
 import NewPassword from "./pages/NewPassword";
+import Wishlist from "./pages/Wishlist";
 import Notifikasi from "./pages/Notifikasi";
 
 import configs from './utils/configs'
@@ -64,6 +65,7 @@ function App() {
       <Route path="/profil" element={<Profile />} />
       <Route path="/preview-produk" element={<PreviewProduk />} />
       <Route path="/produkku" element={<DaftarJualSaya />} />
+      <Route path="/wishlist" element={<Wishlist />} />
       <Route path="/waiting-email-confirmation" element={<EmailConfirm />} />
       <Route path="/forgot-password" element={<ForgotPassword />} />
       <Route path="/forgot-password/:token" element={<NewPassword />} />

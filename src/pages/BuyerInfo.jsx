@@ -8,8 +8,6 @@ import { toast } from 'react-toastify'
 import axios from 'axios'
 
 import { formatRupiah } from '../utils/helpers'
-import buyerPic from '../assets/buyer-pic.png'
-import productPic from '../assets/product.png'
 
 import LoadingSpin from '../components/LoadingSpin'
 import ModalTolakTawaran from '../components/modals/ModalTolakTawaran'
