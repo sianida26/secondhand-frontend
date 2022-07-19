@@ -30,7 +30,9 @@ export default function Header(props) {
     >
       <div className="container-fluid w-full flex flex-wrap items-center justify-between lg:justify-around lg:max-w-screen-lg lg:mx-auto">
         <div className="hidden lg:flex gap-5 items-center lg:flex-grow-0">
-          <div className="w-[5.88rem] h-8 bg-purple-5"></div>
+          <Link to="/">
+            <div className="w-[5.88rem] h-8 bg-purple-5"></div>
+          </Link>
           {!props.withoutSearchBar && (
             <div className="h-12 bg-white rounded-2xl py-3 px-6 text-neutral-3 flex lg:bg-[#EEEEEE]">
               <input
