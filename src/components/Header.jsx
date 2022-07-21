@@ -41,7 +41,7 @@ export default function Header(props) {
 
   return (
     <nav
-      className={`sticky top-0 w-full flex flex-wrap items-center justify-between py-4 ${props.home ? "bg-[#FFE9C9] lg:bg-white" : "bg-white"} text-black
+      className={`sticky top-0 w-full ${ props.hiddenOnSm ? "hidden lg:flex" : "flex" } flex-wrap items-center justify-between py-4 ${props.home ? "bg-[#FFE9C9] lg:bg-white" : "bg-white"} text-black
     shadow-none lg:shadow-md navbar navbar-expand-lg navbar-light px-5 z-40`}
     >
       <div className="container-fluid w-full flex flex-wrap items-center justify-between lg:justify-around lg:max-w-screen-lg lg:mx-auto">

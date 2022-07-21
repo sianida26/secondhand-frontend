@@ -149,7 +149,7 @@ function PreviewProdukBuyer() {
   return (
     <div className="w-screen min-h-screen overflow-x-none">
       {/* Header */}
-      <Header title="Detail produk" />
+      <Header title="Detail produk" hiddenOnSm />
       <PullToRefresh onRefresh={ requestProductDetail }>
       {
         errorMessage ? renderErrorScreen()
