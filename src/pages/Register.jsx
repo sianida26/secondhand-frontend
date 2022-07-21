@@ -31,13 +31,13 @@ export default function Register() {
         method: 'POST',
         data: { name, email, password }
       })
-      dispatch(setData({
-        name: response.data.name,
-        token: response.data.token,
-        profilePhoto: response.data.profilePhoto,
-        city: response.data.city, 
-      }))
-      navigate('/')
+      // dispatch(setData({
+      //   name: response.data.name,
+      //   token: response.data.token,
+      //   profilePhoto: response.data.profilePhoto,
+      //   city: response.data.city, 
+      // }))
+      navigate('/waiting-email-confirmation')
     } catch (e) {
       console.log(e)
       if(e.response?.data?.errors?.name) setErrorMsgName(e.response?.data?.errors?.name);
