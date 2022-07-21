@@ -26,7 +26,7 @@ export default function Notifikasi() {
             category: notificationData.category,
             price: notificationData.price,
             description: notificationData.description,
-            uris: notificationData.image,
+            files: notificationData.image.map(x => ({ file:null, uri: x })),
             productId: notificationData.productId,
         }
 
