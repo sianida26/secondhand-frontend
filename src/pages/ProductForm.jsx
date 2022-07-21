@@ -1,8 +1,9 @@
 import React, { useEffect, useRef, useState } from 'react'
 import { toast } from 'react-toastify';
-import { useLocation, useNavigate, useParams } from 'react-router-dom'
+import { useLocation, useNavigate, useParams, Navigate } from 'react-router-dom'
 import { FiPlus, FiArrowLeft, FiAlertCircle } from 'react-icons/fi'
 import { useDispatch, useSelector } from 'react-redux'
+import {useSessionStorage} from 'react-use';
 import axios from 'axios'
 
 import Validator from '../utils/Validator';
@@ -20,7 +21,7 @@ export default function ProductForm(props) {
 
     const inputButtonRef = useRef(null)
     const token = useSelector(state => state.auth.token)
-    const productId = location.state?.productId
+    const productId = location.state?.product?.id
 
     const [ isLoading, setLoading ] = useState(false);
 
@@ -28,24 +29,46 @@ export default function ProductForm(props) {
     const [ price, setPrice ] = useState("");
     const [ category, setCategory ] = useState("");
     const [ description, setDescription ] = useState("");
-    const [ previewURIs, setPreviewURIs ] = useState([]);
     const [ files, setFiles ] = useState([]);
     const [ formErrors, setFormErrors ] = useState({});
     const [ errorMsg, setErrorMsg ] = useState("");
-    const [ detailPict, setDetailPict ] = useState("");
+    const [ detailPictId, setDetailPictId ] = useState(0);
 
     const [ isModalPictShow, setModalPictShow ] = useState(false);
     const isModalShow = isModalPictShow;
 
-    const handleOpenPictModal =(picture) => {
-        setDetailPict(picture)
+    const handleOpenPictModal =(id) => {
+        setDetailPictId(id)
         setModalPictShow(true)
     }
     const handleCloseModal =() => {
         setModalPictShow(false)
     }
 
-    useEffect(() => console.log(location.state), [ location ])
+    useEffect(() => {
+
+        const populateInput = async () => {
+            setName(product.name);
+            setPrice(product.price);
+            setCategory(product.category);
+            setDescription(product.description);
+            setFiles(product.image.map(image => ({ file: null, uri: image })));
+        }
+
+        const product = location.state?.product;
+        if (location.state?.fromPreview){
+            console.log(location.state)
+            setName(location.state?.previewData?.name)
+            setPrice(location.state?.previewData?.price)
+            setCategory(location.state?.previewData?.category)
+            setDescription(location.state?.previewData?.description)
+            setFiles(location.state?.previewData?.files || [])
+            return
+        }
+        if (!isEditProduct || !product) return;
+        populateInput()
+        
+    }, [isEditProduct, location.state?.product])
 
     //handle file photo
     const handleSelectFile = async (e) => {
@@ -53,13 +76,14 @@ export default function ProductForm(props) {
         const iFiles = Array.from(e.target.files);
 
         // validasi ukuran files
-        const isAnyOversize = !!iFiles.find(file => file.size>2e+6)
+        const isAnyOversize = !!iFiles.find(file => file.size>5e+6)
         if (isAnyOversize) {
-            alert('Ukuran foto maksimal adalah 2 MB');
+            alert('Ukuran foto maksimal adalah 5 MB');
             return;
         }
-        setPreviewURIs([...previewURIs, ...iFiles.map(file => URL.createObjectURL(file))].slice(0,4))
-        setFiles([...files,...iFiles].slice(0,4))
+        // setPreviewURIs([...previewURIs, ...iFiles.map(file => URL.createObjectURL(file))].slice(0,4))
+        // setFiles([...files,...iFiles].slice(0,4))
+        setFiles(prev => [...prev, ...iFiles.map(file => ({ file, uri: URL.createObjectURL(file) }))].slice(0,4))
     }
   
     // handle untuk button terbitkan
@@ -75,7 +99,9 @@ export default function ProductForm(props) {
             formData.append('price', price);
             formData.append('description', description);
             formData.append('category', category);
-            files.forEach(file => formData.append("files",file)); 
+            files.filter(file => file.file !== null).forEach(file => formData.append("files",file.file || file.uri)); 
+            files.filter(file => file.file === null).forEach(file => formData.append("oldFileUrls[]", file.uri))
+            // formData.append('oldFileUrls', files.filter(file => file.file === null).map(file => file.uri))
             await axios({
                 url: `${ configs.apiRootURL }${ productId ? '/products/'+productId : '/products' }`,
                 method: productId ? 'PUT' : 'POST',
@@ -122,37 +148,14 @@ export default function ProductForm(props) {
             price: price,
             category: category,
             description: description,
-            uris: previewURIs,
+            productId: productId,
         }
         navigate('/preview-produk', { replace: true, state: { previewData: state, prevPathname: location.pathname } })
     } 
 
-    const handleDelete = async () => {
-        try {
-            setLoading(true); 
-            // await axios({
-            //     url: 'https://secondhand-backend-kita.herokuapp.com/products/delete/:id', 
-            //     method: 'DELETE',
-            //     headers: {
-            //         Authorization: `Bearer ${token}`
-        
-            //     }
-            // })
-            await new Promise(r => setTimeout(r, 3000))
-            toast.error('Produk berhasil dihapus!', {
-                position: "top-center",
-                autoClose: 5000,
-                hideProgressBar: false,
-                closeOnClick: true,
-                pauseOnHover: true,
-                draggable: true,
-                progress: undefined,
-                });
-            navigate(-1,{replace: true})
-        } catch (e) {
-            if(e.response) setErrorMsg(e.response.message);
-            else setErrorMsg("Terjadi Kesalahan. Silakan periksa koneksi Anda")
-        }
+    const handleDelete = () => {
+        setFiles(prev => prev.filter((_,i) => i !== detailPictId))
+        handleCloseModal()
     }
 
     const validateInput = () => {
@@ -165,8 +168,8 @@ export default function ProductForm(props) {
             category: [ rules.required(), rules.inArray(['hobi', 'kendaraan', 'baju', 'elektronik', 'kesehatan']) ],
             description: [ rules.required() ],
             files: [ rules.required(), rules.array(), rules.min(1, "Foto harus diisi"), rules.max(4, "Foto maksimal 4"), {
-                test: (value) => value.every(photo => photo.size < 2e+6),
-                errorMsg: 'Ukuran foto maksimal adalah 2MB'
+                test: (value) => value.every(photo => photo.file?.size < 5e+6 || photo.file === null),
+                errorMsg: 'Ukuran foto maksimal adalah 5MB'
             }]
         })
 
@@ -198,6 +201,7 @@ export default function ProductForm(props) {
 
                                 <div className="mb-5">
                                     <input
+                                        value={ name }
                                         onChange={(e) => setName(e.target.value)}
                                         type="text" className={ `rounded-[16px] w-full px-4 py-2 font-normal text-sm bg-white 
                                         border transition ease-in-out m-0 focus:outline-none 
@@ -218,6 +222,7 @@ export default function ProductForm(props) {
                             <p className="mb-3 text-sm">Harga Produk</p>
                                 <div className="mb-5">
                                     <input
+                                        value={ price }
                                         onChange={(e) => setPrice(e.target.value)}
                                         type="text" className={ `rounded-[16px] w-full px-4 py-2 font-normal text-sm bg-white 
                                             border transition ease-in-out m-0 focus:outline-none 
@@ -239,6 +244,7 @@ export default function ProductForm(props) {
                             Kategori</p>
                                 <div className="mb-5">
                                     <select
+                                        value={ category }
                                         onChange={(e) => setCategory(e.target.value)}
                                         className={ `rounded-[16px] w-full px-4 py-2 font-normal text-sm bg-white 
                                             border transition ease-in-out m-0 focus:outline-none 
@@ -265,6 +271,7 @@ export default function ProductForm(props) {
                             Deskripsi</p>
                                 <div className="mb-5">
                                     <textarea
+                                        value={ description }
                                         onChange={(e) => setDescription(e.target.value)}
                                         type="text" className={ `rounded-[16px] w-full px-4 py-2 font-normal text-sm bg-white 
                                             border transition ease-in-out m-0 focus:outline-none 
@@ -287,14 +294,14 @@ export default function ProductForm(props) {
                                 <div className='grid grid-cols-3 md:grid-cols-4 mb-5 gap-4'>
                                     {
                                         
-                                        previewURIs.map(uri => (
-                                            <button type='button' onClick={() => handleOpenPictModal(uri)}>
-                                                <img src={uri} className="w-full aspect-square rounded-[16px] object-cover mb-4" alt="foto produk" />
+                                        files.map((file,i) => (
+                                            <button type='button' onClick={() => handleOpenPictModal(i)}>
+                                                <img src={file.uri} className="w-full aspect-square rounded-[16px] object-cover mb-4" alt="foto produk" />
                                             </button>
                                         ))
 
                                     }
-                                        <button onClick={() => inputButtonRef.current?.click()} type="button" className={`text-2xl text-neutral-3 p-9 bg-white w-full aspect-square border border-dashed border-neutral-2 rounded-2xl ${previewURIs.length >= 4 ? "hidden" : "flex"} justify-center items-center focus:ring-2 focus:ring-offset-2 focus:ring-purple-3 focus:outline-none focus:border-purple-3 focus:text-purple-3 hover:bg-gray-200`}>
+                                        <button onClick={() => inputButtonRef.current?.click()} type="button" className={`text-2xl text-neutral-3 p-9 bg-white w-full aspect-square border border-dashed border-neutral-2 rounded-2xl ${files.length >= 4 ? "hidden" : "flex"} justify-center items-center focus:ring-2 focus:ring-offset-2 focus:ring-purple-3 focus:outline-none focus:border-purple-3 focus:text-purple-3 hover:bg-gray-200`}>
                                             <FiPlus className="text-xl" />
                                             <input id="file-upload" type="file" ref={inputButtonRef} 
                                                 className="w-full invisible absolute" onChange={handleSelectFile} disabled={isLoading} accept="images/*"
@@ -347,10 +354,10 @@ export default function ProductForm(props) {
                     <div onClick={(e)=>e.stopPropagation()} className={`${isModalPictShow?'bg-white':'hidden'} relative p-6 w-full mx-4 max-w-sm md:h-auto rounded-2xl`}>
                         <div className='flex flex-col justify-center items-center'>
                             <p className='text-lg font-semibold'>Detail Foto Produk</p>
-                            <img src={detailPict} className="w-60 h-60 rounded-xl aspect-square object-cover mb-6 mt-4" alt="foto produk" />
+                            <img src={files[detailPictId]?.uri} className="w-60 h-60 rounded-xl aspect-square object-cover mb-6 mt-4" alt="foto produk" />
                         </div>
                         <div className='grid grid-cols-2'>
-                        <button className="flex items-center justify-center border border-red-500 text-red-500 hover:text-white hover:bg-red-500 font-normal text-sm rounded-2xl 
+                        <button onClick={ handleDelete } className="flex items-center justify-center border border-red-500 text-red-500 hover:text-white hover:bg-red-500 font-normal text-sm rounded-2xl 
                                     focus:shadow-lg focus:outline-none active:shadow-lg mr-2" type="button"  >
                                 Delete
                             </button>

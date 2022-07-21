@@ -26,7 +26,6 @@ function PreviewProduk() {
     const [ category, setCategory ] = useState(location.state?.previewData?.category)
     const [ price, setPrice ] = useState(location.state?.previewData?.price)
     const [ description, setDescription ] = useState(location.state?.previewData?.description)
-    const [ previewURIs, setPreviewURIs ] = useState(location.state?.previewData?.uris)
     const [ files, setFiles ] = useState(location.state?.previewData?.files)
     const [ productId, setProductId ] = useState(location.state?.previewData?.productId || 0);
 
@@ -38,7 +37,8 @@ function PreviewProduk() {
             formData.append('price', price);
             formData.append('description', description);
             formData.append('category', category);
-            files.forEach(file => formData.append("files",file)); 
+            files.filter(file => file.file !== null).forEach(file => formData.append("files",file.file || file.uri)); 
+            files.filter(file => file.file === null).forEach(file => formData.append("oldFileUrls[]", file.uri)) 
             await axios({
                 url: `${ configs.apiRootURL }${ productId ? '/products/'+productId : '/products' }`,
                 method: productId ? 'PUT' : 'POST',
@@ -81,16 +81,16 @@ function PreviewProduk() {
                     showThumbs={false} 
                 >
                     {
-                        previewURIs.map((uri, i) => <img 
+                        files.map((file, i) => <img 
                             key={ i } 
                             alt="Produk" 
                             className="w-full aspect-[6/5] object-cover md:rounded-xl" 
-                            src={ uri } />
+                            src={ file.uri } />
                         )
                     }
                 </Carousel>
                 <button 
-                    onClick={ () => navigate(location.state?.prevPathname || -1, { state: location.state }) } 
+                    onClick={ () => navigate(location.state?.prevPathname || -1, { state: {...location.state, fromPreview: true, product: { id: location.state?.previewData.productId }}, replace: true }) } 
                     disabled={ isLoading }
                     className="absolute top-4 left-4 rounded-full w-8 h-8 bg-white flex justify-center items-center focus:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500"
                 >

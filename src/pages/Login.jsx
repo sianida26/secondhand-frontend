@@ -102,7 +102,7 @@ export default function Login() {
                 />
 
                 <Link to="/forgot-password">
-                  <button tabIndex={5} className="float-right text-purple-4 hover:text-purple-5 font-base py-2 mb-4">
+                  <button type="button" tabIndex={5} className="float-right text-purple-4 hover:text-purple-5 font-base py-2 mb-4">
                     Lupa Password?
                   </button>
                 </Link>

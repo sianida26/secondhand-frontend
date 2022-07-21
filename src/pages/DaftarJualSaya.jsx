@@ -109,7 +109,7 @@ export default function DaftarJualSaya() {
             <div className="w-full">
 
               { 
-                activeTab === 0 ? renderProductFragment(products, loading)
+                activeTab === 0 ? renderProductFragment(products, loading, navigate)
                 : activeTab === 1 ? renderDiminatiFragment(diminatis, loading)
                 : activeTab === 2 ? renderTerjualFragment(terjuals, loading)
                 : "Invalid tab!"
@@ -204,7 +204,7 @@ const renderDiminatiFragment = (diminatis, isLoading) => {
   )
 }
 
-const renderProductFragment = (products, isLoading) => {
+const renderProductFragment = (products, isLoading, navigate) => {
 
   return (
     <div className="grid grid-cols-2 gap-4 lg:grid-cols-3">
@@ -223,12 +223,12 @@ const renderProductFragment = (products, isLoading) => {
             <div className="w-28 h-4 bg-slate-700 rounded-md" />
           </div>
         ))
-        : products.map(product => (<Link to={{ pathname: '/edit-produk', state: product }} key={ product.id } className="flex flex-col w-full h-full items-start bg-neutral-1 shadow-low rounded-md py-3 px-2 gap-2 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-neutral-2">
+        : products.map(product => (<button onClick={() => navigate('/edit-produk', { state: { product } })} key={ product.id } className="flex flex-col w-full h-full items-start bg-neutral-1 shadow-low rounded-md py-3 px-2 gap-2 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-neutral-2">
             <img className="w-full aspect-[7/5] object-cover" alt="Foto Produk" src={ product.image } />
             <p className="text-neutral-5">{ product.name }</p>
             <p className="text-xs text-neutral-3">{ product.category }</p>
             <p className="text-neutral-5">{ formatRupiah(product.price) }</p>
-          </Link>
+          </button>
         ))
       }
       
