@@ -188,13 +188,18 @@ function PreviewProdukBuyer() {
                     </div>
                 }
 
-                <button
-                  onClick={openModal}
-                  disabled={isLoading}
-                  className="hidden md:block w-full bg-purple-4 hover:bg-purple-5 font-medium text-white text-center py-2 mt-4 rounded-2xl focus:ring-2 focus:ring-offset-2 focus:ring-purple-4 focus:outline-none"
-                >
-                  Saya tertarik dan ingin nego
-                </button>
+              <button
+                onClick={openModal}
+                disabled={isLoading || ["WAITING_CONFIRMATION", "TRANSACTION_DECLINED"].includes(productStatus)}
+                className="hidden md:block btn w-full py-2 mt-2 font-medium disabled:bg-purple-2 disabled:opacity-100"
+              >
+                {
+                  productStatus === "BIDDABLE" ? "Saya tertarik dan ingin nego"
+                  : productStatus === "WAITING_CONFIRMATION" ? "Menunggu Respon Penjual"
+                  : productStatus === "TRANSACTION_DECLINED" ? "Penawaranmu Ditolak Penjual"
+                  : ""
+                }
+              </button>
                 <button
                   disabled={isLoading}
                   onClick={ handleAddWishlist }
