@@ -35,6 +35,8 @@ export default function Login() {
         token: response.data.token,
         profilePhoto: response.data.profilePhoto,
         city: response.data.city, 
+        address: response.data.address,
+        phone: response.data.phone,
       }))
       navigate(location.state?.referrer || '/', { replace: true });
     } catch (e) {

@@ -5,6 +5,8 @@ const initialState = {
     name: "",
     profilePhoto: "",
     city: "",
+    address: "",
+    phone: "",
 }
 
 export const authSlice = createSlice({

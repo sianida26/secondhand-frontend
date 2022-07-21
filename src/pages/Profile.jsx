@@ -29,6 +29,10 @@ export default function ProductForm(props) {
   useEffect(() => {
     if (!auth.name) return;
     setName(auth.name);
+    setPreviewURI(auth.profilePhoto);
+    setCity(auth.city);
+    setPhone(auth.phone);
+    setAddress(auth.address);
   }, [auth, setName]);
 
   const validateInput = () => {
@@ -69,7 +73,7 @@ export default function ProductForm(props) {
       });
 
       // Handle success
-      dispatch(setData({ name, city, profilePhoto: response.data.image }))
+      dispatch(setData({ name, city, profilePhoto: response.data.image, address, phone }))
       navigate(location.state?.referrer || -1, { replace: true });
     } catch (e) {
       setFormErrors(e.response?.data?.errors ?? {})
