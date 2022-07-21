@@ -19,6 +19,7 @@ import ForgotPassword from "./pages/ForgotPassword";
 import NewPassword from "./pages/NewPassword";
 import Wishlist from "./pages/Wishlist";
 import Notifikasi from "./pages/Notifikasi";
+import NotFound from "./pages/NotFound";
 
 import configs from './utils/configs'
 import { setNotifications } from './redux/slices/notificationSlice'
@@ -51,12 +52,8 @@ function App() {
     fetchNotifications()
   }, [token])
 
-  return (
-    <Routes>
-      <Route path="/" element={<Home />} />
-
-      <Route path="/register" element={<Register />} />
-      <Route path="/login" element={<Login />} />
+  const renderProtectedRoutes = () => {
+    return <>
       <Route path="/buat-produk" element={<ProductForm />} />
       <Route path="/edit-produk" element={<ProductForm />} />
       <Route path="/penawaran/:id" element={<BuyerInfo />} />
@@ -66,12 +63,32 @@ function App() {
       <Route path="/preview-produk" element={<PreviewProduk />} />
       <Route path="/produkku" element={<DaftarJualSaya />} />
       <Route path="/wishlist" element={<Wishlist />} />
+      <Route path="/logout" element={<Logout />} />
+      <Route path="/notifikasi" element={ <Notifikasi /> } />
+    </>
+  }
+
+  const renderGuestRoutes = () => {
+
+    return <>
+      <Route path="/register" element={<Register />} />
+      <Route path="/login" element={<Login />} />
       <Route path="/waiting-email-confirmation" element={<EmailConfirm />} />
       <Route path="/forgot-password" element={<ForgotPassword />} />
       <Route path="/forgot-password/:token" element={<NewPassword />} />
-      <Route path="/logout" element={<Logout />} />
+    </>
+  }
+
+  return (
+    <Routes>
+      {
+        token ? renderProtectedRoutes()
+        : renderGuestRoutes()
+      }
+      <Route path="/" element={<Home />} />
       <Route path="/produk/:id" element={<PreviewProdukBuyer />} />
-      <Route path="/notifikasi" element={ <Notifikasi /> } />
+      
+      <Route path="*" element={ <NotFound /> } />
     </Routes>
   );
 }
