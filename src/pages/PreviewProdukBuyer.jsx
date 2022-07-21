@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 
 import axios from 'axios';
 
 import { FiArrowLeft, FiX, FiHeart } from "react-icons/fi";
+import { BsCartPlus, BsCartX } from "react-icons/bs";
 
 import PullToRefresh from "react-simple-pull-to-refresh";
 
@@ -14,6 +15,7 @@ import configs from "../utils/configs";
 import { formatRupiah } from "../utils/helpers";
 import { toast } from 'react-toastify';
 import notFoundImage from '../assets/undraw_not_found_re_qvvo.svg';
+import { addItem, removeItem } from "../redux/slices/wishlistSlice";
 
 import { Carousel } from "react-responsive-carousel";
 import "react-responsive-carousel/lib/styles/carousel.min.css";
@@ -25,6 +27,8 @@ function PreviewProdukBuyer() {
   const location = useLocation();
   const navigate = useNavigate();
   const token = useSelector(state => state.auth.token);
+  const wishlists = useSelector(state => state.wishlist.items);
+  const dispatch = useDispatch();
 
   const { id } = useParams();
 
@@ -47,6 +51,8 @@ function PreviewProdukBuyer() {
     description: "",
     price: 0,
   })
+
+  const isAlreadyAddedToWishlist = wishlists.find(x => x.id === +id)
 
   useEffect(() => {
     requestProductDetail()
@@ -72,7 +78,16 @@ function PreviewProdukBuyer() {
       draggable: true,
       progress: undefined,
       theme: 'colored',
-    });
+  });
+
+  const handleAddWishlist = () => {
+    if (isAlreadyAddedToWishlist){
+      dispatch(removeItem(+id))
+      return;
+    };
+    console.log('aku terpanggil')
+    dispatch(addItem(productDetail))
+  }
 
   const requestProductDetail = async () => {
     try {
@@ -177,7 +192,8 @@ function PreviewProdukBuyer() {
                 </button>
                 <button
                   disabled={isLoading}
-                  className="hidden md:block w-full justify-center items-center py-2 mt-2 rounded-2xl bg-red-500 font-medium text-white hover:bg-red-600  focus:ring-2 focus:ring-offset-2 focus:ring-red-500 focus:outline-none"
+                  onClick={ handleAddWishlist }
+                  className="hidden md:block w-full justify-center items-center py-2 mt-2 rounded-2xl bg-red-500 font-medium text-white hover:bg-red-600 focus:ring-2 focus:ring-offset-2 focus:ring-red-500 focus:outline-none"
                 >
                   <span className="flex gap-2 justify-center items-center">Masukkan ke wishlist<FiHeart className="mb-1" /></span>                 
                 </button>
@@ -203,7 +219,7 @@ function PreviewProdukBuyer() {
             </div>
           </div>
 
-            <div className="pb-20 px-4 mt-2 md:max-w-screen-lg md:mt-4 md:mx-auto md:px-0 md:pb-0">
+            <div className="pb-4 px-4 mt-2 md:max-w-screen-lg md:mt-4 md:mx-auto md:px-0 md:pb-0">
               <div className="flex bg-white rounded-xl px-6 py-4 shadow-low flex-col gap-2 md:w-3/5">
                 <h1 className="font-medium">Deskripsi</h1>
                 {
@@ -220,7 +236,7 @@ function PreviewProdukBuyer() {
               </div>
             </div>
 
-            <div className="fixed w-full bottom-4 px-4 md:hidden">
+            <div className="w-full px-4 md:hidden pb-4">
               <button
                 onClick={openModal}
                 disabled={isLoading || ["WAITING_CONFIRMATION", "TRANSACTION_DECLINED"].includes(productStatus)}
@@ -235,9 +251,10 @@ function PreviewProdukBuyer() {
               </button>
               <button
                   disabled={isLoading}
-                  className="btn w-full py-4 rounded-2xl bg-red-500 font-medium text-white mt-2"
+                  onClick={ handleAddWishlist }
+                  className="btn w-full py-4 rounded-2xl bg-red-500 font-medium text-white mt-2 focus:bg-red-700 focus:ring-2 focus:ring-offset-2 focus:ring-red-700"
                 >
-                  <span className="flex gap-2 justify-center items-center">Masukkan ke wishlist<FiHeart className="mb-1" /></span>                 
+                  <span className="flex gap-2 justify-center items-center">{ isAlreadyAddedToWishlist ? "Keluarkan dari wishlist" : <>Masukkan ke wishlist<FiHeart className="mb-1" /></> }</span>                 
                 </button>
             </div>
         </>

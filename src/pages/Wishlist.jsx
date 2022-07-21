@@ -17,6 +17,7 @@ export default function Wishlist() {
   const name = useSelector((state) => state.auth.name);
   const profilePic = useSelector((state) => state.auth.profilePhoto);
   const city = useSelector((state) => state.auth.city);
+  const wishlists = useSelector(state => state.wishlist.items);
 
   return (
     <div className="w-screen min-h-screen">
@@ -49,18 +50,19 @@ export default function Wishlist() {
           </div>
         </div>
         <div className="grid grid-cols-2 gap-4 lg:grid-cols-4">
-          {[...new Array(12)].map((_, i) => (
+          {wishlists.map((product, i) => (
             <Link
-              to={{ pathname: "/detail-produk" }}
+              to={{ pathname: `/produk/${ product.id }` }}
               className="flex flex-col w-full h-full items-start bg-neutral-1 shadow-low rounded-md py-3 px-2 gap-2 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-neutral-2"
             >
               <img
                 className="w-full aspect-[7/5] object-cover"
-                alt="Foto Produk"
+                alt={ product.name }
+                src={ product.images?.[0] }
               />
-              <p className="text-neutral-5">Buku</p>
-              <p className="text-xs text-neutral-3">kendaraan</p>
-              <p className="text-neutral-5">{formatRupiah(50000)}</p>
+              <p className="text-neutral-5">{ product.name }</p>
+              <p className="text-xs text-neutral-3">{ product.category }</p>
+              <p className="text-neutral-5">{formatRupiah(product.price)}</p>
             </Link>
           ))}
         </div>
