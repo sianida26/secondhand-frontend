@@ -190,13 +190,15 @@ function PreviewProdukBuyer() {
 
               <button
                 onClick={openModal}
-                disabled={isLoading || ["WAITING_CONFIRMATION", "TRANSACTION_DECLINED"].includes(productStatus)}
+                disabled={isLoading || !["BIDDABLE"].includes(productStatus)}
                 className="hidden md:block btn w-full py-2 mt-2 font-medium disabled:bg-purple-2 disabled:opacity-100"
               >
                 {
                   productStatus === "BIDDABLE" ? "Saya tertarik dan ingin nego"
                   : productStatus === "WAITING_CONFIRMATION" ? "Menunggu Respon Penjual"
                   : productStatus === "TRANSACTION_DECLINED" ? "Penawaranmu Ditolak Penjual"
+                  : productStatus === "TRANSACTION_ACCEPTED" ? "Penawaranmu Diterima. Lakukan Transaksi Sekarang"
+                  : productStatus === "TRANSACTION_COMPLETED" ? "Transaksi telah selesai"
                   : ""
                 }
               </button>
@@ -249,13 +251,15 @@ function PreviewProdukBuyer() {
             <div className="w-full px-4 md:hidden pb-4">
               <button
                 onClick={openModal}
-                disabled={isLoading || ["WAITING_CONFIRMATION", "TRANSACTION_DECLINED"].includes(productStatus)}
+                disabled={isLoading || !["BIDDABLE"].includes(productStatus)}
                 className="btn w-full py-4 font-medium disabled:bg-purple-2 disabled:opacity-100"
               >
                 {
                   productStatus === "BIDDABLE" ? "Saya tertarik dan ingin nego"
                   : productStatus === "WAITING_CONFIRMATION" ? "Menunggu Respon Penjual"
                   : productStatus === "TRANSACTION_DECLINED" ? "Penawaranmu Ditolak Penjual"
+                  : productStatus === "TRANSACTION_ACCEPTED" ? "Penawaranmu Diterima. Lakukan Transaksi Sekarang"
+                  : productStatus === "TRANSACTION_COMPLETED" ? "Transaksi telah selesai"
                   : ""
                 }
               </button>

@@ -31,7 +31,7 @@ export default function Notifikasi() {
         }
 
         if (notificationData.type === "Berhasil diterbitkan") return navigate('/preview-produk', { state: { previewData, readOnly: true } })
-        if (notificationData.type === "Anda menawar produk") return navigate(`/produk/${ notificationData.productId }`)
+        if (["Anda menawar produk", "Penawaran diterima"].includes(notificationData.type)) return navigate(`/produk/${ notificationData.productId }`)
         return navigate(`/penawaran/${notificationData.bidId}`);
     }
 
