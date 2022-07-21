@@ -66,6 +66,7 @@ export default function Header(props) {
               <input
                 className="w-full h-full bg-transparent"
                 placeholder="Cari di sini ..."
+                onChange={props.onSearchChange}
               />
               <FiSearch className="text-2xl" />
             </div>

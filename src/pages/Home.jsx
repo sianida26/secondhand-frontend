@@ -31,11 +31,22 @@ export default function Home() {
 	const [selectedCategory, setSelectedCategory] = useState(categories[0]); //Defaultnya nampilkan semua produk
 	const [products, setProducts] = useState([]);
 	const [isLoading, setLoading] = useState(true);
+	const [_search, _setSearch] = useState("");
+	const [search, setSearch] = useState("");
 	const [isMobileSidebarOpen, setMobileSidebarOpen] = useState(false);
 
 	useEffect(() => {
 		fetchProducts();
 	}, []);
+
+	useEffect(() => {
+		const delayDebounceFn = setTimeout(() => {
+			//do something
+			setSearch(_search)
+		}, 1000)
+
+		return () => clearTimeout(delayDebounceFn)
+	},[_search])
 
 	const fetchProducts = async () => {
 		try {
@@ -56,11 +67,15 @@ export default function Home() {
 		}
 	};
 
-	const renderedProducts = products.filter(product => selectedCategory === "Semua" || product.category === selectedCategory.toLowerCase())
+	const handleSearchChange = (e) => {
+		_setSearch(e.target.value);
+	}
+
+	const renderedProducts = products.filter(product => selectedCategory === "Semua" || product.category === selectedCategory.toLowerCase()).filter(product => product.name.toLowerCase().includes(search.toLowerCase()))
 
 	return (
 		<div className="w-screen min-h-screen">
-			<Header home  />
+			<Header home onSearchChange={handleSearchChange} />
 			{/* Hero */}
 			<div className="bg-gradient-to-b from-[#FFE9C9] to-transparent pb-12">
 
