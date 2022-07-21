@@ -1,3 +1,7 @@
+/**
+ * @author Chesa Nur Hidayat <chesakeselekkebo@gmail.com>
+ */
+
 export default class Validator{
 
     static rules = {
@@ -23,6 +27,10 @@ export default class Validator{
         number: (errorMsg) => ({
             test: (value) => !(isNaN(value) || isNaN(parseFloat(value))),
             errorMsg: errorMsg || 'Harus berupa angka',
+        }),
+        regex: (regex, errorMsg) => ({
+            test: (value) => value.match(regex),
+            errorMsg: errorMsg || 'Format tidak sesuai'
         }),
         required: (errorMsg) => ({
             test: (value) => value === 0 || !!value,

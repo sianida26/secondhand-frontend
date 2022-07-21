@@ -2,15 +2,19 @@ import React, { useRef, useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { FiCamera, FiArrowLeft, FiAlertCircle } from "react-icons/fi";
 import axios from "axios";
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 
 import Header from "../components/Header";
 import configs from "../utils/configs";
+import Validator from '../utils/Validator';
+import { setData } from "../redux/slices/authSlice";
+import LoadingSpin from "../components/LoadingSpin";
 
 export default function ProductForm(props) {
   const navigate = useNavigate();
   const inputButtonRef = useRef(null);
   const auth = useSelector(state => state.auth)
+  const dispatch = useDispatch();
 
   const [isLoading, setLoading] = useState(false);
   const [previewURI, setPreviewURI] = useState("");
@@ -19,17 +23,32 @@ export default function ProductForm(props) {
   const [phone, setPhone] = useState("");
   const [address, setAddress] = useState("");
   const [file, setFile] = useState(null);
-
-  const [errorMsgName, setErrorMsgName] = useState("");
-  const [errorMsgKota, setErrorMsgKota] = useState("");
+  const [formErrors, setFormErrors] = useState({});
 
   useEffect(() => {
     if (!auth.name) return;
     setName(auth.name);
   }, [auth, setName]);
 
+  const validateInput = () => {
+
+    const rules = Validator.rules
+    
+    const validator = new Validator({ name, city, phone, address }, {
+        name: [ rules.required(), rules.max(255) ],
+        city: [ rules.required(), rules.max(255)],
+        phone: [ rules.required(), rules.min(8), rules.regex(/^[+]?[(]?[0-9]{3}[)]?[-\s.]?[0-9]{3}[-\s.]?[0-9]{4,7}$/) ],
+        address: [ rules.required() ],
+    })
+
+    setFormErrors(validator.getErrors(true));
+
+    return validator.ok();
+  }
+
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (!validateInput()) return;
     const data = new FormData();
     data.append("file", file);
     data.append("name", name);
@@ -39,7 +58,7 @@ export default function ProductForm(props) {
 
     try {
       setLoading(true); //Mendisable input dan tombol submit
-      await axios({
+      const response = await axios({
         method: "POST",
         url: `${ configs.apiRootURL }/users/lengkapi-profil`,
         headers: {
@@ -49,11 +68,10 @@ export default function ProductForm(props) {
       });
 
       // Handle success
+      dispatch(setData({ name, city, profilePhoto: response.data.image }))
       navigate(-1, { replace: true });
     } catch (e) {
-      if (e.response?.data?.errors?.name) setErrorMsgName(e.response?.data?.errors?.name);
-      if (e.response?.data?.errors?.kota) setErrorMsgKota(e.response?.data?.errors?.email);
-
+      setFormErrors(e.response?.data?.errors ?? {})
       // Handle error
     } finally {
       setLoading(false);
@@ -92,7 +110,7 @@ export default function ProductForm(props) {
                 <button onClick={() => navigate(-1)} disabled={isLoading}>
                   <FiArrowLeft className="invisible lg:visible mx-[-64px] mb-[-8px] text-2xl" />
                 </button>
-                Nama*
+                Nama<span className="text-red-500">*</span>
               </p>
               <div className="mb-5">
                 <input
@@ -101,25 +119,25 @@ export default function ProductForm(props) {
                   type="text"
                   className={`form-control rounded-[16px] w-full px-4 py-2 font-normal text-sm text-neutral-3 bg-white 
                   transition ease-in-out m-0 focus:text-gray-700 focus:outline-none border 
-                  ${errorMsgName ? "border-red-600 hover:border-red-600" : "border-neutral-2"}`}
+                  ${formErrors.name ? "border-red-600 hover:border-red-600" : "border-neutral-2"}`}
                   id="nameInput"
                   placeholder="Nama Lengkap"
                   disabled={isLoading}
                 />
-                <div className={`flex items-center text-red-600 text-sm mt-2 ${errorMsgName ? "block" : "hidden"}`}>
+                <div className={`flex items-center text-red-600 text-sm mt-2 ${formErrors.name ? "block" : "hidden"}`}>
                   <FiAlertCircle className="mr-2" />
-                  <p>{errorMsgName}</p>
+                  <p>{formErrors.name}</p>
                 </div>
               </div>
 
-              <p className="mb-3 text-sm">Kota*</p>
+              <p className="mb-3 text-sm">Kota<span className="text-red-500">*</span></p>
               <div className="mb-5">
                 <select
                   disabled={isLoading}
                   onChange={ (e) => setCity(e.target.value) }
                   value={ city }
-                  className="form-select w-full px-4 py-2 font-normal text-sm text-neutral-3 bg-white 
-                                        border border-neutral-2 rounded-[16px] transition ease-in-out focus:text-gray-700 focus:outline-none"
+                  className={`form-select w-full px-4 py-2 font-normal text-sm text-neutral-3 bg-white 
+                                        border ${formErrors.city ? "border-red-600 hover:border-red-600" : "border-neutral-2"} rounded-[16px] transition ease-in-out focus:text-gray-700 focus:outline-none`}
                 >
                   <option selected>Pilih Kota</option>
                   <option value="Bandung">Bandung</option>
@@ -137,44 +155,56 @@ export default function ProductForm(props) {
                   <option value="Surabaya">Surabaya</option>
                   <option value="Toraja Utara">Toraja Utara</option>
                 </select>
+                <div className={`flex items-center text-red-600 text-sm mt-2 ${formErrors.city ? "block" : "hidden"}`}>
+                  <FiAlertCircle className="mr-2" />
+                  <p>{formErrors.city}</p>
+                </div>
               </div>
-              <p className="mb-3 text-sm">Alamat*</p>
+              <p className="mb-3 text-sm">Alamat<span className="text-red-500">*</span></p>
               <div className="mb-5">
                 <textarea
                   disabled={isLoading}
                   type="text"
                   onChange={ (e) => setAddress(e.target.value)}
                   value={ address }
-                  className="form-control w-full px-4 py-2 font-normal text-sm text-neutral-3 bg-white 
-                                        border border-neutral-2 rounded-[16px] transition ease-in-out m-0 focus:text-gray-700 focus:outline-none"
+                  className={`form-control w-full px-4 py-2 font-normal text-sm text-neutral-3 bg-white 
+                                        border ${formErrors.address ? "border-red-600 hover:border-red-600" : "border-neutral-2"} rounded-[16px] transition ease-in-out m-0 focus:text-gray-700 focus:outline-none`}
                   id="addressInput"
                   rows="3"
                   placeholder="Contoh: Jalan Ikan Hiu No 33"
                 />
+                <div className={`flex items-center text-red-600 text-sm mt-2 ${formErrors.address ? "block" : "hidden"}`}>
+                  <FiAlertCircle className="mr-2" />
+                  <p>{formErrors.address}</p>
+                </div>
               </div>
-              <p className="mb-3 text-sm">No.Handphone*</p>
+              <p className="mb-3 text-sm">No.Handphone<span className="text-red-500">*</span></p>
               <div className="mb-5">
                 <input
                   type="text"
                   onChange={(e) => setPhone(e.target.value)}
                   value={ phone }
-                  className="form-control rounded-[16px] w-full px-4 py-2 font-normal text-sm text-neutral-3 bg-white 
-                                        border border-neutral-2  transition ease-in-out m-0 focus:text-gray-700 focus:outline-none"
+                  className={`form-control rounded-[16px] w-full px-4 py-2 font-normal text-sm text-neutral-3 bg-white 
+                                        border ${formErrors.phone ? "border-red-600 hover:border-red-600" : "border-neutral-2"}  transition ease-in-out m-0 focus:text-gray-700 focus:outline-none`}
                   id="noHp"
                   placeholder="contoh: +628123456789"
                 />
+                <div className={`flex items-center text-red-600 text-sm mt-2 ${formErrors.phone ? "block" : "hidden"}`}>
+                  <FiAlertCircle className="mr-2" />
+                  <p>{formErrors.phone}</p>
+                </div>
               </div>
 
               <div className="text-center pt-2 mb-6">
                 <button
                   disabled={isLoading}
-                  className="inline-block bg-purple-4 hover:bg-purple-3 px-6 py-3 text-white font-normal text-sm leading-tight rounded-[16px] 
-                focus:shadow-lg focus:outline-none active:shadow-lg transition duration-200 ease-in-out w-full mb-4"
+                  className="bg-purple-4 hover:bg-purple-3 px-6 py-3 text-white font-normal text-sm leading-tight rounded-[16px] 
+                focus:shadow-lg focus:outline-none active:shadow-lg transition duration-200 ease-in-out w-full mb-4 disabled:opacity-70 flex items-center justify-center"
                   type="submit"
                   data-mdb-ripple="true"
                   data-mdb-ripple-color="dark"
                 >
-                  Simpan
+                  { isLoading ? <><LoadingSpin /> Menyimpan...</> : "Simpan" }
                 </button>
               </div>
             </form>
