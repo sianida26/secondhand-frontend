@@ -9,6 +9,7 @@ import Header from "../components/Header";
 import product from "../assets/product.png";
 import configs from "../utils/configs";
 import { formatRupiah } from "../utils/helpers";
+import BlankIllustration from '../assets/undraw_selection.svg'
 
 export default function Notifikasi() {
 
@@ -30,7 +31,7 @@ export default function Notifikasi() {
         }
 
         if (notificationData.type === "Berhasil diterbitkan") return navigate('/preview-produk', { state: { previewData, readOnly: true } })
-        return navigate(`/penawaran/${ notificationData.bidId }`);
+        return navigate(`/penawaran/${notificationData.bidId}`);
     }
 
     return (
@@ -45,51 +46,55 @@ export default function Notifikasi() {
                             {/* Item notifikasi */}
                             {
                                 isLoading ?
-                                [...new Array(10)].map((_,i) => (
-                                    <div className="flex flex-col bg-white py-4 animate-pulse" key={ i }>
-                                        <div className="flex gap-4">
-                                            <div className="w-12 h-12 rounded-xl mr-4 bg-slate-400 flex-none" />
-                                            <div className="flex flex-col w-full gap-1">
-                                                <div className="flex justify-between text-neutral-3">
-                                                    <div className="h-2.5 w-16 bg-slate-400 rounded-lg" />
-                                                    <div className="flex gap-2 items-center">
-                                                        <div className="h-2.5 w-10 bg-slate-400 rounded-lg" />
+                                    [...new Array(10)].map((_, i) => (
+                                        <div className="flex flex-col bg-white py-4 animate-pulse" key={i}>
+                                            <div className="flex gap-4">
+                                                <div className="w-12 h-12 rounded-xl mr-4 bg-slate-400 flex-none" />
+                                                <div className="flex flex-col w-full gap-1">
+                                                    <div className="flex justify-between text-neutral-3">
+                                                        <div className="h-2.5 w-16 bg-slate-400 rounded-lg" />
+                                                        <div className="flex gap-2 items-center">
+                                                            <div className="h-2.5 w-10 bg-slate-400 rounded-lg" />
+                                                        </div>
                                                     </div>
-                                                </div>
-                                                <div className="flex flex-col gap-1">
-                                                    <div className="h-5 w-24 rounded-md bg-slate-400" />
-                                                    <div className="h-5 w-24 rounded-md bg-slate-400" />
-                                                    <div className="h-5 w-24 rounded-md bg-slate-400" />
+                                                    <div className="flex flex-col gap-1">
+                                                        <div className="h-5 w-24 rounded-md bg-slate-400" />
+                                                        <div className="h-5 w-24 rounded-md bg-slate-400" />
+                                                        <div className="h-5 w-24 rounded-md bg-slate-400" />
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
+                                    ))
+                                    : notifications.length === 0 ? <div className="w-full h-full flex flex-col items-center justify-center">
+                                        <img className="w-full object-cover" src={BlankIllustration} alt="Illustration" />
+                                        <p className="text-center mt-4">Notifikasi kamu kosong nih!</p>
                                     </div>
-                                ))
-                                : notifications.map(notification => (
-                                    <div className="flex flex-col bg-white py-4" key={ notification.id } onClick={ () => handleClickNotification(notification) }>
-                                        <div className="flex gap-4">
-                                            <img
-                                                src={ notification.image[0] }
-                                                alt={ notification.productName }
-                                                className="w-12 h-12 rounded-xl border border-neutral-2 mr-4"
-                                            />
-                                            <div className="flex flex-col w-full gap-1">
-                                                <div className="flex justify-between text-[10px] text-neutral-3">
-                                                    <p>{ notification.type }</p>
-                                                    <div className="flex gap-2 items-center">
-                                                        <p>{ moment(notification.time).format('D MMM, HH:mm') }</p>
-                                                        <div className="w-2 h-2 rounded-full bg-red-500"></div>
+                                        : notifications.map(notification => (
+                                            <div className="flex flex-col bg-white py-4" key={notification.id} onClick={() => handleClickNotification(notification)}>
+                                                <div className="flex gap-4">
+                                                    <img
+                                                        src={notification.image[0]}
+                                                        alt={notification.productName}
+                                                        className="w-12 h-12 rounded-xl border border-neutral-2 mr-4"
+                                                    />
+                                                    <div className="flex flex-col w-full gap-1">
+                                                        <div className="flex justify-between text-[10px] text-neutral-3">
+                                                            <p>{notification.type}</p>
+                                                            <div className="flex gap-2 items-center">
+                                                                <p>{moment(notification.time).format('D MMM, HH:mm')}</p>
+                                                                <div className="w-2 h-2 rounded-full bg-red-500"></div>
+                                                            </div>
+                                                        </div>
+                                                        <div className="text-sm">
+                                                            <p>{notification.productName}</p>
+                                                            <p className={notification.type === "Berhasil terjual" && "line-through"}>{formatRupiah(notification.price)}</p>
+                                                            <p className={notification.type === "Penawaran ditolak" && "line-through"}>{notification.bidPrice && `${notification.type === "Berhasil terjual" ? "Terjual" : "Ditawar"} ${formatRupiah(notification.bidPrice)}`}</p>
+                                                        </div>
                                                     </div>
                                                 </div>
-                                                <div className="text-sm">
-                                                    <p>{ notification.productName }</p>
-                                                    <p className={notification.type === "Berhasil terjual" && "line-through"}>{ formatRupiah(notification.price) }</p>
-                                                    <p className={notification.type === "Penawaran ditolak" && "line-through" }>{ notification.bidPrice && `${ notification.type === "Berhasil terjual" ? "Terjual" : "Ditawar" } ${formatRupiah(notification.bidPrice)}` }</p>
-                                                </div>
                                             </div>
-                                        </div>
-                                    </div>
-                                ))
+                                        ))
                             }
                         </div>
                     </div>

@@ -16,6 +16,7 @@ import moment from "moment"
 import PerfectScrollbar from 'react-perfect-scrollbar'
 
 import Sidebar from "./Sidebar";
+import BlankIllustration from '../assets/undraw_selection.svg'
 
 export default function Header(props) {
   const navigate = useNavigate();
@@ -108,7 +109,11 @@ export default function Header(props) {
                   <PerfectScrollbar>
                   <div className="grid grid-cols-1 divide-y">
                     {
-                      notifications.map(notification => (
+                      notifications.length === 0 ? <div className="w-full h-full flex flex-col justify-center items-center px-4">
+                        <img className="w-1/2 object-cover" src={BlankIllustration} alt="Illustration" />
+                        <p className="text-center mt-2">Notifikasi kamu kosong nih!</p>
+                      </div>
+                      : notifications.map(notification => (
                         <div className="flex flex-col bg-white py-4" key={notification.id} onClick={() => handleClickNotification(notification)}>
                           <div className="flex gap-4">
                             <img
