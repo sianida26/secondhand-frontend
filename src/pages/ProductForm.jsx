@@ -10,6 +10,7 @@ import Validator from '../utils/Validator';
 import configs from '../utils/configs';
 import LoadingSpin from '../components/LoadingSpin';
 import Header from '../components/Header';
+import { requestUpdateNotification } from '../redux/slices/notificationSlice';
 
 export default function ProductForm(props) {
     
@@ -121,6 +122,7 @@ export default function ProductForm(props) {
                 progress: undefined,
                 theme: 'colored',
             });
+            dispatch(requestUpdateNotification())
             navigate('/produkku', { replace: true })
         } catch (error) {
             toast.error(error.response?.data?.message || 'Terjadi Kesalahan. Silakan coba lagi', {

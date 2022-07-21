@@ -19,6 +19,7 @@ import { addItem, removeItem } from "../redux/slices/wishlistSlice";
 
 import { Carousel } from "react-responsive-carousel";
 import "react-responsive-carousel/lib/styles/carousel.min.css";
+import { requestUpdateNotification } from "../redux/slices/notificationSlice";
 
 // TODO: Ganti Seller's picture (ambil dari backend jika sudah dibenerin)
 
@@ -104,6 +105,7 @@ function PreviewProdukBuyer() {
       })
       setProductDetail(response.data);
       setProductStatus(response.data.status);
+      dispatch(requestUpdateNotification())
     } catch (error) {
       const errorMsg = error.response?.data?.message || 'Terjadi Kesalahan. Silakan coba lagi'
       setErrorMessage(errorMsg);
@@ -130,6 +132,7 @@ function PreviewProdukBuyer() {
       requestProductDetail();
       setBidPrice(0);
       setShowModal(false);
+      dispatch(requestUpdateNotification())
     } catch (e) {
       showErrorToast(e.response?.data?.message || 'Terjadi Kesalahan. Silakan coba lagi')
     } finally {

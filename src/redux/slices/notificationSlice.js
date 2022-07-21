@@ -6,6 +6,7 @@ import configs from '../../utils/configs';
 const initialState = {
     items: [],
     isLoading: false,
+    requestUpdateNotification: true,
 }
 
 export const notificationSlice = createSlice({
@@ -24,12 +25,15 @@ export const notificationSlice = createSlice({
                 ...action.payload,
             }
         },
+        requestUpdateNotification: (state, action) => {
+            state.requestUpdateNotification = true
+        },
         clearData: (state, action) => {
             return initialState;
         }
     }
 });
 
-export const { setNotifications, setLoading, setData, clearData } = notificationSlice.actions;
+export const { setNotifications, setLoading, setData, clearData, requestUpdateNotification } = notificationSlice.actions;
 
 export default notificationSlice.reducer;

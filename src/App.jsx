@@ -22,11 +22,12 @@ import Notifikasi from "./pages/Notifikasi";
 import NotFound from "./pages/NotFound";
 
 import configs from './utils/configs'
-import { setNotifications } from './redux/slices/notificationSlice'
+import { setData } from './redux/slices/notificationSlice'
 
 function App() {
 
   const token = useSelector(state => state.auth.token)
+  const isNeedToFetchNotification = useSelector(state => state.notification.requestUpdateNotification)
   const dispatch = useDispatch()
 
   const fetchNotifications = async () => {
@@ -39,7 +40,7 @@ function App() {
         },
         timeout: 20000, // seconds
       });
-      dispatch(setNotifications(response.data));
+      dispatch(setData({ items: response.data, requestUpdateNotification: false }));
     } catch (e){
 
     } finally {
@@ -48,9 +49,9 @@ function App() {
   }
 
   useEffect(() => {
-    if (!token) return;
+    if (!token || !isNeedToFetchNotification) return;
     fetchNotifications()
-  }, [token])
+  }, [isNeedToFetchNotification, token])
 
   const renderProtectedRoutes = () => {
     return <>

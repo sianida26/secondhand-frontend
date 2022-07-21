@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 
 import axios from 'axios';
@@ -14,12 +14,14 @@ import LoadingSpin from '../components/LoadingSpin';
 import configs from '../utils/configs';
 
 import { formatRupiah, toTitleCase } from '../utils/helpers';
+import { requestUpdateNotification } from '../redux/slices/notificationSlice';
 
 function PreviewProduk() {
 
     const auth = useSelector(state => state.auth);
     const location = useLocation();
     const navigate = useNavigate();
+    const dispatch = useDispatch();
 
     const [ isLoading, setLoading ] = useState(false);
     const [ productName, setProductName ] = useState(location.state?.previewData?.name)
@@ -48,6 +50,7 @@ function PreviewProduk() {
                 data: formData,
                 timeout: 20000, //20 s
             })
+            dispatch(requestUpdateNotification())
             navigate('/produkku', { replace: true })
         } catch (error) {
             toast.error(error.response?.data?.message || 'Terjadi Kesalahan. Silakan coba lagi', {
