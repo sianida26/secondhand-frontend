@@ -197,7 +197,7 @@ function PreviewProdukBuyer() {
                   onClick={ handleAddWishlist }
                   className="hidden md:block w-full justify-center items-center py-2 mt-2 rounded-2xl bg-red-500 font-medium text-white hover:bg-red-600 focus:ring-2 focus:ring-offset-2 focus:ring-red-500 focus:outline-none"
                 >
-                  <span className="flex gap-2 justify-center items-center">Masukkan ke wishlist<FiHeart className="mb-1" /></span>                 
+                  <span className="flex gap-2 justify-center items-center">{ isAlreadyAddedToWishlist ? "Keluarkan dari wishlist" : <>Masukkan ke wishlist<FiHeart className="mb-1" /></> }</span>                 
                 </button>
                 {/* <button className="hidden md:block w-full border border-purple-4 bg-white font-medium text-neutral-5 text-center py-2 mt-4 rounded-lg">Edit</button> */}
               </div>
