@@ -117,7 +117,7 @@ function PreviewProduk() {
                     <button 
                         className="hidden md:block w-full border border-purple-4 bg-white font-medium text-neutral-5 text-center py-2 mt-4 rounded-[16px]"
                         disabled={ isLoading || location.state?.readOnly }
-                        onClick={ () => navigate(location.state?.prevPathname || -1, { state: location.state }) } 
+                        onClick={ () => navigate(location.state?.prevPathname || -1, { state: {...location.state, fromPreview: true, product: { id: location.state?.previewData.productId }}, replace: true }) } 
                     >
                         Edit
                     </button>
