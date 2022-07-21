@@ -48,6 +48,7 @@ export default function Header(props) {
     }
 
     if (notificationData.type === "Berhasil diterbitkan") return navigate('/preview-produk', { state: { previewData, readOnly: true } })
+    if (notificationData.type === "Anda menawar produk") return navigate(`/produk/${ notificationData.productId }`)
     return navigate(`/penawaran/${notificationData.bidId}`);
   }
 

@@ -53,6 +53,8 @@ function App() {
     fetchNotifications()
   }, [isNeedToFetchNotification, token])
 
+  useEffect(() => { fetchNotifications() }, [])
+
   const renderProtectedRoutes = () => {
     return <>
       <Route path="/buat-produk" element={<ProductForm />} />
