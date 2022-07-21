@@ -12,6 +12,8 @@ import ProductCard from "../components/ProductCard";
 import Header from "../components/Header";
 import configs from "../utils/configs";
 
+import notFoundIllustration from "../assets/undraw_void.svg";
+
 const categories = [
 	"Semua",
 	"Hobi",
@@ -53,6 +55,8 @@ export default function Home() {
 			setLoading(false);
 		}
 	};
+
+	const renderedProducts = products.filter(product => selectedCategory === "Semua" || product.category === selectedCategory.toLowerCase())
 
 	return (
 		<div className="w-screen min-h-screen">
@@ -101,10 +105,15 @@ export default function Home() {
 			</div>
 
 			{/* Products list */}
-			<div className="w-full grid grid-cols-2 place-items-center gap-4 px-4 mt-4 lg:grid-cols-5 xl:grid-cols-8">
+			<div className={`w-full place-items-center gap-4 px-4 mt-4 ${ !isLoading && renderedProducts.length === 0 ? "" : "grid grid-cols-2 lg:grid-cols-5 xl:grid-cols-6" }`}>
 				{isLoading
 					? [...new Array(10)].map((x) => <ProductCard isLoading />)
-					: products.filter(product => selectedCategory === "Semua" || product.category === selectedCategory.toLowerCase() ).map((product) => (
+					: renderedProducts.length === 0? 
+					<div className="w-full h-full flex flex-col items-center justify-center py-8">
+						<img className="w-60" src={ notFoundIllustration } alt="illustration" />
+						<p className="text-center mt-4 text-base">Yah! Item dengan kategori ini belum tersedia :&#40;</p>
+					</div>
+					: renderedProducts.map((product) => (
 							<ProductCard
 								key={ product.id }
 								isLoading={isLoading}
