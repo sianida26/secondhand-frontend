@@ -1,5 +1,5 @@
 import React, { useRef, useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { FiCamera, FiArrowLeft, FiAlertCircle } from "react-icons/fi";
 import axios from "axios";
 import { useDispatch, useSelector } from 'react-redux';
@@ -12,6 +12,7 @@ import LoadingSpin from "../components/LoadingSpin";
 
 export default function ProductForm(props) {
   const navigate = useNavigate();
+  const location = useLocation();
   const inputButtonRef = useRef(null);
   const auth = useSelector(state => state.auth)
   const dispatch = useDispatch();
@@ -69,7 +70,7 @@ export default function ProductForm(props) {
 
       // Handle success
       dispatch(setData({ name, city, profilePhoto: response.data.image }))
-      navigate(-1, { replace: true });
+      navigate(location.state?.referrer || -1, { replace: true });
     } catch (e) {
       setFormErrors(e.response?.data?.errors ?? {})
       // Handle error

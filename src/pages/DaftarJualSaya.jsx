@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import axios from 'axios';
 
 import { useSelector } from 'react-redux';
-import { useNavigate, Link } from 'react-router-dom';
+import { useLocation, useNavigate, Link } from 'react-router-dom';
 import PullToRefresh from 'react-simple-pull-to-refresh';
 
 import { FiBox, FiChevronRight, FiDollarSign, FiHeart, FiPlus } from 'react-icons/fi'
@@ -15,9 +15,11 @@ import { formatRupiah } from '../utils/helpers';
 export default function DaftarJualSaya() {
 
   const navigate = useNavigate();
+  const location = useLocation();
   const token = useSelector(state => state.auth.token);
   const name = useSelector(state => state.auth.name);
   const profilePic = useSelector(state => state.auth.profilePhoto);
+  const isAlreadyUpdateProfile = !!useSelector(state => state.auth.city);
   const city = useSelector(state => state.auth.city);
 
   const [ activeTab, setActiveTab ] = useState(0);
@@ -109,7 +111,7 @@ export default function DaftarJualSaya() {
             <div className="w-full">
 
               { 
-                activeTab === 0 ? renderProductFragment(products, loading, navigate)
+                activeTab === 0 ? renderProductFragment(products, loading, navigate, location, isAlreadyUpdateProfile)
                 : activeTab === 1 ? renderDiminatiFragment(diminatis, loading)
                 : activeTab === 2 ? renderTerjualFragment(terjuals, loading)
                 : "Invalid tab!"
@@ -204,15 +206,20 @@ const renderDiminatiFragment = (diminatis, isLoading) => {
   )
 }
 
-const renderProductFragment = (products, isLoading, navigate) => {
+const renderProductFragment = (products, isLoading, navigate, location, isAlreadyUpdateProfile) => {
+
+  const handleCreateProduct = () => {
+    if (!isAlreadyUpdateProfile) return navigate('/profil', { replace: true, state: { referrer: location.pathname } }) //Redirects to profile if not upadted profile yet
+    navigate('/buat-produk')
+  }
 
   return (
     <div className="grid grid-cols-2 gap-4 lg:grid-cols-3">
       {/* Add Product */}
-      <Link to="/buat-produk" className="flex flex-col justify-center items-center w-full h-full min-h-[16rem] border border-neutral-2 border-dashed text-neutral-3 hover:bg-gray-200 focus:ring-2 focus:ring-offset-2 focus:ring-neutral-2 focus:outline-none">
+      <button onClick={ handleCreateProduct } className="flex flex-col justify-center items-center w-full h-full min-h-[16rem] border border-neutral-2 border-dashed text-neutral-3 hover:bg-gray-200 focus:ring-2 focus:ring-offset-2 focus:ring-neutral-2 focus:outline-none">
         <FiPlus />
         <p>Tambah Produk</p>
-      </Link>
+      </button>
 
       {
         isLoading ? [ ...new Array(11) ].map((_,i) => (

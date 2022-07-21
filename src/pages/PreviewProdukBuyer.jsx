@@ -27,6 +27,7 @@ function PreviewProdukBuyer() {
   const location = useLocation();
   const navigate = useNavigate();
   const token = useSelector(state => state.auth.token);
+  const isAlreadyUpdateProfile = !!useSelector(state => state.auth.city);
   const wishlists = useSelector(state => state.wishlist.items);
   const dispatch = useDispatch();
 
@@ -66,6 +67,7 @@ function PreviewProdukBuyer() {
   const openModal = () => {
     if (isLoading) return; //Prevent open modal while fetching data
     if (!token) return navigate('/login', { replace: true, state: { referrer: location.pathname } }) //Redirects to login page if not logged in yet
+    if (!isAlreadyUpdateProfile) return navigate('/profil', { replace: true, state: { referrer: location.pathname } }) //Redirects to profile if not upadted profile yet
     setShowModal(true);
   }
 
