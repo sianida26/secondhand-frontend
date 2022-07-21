@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { useSelector } from "react-redux";
 import {
@@ -20,10 +20,21 @@ import Sidebar from "./Sidebar";
 export default function Header(props) {
   const navigate = useNavigate();
   const isLoggedIn = useSelector((state) => state.auth.token);
-  const notifications = useSelector(state => state.notification.items)
+  const notifications = useSelector(state => state.notification.items);
+
+  const notificationRef = useRef();
 
   const [showSidebar, setShowSidebar] = useState(false);
   const [showNotification, setShowNotification] = useState(false);
+
+  useEffect(() => {
+    const handleClickOutsideNotification = e => {
+      if (!notificationRef.current.contains(e.target)) setShowNotification(false);
+    }
+
+    document.addEventListener("mousedown", handleClickOutsideNotification)
+    return () => document.removeEventListener("mousedown", handleClickOutsideNotification)
+  })
 
   const handleClickNotification = (notificationData) => {
     const previewData = {
@@ -93,7 +104,7 @@ export default function Header(props) {
 
                 {/* Notifikasi */}
 
-                <div className={`hidden ${showNotification && "lg:block"} absolute bg-white shadow-lg border border-gray-100 w-96 mt-2 right-0 p-4 rounded-2xl text-sm max-h-96 overflow-y-auto`}>
+                <div ref={notificationRef} className={`hidden ${showNotification && "lg:block"} absolute bg-white shadow-lg border border-gray-100 w-96 mt-2 right-0 p-4 rounded-2xl text-sm max-h-96 overflow-y-auto`}>
                   <PerfectScrollbar>
                   <div className="grid grid-cols-1 divide-y">
                     {
