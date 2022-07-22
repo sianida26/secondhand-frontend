@@ -153,7 +153,7 @@ const renderTerjualFragment = (terjuals, isLoading) => {
               <p>Terjual { formatRupiah(terjual.bidPrice) }</p>
             </div>
 
-            <span className="flex-none text-xs text-neutral-3">20 Apr, 14:04</span>
+            <span className="flex-none text-xs text-neutral-3">{moment(terjual.soldTimestamp).format('D MMM, HH:mm')}</span>
           </Link>
         ))
         : <div className="w-full h-full flex flex-col items-center justify-center py-8 gap-4">
@@ -194,7 +194,7 @@ const renderDiminatiFragment = (diminatis, isLoading) => {
               <p>Ditawar { formatRupiah(diminati.bidPrice) }</p>
             </div>
 
-            <span className="flex-none text-xs text-neutral-3">20 Apr, 14:04</span>
+            <span className="flex-none text-xs text-neutral-3">{moment(diminati.bidTimestamp).format('D MMM, HH:mm')}</span>
           </Link>
         ))
         : <div className="w-full h-full flex flex-col items-center justify-center py-8 gap-4">
