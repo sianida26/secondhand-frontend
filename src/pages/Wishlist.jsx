@@ -1,14 +1,9 @@
-import React, { useEffect, useState } from "react";
-import axios from "axios";
+import React from "react";
 
 import { useSelector } from "react-redux";
 import { useNavigate, Link } from "react-router-dom";
-import PullToRefresh from "react-simple-pull-to-refresh";
 
-
-import emptyImage from "../assets/undraw_selection.svg";
 import Header from "../components/Header";
-import configs from "../utils/configs";
 import { formatRupiah } from "../utils/helpers";
 
 export default function Wishlist() {
