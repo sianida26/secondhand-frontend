@@ -143,7 +143,7 @@ const renderTerjualFragment = (terjuals, isLoading) => {
             <div className="w-20 h-3 bg-slate-700 animate-pulse rounded-md" />
           </div>
         ))
-        : terjuals.length ? terjuals.map(terjual => (<Link to={{ pathname:"/penawaran", state: { bidId: terjual.id } }} key={ terjual.id } className="flex gap-4 py-3">
+        : terjuals.length ? terjuals.map(terjual => (<Link to={{ pathname:`/penawaran/${terjual.id}`, state: { bidId: terjual.id } }} key={ terjual.id } className="flex gap-4 py-3">
             <img className="w-12 h-12 object-cover rounded-lg flex-none" alt="Foto Produk" src={ terjual.image } />
             
             <div className="flex-grow flex flex-col">
