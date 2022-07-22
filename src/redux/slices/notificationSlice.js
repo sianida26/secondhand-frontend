@@ -1,7 +1,4 @@
-import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
-
-import axios from 'axios';
-import configs from '../../utils/configs';
+import { createSlice } from '@reduxjs/toolkit';
 
 const initialState = {
     items: [],

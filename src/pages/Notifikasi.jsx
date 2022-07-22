@@ -1,20 +1,16 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { useSelector } from 'react-redux';
 import { useNavigate } from "react-router-dom";
 
-import axios from 'axios';
 import moment from 'moment';
 
 import Header from "../components/Header";
-import product from "../assets/product.png";
-import configs from "../utils/configs";
 import { formatRupiah } from "../utils/helpers";
 import BlankIllustration from '../assets/undraw_selection.svg'
 
 export default function Notifikasi() {
 
     const navigate = useNavigate();
-    const token = useSelector(state => state.auth.token);
     const notifications = useSelector(state => state.notification.items)
 
     // const [notifications, setNotifications] = useState([])

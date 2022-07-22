@@ -1,14 +1,12 @@
 import React from "react";
 
 import { useSelector } from "react-redux";
-import { useNavigate, Link } from "react-router-dom";
+import { Link } from "react-router-dom";
 
 import Header from "../components/Header";
 import { formatRupiah } from "../utils/helpers";
 
 export default function Wishlist() {
-  const navigate = useNavigate();
-  const token = useSelector((state) => state.auth.token);
   const name = useSelector((state) => state.auth.name);
   const profilePic = useSelector((state) => state.auth.profilePhoto);
   const city = useSelector((state) => state.auth.city);

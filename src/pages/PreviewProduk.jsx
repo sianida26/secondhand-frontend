@@ -1,13 +1,13 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 
 import axios from 'axios';
 import { Carousel } from 'react-responsive-carousel';
 import { toast } from 'react-toastify';
 import "react-responsive-carousel/lib/styles/carousel.min.css";
 
-import { FiArrowLeft, FiSearch, FiBell, FiList, FiUser } from 'react-icons/fi';
+import { FiArrowLeft } from 'react-icons/fi';
 
 import Header from '../components/Header';
 import LoadingSpin from '../components/LoadingSpin';

@@ -1,12 +1,10 @@
 import React, { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
 import { useSelector } from "react-redux"
 
 import axios from 'axios';
 
-import { FiLogIn, FiMenu, FiSearch } from "react-icons/fi";
+import { FiSearch } from "react-icons/fi";
 
-import gambarJam from "../assets/jam.png";
 import gambarKado from "../assets/png_gift_88837.png";
 import ProductCard from "../components/ProductCard";
 import Header from "../components/Header";
@@ -26,14 +24,12 @@ const categories = [
 export default function Home() {
 
 	const token = useSelector(state => state.auth.token);
-	const isLoggedIn = !!token;
 
 	const [selectedCategory, setSelectedCategory] = useState(categories[0]); //Defaultnya nampilkan semua produk
 	const [products, setProducts] = useState([]);
 	const [isLoading, setLoading] = useState(true);
 	const [_search, _setSearch] = useState("");
 	const [search, setSearch] = useState("");
-	const [isMobileSidebarOpen, setMobileSidebarOpen] = useState(false);
 
 	useEffect(() => {
 		fetchProducts();

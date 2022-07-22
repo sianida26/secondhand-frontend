@@ -5,7 +5,6 @@ import { useLocation, useNavigate, useParams } from "react-router-dom";
 import axios from 'axios';
 
 import { FiArrowLeft, FiX, FiHeart } from "react-icons/fi";
-import { BsCartPlus, BsCartX } from "react-icons/bs";
 
 import PullToRefresh from "react-simple-pull-to-refresh";
 
