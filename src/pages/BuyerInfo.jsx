@@ -180,7 +180,7 @@ export default function BuyerInfo(props) {
                                         type="button" onClick={handleOpenStatusModal}>
                                         Status
                                     </button>
-                                    <a href={`https://wa.me/${data.buyerPhone?.slice(1)}?text=Selamat,20%Penawaran20%Kamu20%telah20%berhasil.20%Silakan20%lakukan20%pembayaran.`} className="flex items-center justify-center ml-2 px-8 py-2 bg-purple-4 hover:bg-purple-5  text-white font-normal text-sm leading-tight rounded-[16px] 
+                                    <a target="_blank" rel="noopener noreferrer" href={`https://wa.me/${data.buyerPhone?.slice(1)}?text=Selamat,20%Penawaran20%Kamu20%telah20%berhasil.20%Silakan20%lakukan20%pembayaran.`} className="flex items-center justify-center ml-2 px-8 py-2 bg-purple-4 hover:bg-purple-5  text-white font-normal text-sm leading-tight rounded-[16px] 
                                     focus:shadow-lg focus:outline-none focus:ring-offset-2 focus:ring-purple-5 disabled:opacity-70"
                                         type="button" >
                                         <p>Hubungi di</p>
