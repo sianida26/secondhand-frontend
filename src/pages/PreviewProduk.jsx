@@ -24,12 +24,55 @@ function PreviewProduk() {
     const dispatch = useDispatch();
 
     const [ isLoading, setLoading ] = useState(false);
+    const [ isDeleting, setDeleting ] = useState(false);
     const [ productName, setProductName ] = useState(location.state?.previewData?.name)
     const [ category, setCategory ] = useState(location.state?.previewData?.category)
     const [ price, setPrice ] = useState(location.state?.previewData?.price)
     const [ description, setDescription ] = useState(location.state?.previewData?.description)
     const [ files, setFiles ] = useState(location.state?.previewData?.files)
     const [ productId, setProductId ] = useState(location.state?.previewData?.productId || 0);
+
+    const handleDeleteProduct = async () => {
+        if (!productId) return;
+        try {
+            setDeleting(true)
+            setLoading(true)
+            await axios({
+                url: `${ configs.apiRootURL }/products/delete-product/${ productId }`,
+                method: 'DELETE',
+                headers: {
+                    Authorization: `Bearer ${ auth.token }`,
+                },
+                timeout: 20000,
+            })
+            toast.success('Produk berhasil dihapus!', {
+                position: "top-center",
+                autoClose: 5000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: 'colored',
+            });
+            navigate('/produkku', { replace: true })
+        }
+        catch (error) {
+            toast.error(error.response?.data?.message || 'Terjadi Kesalahan. Silakan coba lagi', {
+                position: "top-center",
+                autoClose: 5000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: 'colored',
+            });
+        } finally {
+            setLoading(false);
+            setDeleting(false);
+        }
+    }
 
     const terbitkanProduk = async () => {
         try {
@@ -122,10 +165,11 @@ function PreviewProduk() {
                         Edit
                     </button>
                     <button 
-                        className="hidden md:block w-full bg-red-600 hover:bg-red-700 font-medium text-white text-center py-2 mt-4 rounded-[16px] focus:ring-2 focus:ring-offset-2 focus:ring-red-600 focus:outline-none"
-                        disabled={ isLoading || location.state?.readOnly }
+                        className={`hidden ${ productId && "md:flex" } items-center justify-center w-full bg-red-600 hover:bg-red-700 font-medium text-white text-center py-2 mt-4 rounded-[16px] focus:ring-2 focus:ring-offset-2 focus:ring-red-600 focus:outline-none`}
+                        disabled={ isLoading || isDeleting || location.state?.readOnly }
+                        onClick={ handleDeleteProduct }
                     >
-                        Delete
+                        { isDeleting ? <><LoadingSpin /> Menghapus...</> : "Hapus" }
                     </button>
                 </div>
 
@@ -166,10 +210,11 @@ function PreviewProduk() {
                 Edit
             </button>
             <button 
-                className="bg-red-600 font-medium text-white text-center py-3 mb-4 rounded-2xl w-full focus:ring-2 focus:ring-offset-2 focus:ring-red-600 focus:outline-none"
-                disabled={ isLoading || location.state?.readOnly }
+                className={`bg-red-600 flex items-center justify-center font-medium text-white text-center py-3 mb-4 rounded-2xl w-full focus:ring-2 focus:ring-offset-2 focus:ring-red-600 focus:outline-none ${ !productId && "hidden" }`}
+                disabled={ isLoading || isDeleting || location.state?.readOnly }
+                onClick={ handleDeleteProduct }
             >
-                Delete
+                { isDeleting ? <><LoadingSpin /> Menghapus...</> : "Hapus" }
             </button>
         </div>
     </div>
