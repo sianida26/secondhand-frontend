@@ -143,20 +143,33 @@ function PreviewProduk() {
             </div>
         </div>
 
-        <div className="pb-20 px-4 mt-2 md:max-w-screen-lg md:mt-4 md:mx-auto md:px-0 md:pb-0">
+        <div className="pb-4 px-4 mt-2 md:max-w-screen-lg md:mt-4 md:mx-auto md:px-0 md:pb-0">
             <div className="flex bg-white rounded-xl px-6 py-4 shadow-low flex-col gap-2 md:w-3/5">
                 <h1 className="font-medium">Deskripsi</h1>
                 <p className="text-neutral-3">{ description }</p>
             </div>
         </div>
 
-        <div className="fixed w-full bottom-4 px-4 md:hidden">
+        <div className="flex flex-col w-full bottom-4 px-4 md:hidden">
             <button 
                 disabled={ isLoading || location.state?.readOnly } 
                 onClick={ terbitkanProduk }
-                className="bg-purple-4 font-medium text-white text-center py-4 flex justify-center w-full rounded-xl focus:ring-2 focus:ring-offset-2 focus:ring-purple-4 focus:outline-none disabled:opacity-70"
+                className="bg-purple-4 font-medium text-white text-center py-3 flex justify-center w-full rounded-2xl focus:ring-2 focus:ring-offset-2 focus:ring-purple-4 focus:outline-none disabled:opacity-70"
             >
                 { isLoading ? <span className="flex items-center"><LoadingSpin /> Mengirim...</span> : "Terbitkan" }
+            </button>
+            <button 
+                className="border border-purple-4 bg-white font-medium w-full my-2 text-neutral-5 text-center py-3 rounded-2xl"
+                disabled={ isLoading || location.state?.readOnly }
+                onClick={ () => navigate(location.state?.prevPathname || -1, { state: {...location.state, fromPreview: true, product: { id: location.state?.previewData.productId }}, replace: true }) } 
+            >
+                Edit
+            </button>
+            <button 
+                className="bg-red-600 font-medium text-white text-center py-3 mb-4 rounded-2xl w-full focus:ring-2 focus:ring-offset-2 focus:ring-red-600 focus:outline-none"
+                disabled={ isLoading || location.state?.readOnly }
+            >
+                Delete
             </button>
         </div>
     </div>

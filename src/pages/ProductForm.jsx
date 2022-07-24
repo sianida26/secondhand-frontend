@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react'
 import { toast } from 'react-toastify';
-import { useLocation, useNavigate, useParams, Navigate } from 'react-router-dom'
+import { useLocation, useNavigate } from 'react-router-dom'
 import { FiPlus, FiArrowLeft, FiAlertCircle } from 'react-icons/fi'
 import { useDispatch, useSelector } from 'react-redux'
 import axios from 'axios'
@@ -17,7 +17,6 @@ export default function ProductForm(props) {
     const navigate = useNavigate()
     const dispatch = useDispatch()
     const location = useLocation()
-    const { id } = useParams()
 
     const inputButtonRef = useRef(null)
     const token = useSelector(state => state.auth.token)
