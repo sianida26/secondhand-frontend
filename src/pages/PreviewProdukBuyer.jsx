@@ -196,7 +196,7 @@ function PreviewProdukBuyer() {
                   productStatus === "BIDDABLE" ? "Saya tertarik dan ingin nego"
                   : productStatus === "WAITING_CONFIRMATION" ? "Menunggu Respon Penjual"
                   : productStatus === "TRANSACTION_DECLINED" ? "Penawaranmu Ditolak Penjual"
-                  : productStatus === "TRANSACTION_ACCEPTED" ? "Penawaranmu Diterima. Lakukan Transaksi Sekarang"
+                  : productStatus === "TRANSACTION_ACCEPTED" ? "Penawaran diterima. Kamu akan dihubungi penjual"
                   : productStatus === "TRANSACTION_COMPLETED" ? "Transaksi telah selesai"
                   : ""
                 }
